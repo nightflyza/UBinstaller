@@ -15,10 +15,10 @@
 
 . /etc/rc.subr
 
-name=ubilling
-rcvar=ubilling_enable
+name="ubilling"
+rcvar="ubilling_enable"
 command="/usr/sbin/stargazer"
-
+pidfile="/var/run/stargazer.pid"
 
 start_precmd="start_precmd"
 start_postcmd="start_postcmd"
@@ -40,7 +40,7 @@ start_postcmd()
        echo "Softflowd started"
 }
 
-pidfile="/var/run/stargazer.pid"
+
 
 stop_postcmd=stop_postcmd
 
