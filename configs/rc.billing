@@ -20,8 +20,20 @@ rcvar="ubilling_enable"
 command="/usr/sbin/stargazer"
 pidfile="/var/run/stargazer.pid"
 
+start_cmd="start_cmd"
 start_precmd="start_precmd"
 start_postcmd="start_postcmd"
+
+start_cmd()
+{
+       echo "Starting stargazer"
+       /usr/sbin/stargazer || echo "failed to start stargazer"
+       /usr/local/bandwidthd/bandwidthd
+       echo "Bandwidthd started"
+       /usr/local/sbin/softflowd -i ${ubilling_flags} -n 127.0.0.1:42111
+       echo "Softflowd started"
+}
+
 
 start_precmd()
 {
@@ -34,10 +46,7 @@ start_precmd()
 
 start_postcmd()
 {
-       /usr/local/bandwidthd/bandwidthd
-       echo "Bandwidthd started"
-       /usr/local/sbin/softflowd -i ${ubilling_flags} -n 127.0.0.1:42111
-       echo "Softflowd started"
+     
 }
 
 
