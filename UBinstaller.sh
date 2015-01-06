@@ -417,10 +417,7 @@ chmod 777 ${APACHE_DATA_PATH}billing/content/dn
 ln -fs /usr/local/bandwidthd/htdocs ${APACHE_DATA_PATH}band
 
 #creating rc.script
-echo "#!/bin/sh" >> /etc/rc.d/billing 
-echo "/usr/sbin/stargazer" >> /etc/rc.d/billing 
-echo "/usr/local/bandwidthd/bandwidthd" >> /etc/rc.d/billing 
-echo "/usr/local/sbin/softflowd -i ${LAN_IFACE} -n 127.0.0.1:42111" >> /etc/rc.d/billing 
+cp -R /usr/local/ubinstaller/configs/rc.billing /etc/rc.d/billing
 chmod a+x /etc/rc.d/billing
 
 #ugly hack for starting stargazer without NAS-es

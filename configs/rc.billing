@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+#
+
+# PROVIDE: ubilling
+# REQUIRE: mysql
+# KEYWORD: FreeBSD
+
+#
+# Add the following lines to /etc/rc.conf
+#
+# ubilling_enable="YES"
+# ubilling_flags="igb0" - LAN interface name
+
+
+. /etc/rc.subr
+
+name=ubilling
+rcvar=`set_rcvar`
+
+command=/usr/sbin/stargazer # Path to stargazer binary
+
+start_precmd="start_precmd"
+start_postcmd="start_postcmd"
+
+start_precmd()
+{
+        while [ ! "`ps ax | grep mysqld | grep -v grep`" ]; do
+            sleep 2
+        	echo "Waiting for running MySQL"    
+        done
+        
+}
+
+start_postcmd()
+{
+       echo "Stargazer started"
+       /usr/local/bandwidthd/bandwidthd
+       echo "Bandwidthd started"
+       /usr/local/sbin/softflowd -i ${ubilling_flags} -n 127.0.0.1:42111
+       echo "Softflowd started"
+}
+
+pidfile=/var/run/stargazer.pid
+
+stop_postcmd=stop_postcmd
+
+stop_postcmd()
+{
+  killall stargazer
+  echo "Stargazer stopped"
+  killall bandwidthd
+  echo "Bandwidthd stopped"
+  softflowctl shutdown
+  echo "Softflow stoppped"
+}
+
+
+load_rc_config $name
+run_rc_command "$1"
