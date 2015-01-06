@@ -16,9 +16,9 @@
 . /etc/rc.subr
 
 name=ubilling
-rcvar=`set_rcvar`
+rcvar=ubilling_enable
+command="/usr/sbin/stargazer"
 
-command=/usr/sbin/stargazer # Path to stargazer binary
 
 start_precmd="start_precmd"
 start_postcmd="start_postcmd"
@@ -34,14 +34,13 @@ start_precmd()
 
 start_postcmd()
 {
-       echo "Stargazer started"
        /usr/local/bandwidthd/bandwidthd
        echo "Bandwidthd started"
        /usr/local/sbin/softflowd -i ${ubilling_flags} -n 127.0.0.1:42111
        echo "Softflowd started"
 }
 
-pidfile=/var/run/stargazer.pid
+pidfile="/var/run/stargazer.pid"
 
 stop_postcmd=stop_postcmd
 
