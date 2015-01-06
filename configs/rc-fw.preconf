@@ -1,0 +1,7 @@
+#access/shape/nat
+firewall_enable="YES" 
+firewall_nat_enable="YES" 
+dummynet_enable="YES" 
+firewall_script="/etc/firewall.conf" 
+
+# ==========

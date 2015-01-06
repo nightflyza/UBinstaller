@@ -1,0 +1,28 @@
+#!/bin/sh
+
+PLATFORM=$1
+PKGPATH="/home/"${PLATFORM}
+
+mkdir ${PKGPATH}
+
+portsnap fetch
+portsnap extract
+portsnap update 
+
+cd /usr/ports/textproc/expat2 && make BATCH=yes install 
+cd /usr/ports/shells/bash/ && make BATCH=yes install
+cd /usr/ports/devel/libtool && make all && make BATCH=yes install 
+cd /usr/ports/security/sudo && make BATCH=yes install 
+cd /usr/ports/net/isc-dhcp41-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=yes install 
+cd /usr/ports/databases/mysql51-server/ && make BATCH=yes install 
+cd /usr/ports/net-mgmt/net-snmp/ && make WITH_MFD_REWRITES=yes BATCH=yes install
+cd /usr/ports/lang/php53 && make WITH_CLI=yes WITH_APACHE=yes  BATCH=yes install 
+cd /usr/ports/lang/php53-extensions/ && make WITH_MYSQL=yes WITH_MBSTRING=yes WITH_ICONV=yes WITH_GD=yes WITH_BCMATH=yes WITH_XML=yes WITH_CURL=yes WITH_SNMP=yes BATCH=yes install 
+cd /usr/ports/net-mgmt/bandwidthd/ && make BATCH=yes install 
+cd /usr/ports/net-mgmt/softflowd/ && make BATCH=yes install 
+cd /usr/ports/net/arping/ && make BATCH=yes install
+cd /usr/ports/devel/gmake && make BATCH=yes install
+cd /usr/ports/security/nmap && make BATCH=yes install
+
+
+pkg create -a -o ${PKGPATH}

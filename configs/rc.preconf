@@ -1,0 +1,11 @@
+# ====== added by UBinstaller ====
+
+#all needed services
+mysql_enable="YES"
+apache22_enable="YES"
+dhcpd_enable="YES"
+dhcpd_flags="-q"
+dhcpd_conf="/usr/local/etc/multinet/dhcpd.conf"
+dhcpd_ifaces="LAN_IFACE"
+
+# ==========
