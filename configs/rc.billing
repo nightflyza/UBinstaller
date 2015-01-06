@@ -22,7 +22,6 @@ pidfile="/var/run/stargazer.pid"
 
 start_cmd="start_cmd"
 start_precmd="start_precmd"
-start_postcmd="start_postcmd"
 
 start_cmd()
 {
@@ -38,15 +37,10 @@ start_cmd()
 start_precmd()
 {
         while [ ! "`ps ax | grep mysqld | grep -v grep`" ]; do
-            sleep 2
+          sleep 2
         	echo "Waiting for running MySQL"    
         done
         
-}
-
-start_postcmd()
-{
-     
 }
 
 
@@ -55,7 +49,6 @@ stop_postcmd=stop_postcmd
 
 stop_postcmd()
 {
-  killall stargazer
   echo "Stargazer stopped"
   killall bandwidthd
   echo "Bandwidthd stopped"
