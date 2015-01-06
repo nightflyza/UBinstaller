@@ -19,6 +19,9 @@ name="ubilling"
 rcvar="ubilling_enable"
 command="/usr/sbin/stargazer"
 pidfile="/var/run/stargazer.pid"
+hostname=`/bin/hostname`
+sql_pid="/var/db/mysql/${hostname}.pid"
+
 
 start_cmd="start_cmd"
 start_precmd="start_precmd"
@@ -36,7 +39,7 @@ start_cmd()
 
 start_precmd()
 {
-        while [ ! "`ps ax | grep mysqld | grep -v grep`" ]; do
+        while [ ! -s $sql_pid ]; do
           sleep 2
         	echo "Waiting for running MySQL"    
         done
