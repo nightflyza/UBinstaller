@@ -1,7 +1,31 @@
 #!/bin/sh
 
+if [ $# -ne 1 ]
+then
+  echo "Usage: ./pkgng.packagecompiling \"PLATFORM\""
+  echo "Example: ./pkgng.packagecompiling \"93_64\" or ./pkgng.packagecompiling \"84_32\""
+  exit
+fi
+
+
+#bootstraping pkgng
+pkg info
+echo "WITH_PKGNG=yes" >>  /etc/make.conf
+pkg2ng
+
+#create a repository configuration file
+mkdir /usr/local/etc/pkg
+mkdir /usr/local/etc/pkg/repos
+cat ../configs/repobsd.preconf  >  /usr/local/etc/pkg/repos/FreeBSD.conf
+
+#clean deprecated packagesite
+echo >  /usr/local/etc/pkg.conf
+#===============================================
+
+
 PLATFORM=$1
 PKGPATH="/home/"${PLATFORM}
+ARCHPATH="/home/"${PLATFORM}".tar.gz"
 
 mkdir ${PKGPATH}
 
@@ -25,4 +49,9 @@ cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/security/nmap && make BATCH=yes install
 
 
+echo "Creating binary packages"
 pkg create -a -o ${PKGPATH}
+echo "Binary packages created"
+echo "Packing binary packages"
+tar cf - ${PKGPATH} | gzip > ${ARCHPATH}
+echo "Packing binary packages finished: "${ARCHPATH}
