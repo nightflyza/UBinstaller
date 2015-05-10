@@ -2,8 +2,8 @@
 
 if [ $# -ne 1 ]
 then
-  echo "Usage: ./pkgng.packagecompiling \"PLATFORM\""
-  echo "Example: ./pkgng.packagecompiling \"93_64\" or ./pkgng.packagecompiling \"84_32\""
+  echo "Usage: sh pkgng.packagecompiling \"PLATFORM\""
+  echo "Example: sh pkgng.packagecompiling \"93_64\" or sh pkgng.packagecompiling \"84_32\""
   exit
 fi
 
@@ -56,6 +56,9 @@ cd /usr/ports/net/freeradius2/ && make WITH_MYSQL=yes WITH_USER=yes BATCH=yes in
 cd /usr/ports/editors/vim-lite/ && make BATCH=yes install
 cd /usr/ports/misc/mc-light/ && make BATCH=yes install
 cd /usr/ports/editors/nano && make BATCH=yes install
+cd /usr/ports/net/mtr-nox11/ &&  make BATCH=yes install
+cd /usr/ports/ftp/wget/ &&  make BATCH=yes install
+cd /usr/ports/www/elinks/ &&  make BATCH=yes install
 
 echo "Creating binary packages"
 pkg create -a -o ${PKGPATH}
