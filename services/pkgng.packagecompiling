@@ -41,13 +41,21 @@ cd /usr/ports/net/isc-dhcp41-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=ye
 cd /usr/ports/databases/mysql51-server/ && make BATCH=yes install 
 cd /usr/ports/net-mgmt/net-snmp/ && make WITH_MFD_REWRITES=yes BATCH=yes install
 cd /usr/ports/lang/php53 && make WITH_CLI=yes WITH_APACHE=yes  BATCH=yes install 
-cd /usr/ports/lang/php53-extensions/ && make WITH_MYSQL=yes WITH_MBSTRING=yes WITH_ICONV=yes WITH_GD=yes WITH_BCMATH=yes WITH_XML=yes WITH_CURL=yes WITH_SNMP=yes BATCH=yes install 
+cd /usr/ports/lang/php53-extensions/
+make WITH_MYSQL=yes WITH_MBSTRING=yes WITH_ICONV=yes WITH_GD=yes WITH_BCMATH=yes WITH_XML=yes WITH_CURL=yes WITH_SNMP=yes WITH_ZLIB=yes WITH_ZIP=yes WITH_SOAP=yes WITH_MYSQLI=yes  BATCH=yes install 
 cd /usr/ports/net-mgmt/bandwidthd/ && make BATCH=yes install 
 cd /usr/ports/net-mgmt/softflowd/ && make BATCH=yes install 
 cd /usr/ports/net/arping/ && make BATCH=yes install
 cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/security/nmap && make BATCH=yes install
-
+cd /usr/ports/devel/pecl-xhprof/ && make BATCH=yes install
+cd /usr/ports/graphics/graphviz/ && make BATCH=yes install
+cd /usr/ports/databases/memcached/ && make BATCH=yes install
+cd /usr/ports/databases/pecl-memcache/ && make BATCH=yes install
+cd /usr/ports/net/freeradius2/ && make WITH_MYSQL=yes WITH_USER=yes BATCH=yes install
+cd /usr/ports/editors/vim-lite/ && make BATCH=yes install
+cd /usr/ports/misc/mc-light/ && make BATCH=yes install
+cd /usr/ports/editors/nano && make BATCH=yes install
 
 echo "Creating binary packages"
 pkg create -a -o ${PKGPATH}

@@ -11,4 +11,8 @@ dhcpd_ifaces="LAN_IFACE"
 ubilling_enable="YES"
 ubilling_flags="LAN_IFACE"
 
+#optional services
+memcached_enable="NO"
+radiusd_enable="NO"
+
 # ==========
