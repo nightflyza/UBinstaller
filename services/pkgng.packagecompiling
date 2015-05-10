@@ -35,6 +35,7 @@ portsnap update
 
 cd /usr/ports/textproc/expat2 && make BATCH=yes install 
 cd /usr/ports/shells/bash/ && make BATCH=yes install
+cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/devel/libtool && make all && make BATCH=yes install 
 cd /usr/ports/security/sudo && make BATCH=yes install 
 cd /usr/ports/net/isc-dhcp41-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=yes install 
@@ -48,7 +49,6 @@ cd /usr/ports/www/mod_php5 && make BATCH=yes install
 cd /usr/ports/net-mgmt/bandwidthd/ && make BATCH=yes install 
 cd /usr/ports/net-mgmt/softflowd/ && make BATCH=yes install 
 cd /usr/ports/net/arping/ && make BATCH=yes install
-cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/security/nmap && make BATCH=yes install
 cd /usr/ports/devel/pecl-xhprof/ && make BATCH=yes install
 cd /usr/ports/graphics/graphviz/ && make BATCH=yes install
