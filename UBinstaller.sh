@@ -264,24 +264,26 @@ portsnap update
 
 cd /usr/ports/textproc/expat2 && make BATCH=yes install 
 cd /usr/ports/shells/bash/ && make BATCH=yes install
+cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/devel/libtool && make all && make BATCH=yes install 
 cd /usr/ports/security/sudo && make BATCH=yes install 
 cd /usr/ports/net/isc-dhcp41-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=yes install 
 cd /usr/ports/databases/mysql51-server/ && make BATCH=yes install 
-cd /usr/ports/net-mgmt/net-snmp/ && make WITH_MFD_REWRITES=yes BATCH=yes install
-cd /usr/ports/lang/php53 && make WITH_CLI=yes WITH_APACHE=yes  BATCH=yes install 
+cd /usr/ports/net-mgmt/net-snmp/ && make WITH="MFD_REWRITES" BATCH=yes install
+cd /usr/ports/lang/php53 && make WITH="APACHE CLI"  BATCH=yes install 
 cd /usr/ports/lang/php53-extensions/
-make WITH_MYSQL=yes WITH_MBSTRING=yes WITH_ICONV=yes WITH_GD=yes WITH_BCMATH=yes WITH_XML=yes WITH_CURL=yes WITH_SNMP=yes WITH_ZLIB=yes WITH_ZIP=yes WITH_SOAP=yes WITH_MYSQLI=yes  BATCH=yes install 
+make WITH="BCMATH CURL GD ICONV MBSTRING MYSQL MYSQLI PDF SNMP SOAP XML XMLREADER XMLWRITER ZIP ZLIB SOCKETS FTP IMAP JSON POSIX PHAR SESSION SIMPLEXML TOKENIZER"  BATCH=yes install 
+cd /usr/ports/www/apache24/ && make BATCH=yes install
+cd /usr/ports/www/mod_php5 && make BATCH=yes install 
 cd /usr/ports/net-mgmt/bandwidthd/ && make BATCH=yes install 
 cd /usr/ports/net-mgmt/softflowd/ && make BATCH=yes install 
 cd /usr/ports/net/arping/ && make BATCH=yes install
-cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/security/nmap && make BATCH=yes install
 cd /usr/ports/devel/pecl-xhprof/ && make BATCH=yes install
 cd /usr/ports/graphics/graphviz/ && make BATCH=yes install
 cd /usr/ports/databases/memcached/ && make BATCH=yes install
 cd /usr/ports/databases/pecl-memcache/ && make BATCH=yes install
-cd /usr/ports/net/freeradius2/ && make WITH_MYSQL=yes WITH_USER=yes BATCH=yes install
+cd /usr/ports/net/freeradius2/ && make WITH="MYSQL USER" BATCH=yes install
 cd /usr/ports/editors/vim-lite/ && make BATCH=yes install
 cd /usr/ports/misc/mc-light/ && make BATCH=yes install
 cd /usr/ports/editors/nano && make BATCH=yes install
