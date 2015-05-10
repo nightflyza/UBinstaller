@@ -13,6 +13,7 @@ ubilling_flags="LAN_IFACE"
 
 #optional services
 memcached_enable="NO"
+memcached_flags="-l 127.0.0.1 -m 64"
 radiusd_enable="NO"
 
 # ==========
