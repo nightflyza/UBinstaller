@@ -205,7 +205,7 @@ APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/usr/local/www/apache24/data/"
 APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
 APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
-APACHE_CONFIG_PRESET_NAME="httpd24.conf"
+APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 DL_STG_NAME="stg-2.409rc1.tar.gz"
 DL_STG_RELEASE="stg-2.409rc1"
