@@ -25,7 +25,7 @@ $DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to insta
 clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	   	   93_64F "FreeBSD 9.3 amd64 (new)"\
- 	   	   93_64 "FreeBSD 9.3 amd64 (bin)"\
+ 	   	   93_64 "FreeBSD 9.3 amd64 (old)"\
  	   	   93_32 "FreeBSD 9.3 i386 (bin)"\
            84_64 "FreeBSD 8.4 amd64 (bin)"\
            84_32 "FreeBSD 8.4 i386 (bin)"\
@@ -285,9 +285,7 @@ cd /usr/ports/databases/mysql51-server/ && make BATCH=yes install
 cd /usr/ports/net-mgmt/net-snmp/ && make WITH="MFD_REWRITES" BATCH=yes install
 cd /usr/ports/lang/php53 && make WITH="APACHE CLI"  BATCH=yes install 
 cd /usr/ports/lang/php53-extensions/
-make WITH="BCMATH CURL GD ICONV MBSTRING MYSQL MYSQLI PDF SNMP SOAP XML XMLREADER XMLWRITER ZIP ZLIB SOCKETS FTP IMAP JSON POSIX PHAR SESSION SIMPLEXML TOKENIZER"  BATCH=yes install 
-cd /usr/ports/www/apache24/ && make BATCH=yes install
-cd /usr/ports/www/mod_php5 && make BATCH=yes install 
+make WITH="BCMATH CURL GD ICONV MBSTRING MYSQL MYSQLI PDF SNMP SOAP XML XMLREADER XMLWRITER ZIP ZLIB SOCKETS FTP IMAP JSON POSIX PHAR SESSION SIMPLEXML TOKENIZER OPENSSL"  BATCH=yes install 
 cd /usr/ports/net-mgmt/bandwidthd/ && make BATCH=yes install 
 cd /usr/ports/net-mgmt/softflowd/ && make BATCH=yes install 
 cd /usr/ports/net/arping/ && make BATCH=yes install
