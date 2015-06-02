@@ -24,11 +24,10 @@ set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 $DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling of the latest stable versions to CLEAN (!) FreeBSD distribution" 10 40
 clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
- 	   	   93_64F "FreeBSD 9.3 amd64 (new)"\
- 	   	   93_64 "FreeBSD 9.3 amd64 (old)"\
- 	   	   93_32 "FreeBSD 9.3 i386 (bin)"\
-           84_64 "FreeBSD 8.4 amd64 (bin)"\
-           84_32 "FreeBSD 8.4 i386 (bin)"\
+ 	   	   93_64F "FreeBSD 9.3 amd64 (bin)"\
+ 	   	   93_32F "FreeBSD 9.3 i386 (bin)"\
+ 	   	   84_64  "FreeBSD 8.4 amd64 (bin)"\
+           84_32  "FreeBSD 8.4 i386 (bin)"\
             2> /tmp/ubarch
 clear
 
@@ -200,7 +199,7 @@ echo "Everything is okay! Installation is starting."
 #######################################
 case $ARCH in
 93_64F)
-#FreeBSD 9.3 x64 Release need to use Apache 2.4 by default
+#FreeBSD 9.3 x64 Release need to use Apache 2.4 by default and 2.409
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/usr/local/www/apache24/data/"
 APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
@@ -211,17 +210,8 @@ DL_STG_NAME="stg-2.409-rc1.tar.gz"
 DL_STG_RELEASE="stg-2.409-rc1"
 ;;
 
-93_64)
-#FreeBSD 9.3 x64 Release need to use Apache 2.4 by default
-APACHE_VERSION="apache24"
-APACHE_DATA_PATH="/usr/local/www/apache24/data/"
-APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
-APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
-APACHE_CONFIG_PRESET_NAME="httpd24.conf"
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
-;;
 
-93_32)
+93_32F)
 #FreeBSD 9.3 x32 Release need to use Apache 2.4 by default
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/usr/local/www/apache24/data/"
@@ -229,6 +219,8 @@ APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
 APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
 APACHE_CONFIG_PRESET_NAME="httpd24.conf"
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
+DL_STG_NAME="stg-2.409-rc1.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc1"
 ;;
 esac
 #=======================================================
