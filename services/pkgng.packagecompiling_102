@@ -7,7 +7,8 @@ then
   exit
 fi
 
-
+#bootstraping pkgng
+pkg info
 
 PLATFORM=$1
 PKGPATH="/home/"${PLATFORM}
