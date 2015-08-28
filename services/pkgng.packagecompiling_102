@@ -20,12 +20,13 @@ portsnap extract
 portsnap update 
 
 cd /usr/ports/textproc/expat2 && make BATCH=yes install 
+#try compile it, to prevent 5.6 as deps
+cd /usr/ports/databases/mysql51-server/ && make BATCH=yes install
 cd /usr/ports/shells/bash/ && make BATCH=yes install
 cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/devel/libtool && make all && make BATCH=yes install 
 cd /usr/ports/security/sudo && make BATCH=yes install 
 cd /usr/ports/net/isc-dhcp41-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=yes install 
-cd /usr/ports/databases/mysql51-server/ && make BATCH=yes install 
 cd /usr/ports/net-mgmt/net-snmp/ && make WITH="MFD_REWRITES" BATCH=yes install
 cd /usr/ports/lang/php5 && make WITH="CLI"  BATCH=yes install 
 cd /usr/ports/lang/php5-extensions/
