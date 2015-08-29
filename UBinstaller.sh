@@ -226,7 +226,7 @@ DL_STG_RELEASE="stg-2.409-rc1"
 
 
 102_64)
-#FreeBSD 10.2 x64 Release need to use Apache 2.4 by default and 2.409
+#FreeBSD 10.2 x64 Release need to use Apache 2.4 by default and 2.409, CC and CXX env is also required
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/usr/local/www/apache24/data/"
 APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
@@ -235,7 +235,8 @@ APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 DL_STG_NAME="stg-2.409-rc1.tar.gz"
 DL_STG_RELEASE="stg-2.409-rc1"
-env CC=clang CXX=clang++
+setenv CC clang 
+setenv CXX clang++
 ;;
 
 esac
