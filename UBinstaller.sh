@@ -26,6 +26,7 @@ clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	   	   93_64F "FreeBSD 9.3 amd64 (bin)"\
  	   	   93_32F "FreeBSD 9.3 i386 (bin)"\
+ 	   	   102_64 "FreeBSD 10.2 amd64 (bin)"\
  	   	   84_64  "FreeBSD 8.4 amd64 (bin)"\
            84_32  "FreeBSD 8.4 i386 (bin)"\
             2> /tmp/ubarch
@@ -222,6 +223,20 @@ sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 DL_STG_NAME="stg-2.409-rc1.tar.gz"
 DL_STG_RELEASE="stg-2.409-rc1"
 ;;
+
+
+102_64)
+#FreeBSD 10.2 x64 Release need to use Apache 2.4 by default and 2.409
+APACHE_VERSION="apache24"
+APACHE_DATA_PATH="/usr/local/www/apache24/data/"
+APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
+APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
+APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
+sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
+DL_STG_NAME="stg-2.409-rc1.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc1"
+;;
+
 esac
 #=======================================================
 
