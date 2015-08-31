@@ -1,11 +1,11 @@
 #!/bin/sh
 DIALOG=${DIALOG=dialog}
 FETCH="/usr/bin/fetch"
-APACHE_VERSION="apache22"
-APACHE_DATA_PATH="/usr/local/www/apache22/data/"
-APACHE_CONFIG_DIR="/usr/local/etc/apache22/"
-APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache22"
-APACHE_CONFIG_PRESET_NAME="httpd22.conf"
+APACHE_VERSION="apache24"
+APACHE_DATA_PATH="/usr/local/www/apache24/data/"
+APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
+APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
+APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
 APACHE_CONFIG_NAME="httpd.conf"
 
 
@@ -15,8 +15,8 @@ DL_PACKAGES_EXT=".tar.gz"
 DL_UB_URL="http://ubilling.net.ua/"
 DL_UB_NAME="ub.tgz"
 DL_STG_URL="http://ubilling.net.ua/stg/"
-DL_STG_NAME="stg-2.408.tar.gz"
-DL_STG_RELEASE="stg-2.408"
+DL_STG_NAME="stg-2.409-rc1.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc1"
 
 set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
@@ -27,33 +27,12 @@ $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	   	   93_64F "FreeBSD 9.3 amd64 (bin)"\
  	   	   93_32F "FreeBSD 9.3 i386 (bin)"\
  	   	   102_64 "FreeBSD 10.2 amd64 (bin)"\
- 	   	   84_64  "FreeBSD 8.4 amd64 (bin)"\
-           84_32  "FreeBSD 8.4 i386 (bin)"\
             2> /tmp/ubarch
 clear
 
-$DIALOG --menu "UBinstaller mode" 10 65 3 \
-           AUT "Full automatic mode (recommended for dummies)"\
-           MAN "Manual settings mode (advanced settings)"\
-            2> /tmp/ubitransmission
-clear
 
-TRANSMISSION=`cat /tmp/ubitransmission`
-
-case $TRANSMISSION in
-AUT)
+# no more manual transmission anymore
 echo "BIN" > /tmp/ubimode
-;;
-
-MAN)
-$DIALOG --menu "Sofware installation mode" 10 65 3 \
-           BIN "Install dependencies from the binary packages (fast)"\
-           SRC "Install software from the ports (slow)"\
-            2> /tmp/ubimode
-            clear
-            ;;
-esac 
-
 
 #configuring LAN interface
 ALL_IFACES=`grep rnet /var/run/dmesg.boot | cut -f 1 -d ":" | tr "\n" " "`
@@ -74,60 +53,26 @@ sh -c "${INTIF_DIALOG}"
 clear 
 
 #configuring internal network
-case $TRANSMISSION in
-AUT)
 TMP_LAN_IFACE=`cat /tmp/ubiface`
 TMP_NET_DATA=`netstat -rn -f inet | grep ${TMP_LAN_IFACE} | grep "/" | cut -f 1 -d " "`
 TMP_LAN_NETW=`echo ${TMP_NET_DATA} | cut -f 1 -d "/"`
 TMP_LAN_CIDR=`echo ${TMP_NET_DATA} | cut -f 2 -d "/"`
 echo ${TMP_LAN_NETW} > /tmp/ubnetw
 echo ${TMP_LAN_CIDR} > /tmp/ubcidr
-;;
-MAN)
-$DIALOG --title "Users network"  --inputbox "Enter users network (for example, 172.16.0.0)" 8 40 2> /tmp/ubnetw
-clear
-$DIALOG --title "Users network CIDR"  --inputbox "Enter users network CIDR (for example, 24 or 19)" 8 40 2> /tmp/ubcidr
-clear
-;;
-esac
 
 
-#getting mysql password
-case $TRANSMISSION in
-AUT)
+#generating mysql password
 GEN_MYS_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
 echo "mys"${GEN_MYS_PASS} > /tmp/ubmypas
-;;
-MAN)
-$DIALOG --title "MySQL password"  --inputbox "Enter new MySQL password for user root" 8 40 2> /tmp/ubmypas
-clear
-;;
-esac
 
 #getting stargazer admin password
-case $TRANSMISSION in
-AUT)
 GEN_STG_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
 echo "stg"${GEN_STG_PASS} > /tmp/ubstgpass
-;;
-MAN)
-$DIALOG --title "New stargazer admin password"  --inputbox "Enter new password for stargazer administrator" 8 40 2> /tmp/ubstgpass
-clear
-;;
-esac
 
 
 #getting rscriptd encryption password
-case $TRANSMISSION in
-AUT)
 GEN_RSD_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
 echo "rsd"${GEN_RSD_PASS} > /tmp/ubrsd
-;;
-MAN)
-$DIALOG --title "Remote NAS encription key"  --inputbox "Enter password for rscriptd NAS servers" 8 40 2> /tmp/ubrsd
-clear
-;;
-esac
 
 
 $DIALOG --title "Setup NAS"   --yesno "Do you want to install firewall/nat/shaper presets for setup all-in-one Billing+NAS server" 10 40
@@ -185,12 +130,17 @@ rm -fr /tmp/ubrsd
 rm -fr /tmp/ubextif
 rm -fr /tmp/ubarch
 rm -fr /tmp/ubimode
-rm -fr /tmp/ubitransmission
+
 
 #last chance to exit
 $DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Mode: ${UBI_MODE}" 18 60
 AGREE=$?
 clear
+
+# preparing for installation
+mkdir /usr/local/ubinstaller/
+cp -R ./* /usr/local/ubinstaller/
+cd /usr/local/ubinstaller/
 
 case $AGREE in
 0)
@@ -200,41 +150,22 @@ echo "Everything is okay! Installation is starting."
 #######################################
 case $ARCH in
 93_64F)
-#FreeBSD 9.3 x64 Release need to use Apache 2.4 by default and 2.409
-APACHE_VERSION="apache24"
-APACHE_DATA_PATH="/usr/local/www/apache24/data/"
-APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
-APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
-APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
+#FreeBSD 9.3 x64 Release 
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
-DL_STG_NAME="stg-2.409-rc1.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc1"
+/bin/sh pkgng.installer
 ;;
 
 
 93_32F)
-#FreeBSD 9.3 x32 Release need to use Apache 2.4 by default
-APACHE_VERSION="apache24"
-APACHE_DATA_PATH="/usr/local/www/apache24/data/"
-APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
-APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
-APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
+#FreeBSD 9.3 x32 Release
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
-DL_STG_NAME="stg-2.409-rc1.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc1"
+/bin/sh pkgng.installer
 ;;
 
 
 102_64)
-#FreeBSD 10.2 x64 Release need to use Apache 2.4 by default and 2.409, CC and CXX env is also required
-APACHE_VERSION="apache24"
-APACHE_DATA_PATH="/usr/local/www/apache24/data/"
-APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
-APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
-APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
+#FreeBSD 10.2 x64 Release need to use CC and CXX env
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
-DL_STG_NAME="stg-2.409-rc1.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc1"
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 ;;
@@ -242,13 +173,6 @@ export CXX=/usr/bin/clang++
 esac
 #=======================================================
 
-# unpack stargazer and ubilling distributions
-mkdir /usr/local/ubinstaller/
-cp -R ./* /usr/local/ubinstaller/
-cd /usr/local/ubinstaller/
-
-#install pkgng
-/bin/sh pkgng.installer
 
 #check is FreeBSD installation clean
 PKG_COUNT=`/usr/sbin/pkg info | /usr/bin/wc -l`
