@@ -235,8 +235,8 @@ APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 DL_STG_NAME="stg-2.409-rc1.tar.gz"
 DL_STG_RELEASE="stg-2.409-rc1"
-setenv CC clang 
-setenv CXX clang++
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
 ;;
 
 esac
