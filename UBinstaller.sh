@@ -103,6 +103,7 @@ EXTIF_DIALOG="${EXTIF_DIALOG} 2> /tmp/ubextif"
 sh -c "${EXTIF_DIALOG}"
 clear 
 
+
 EXT_IF=`cat /tmp/ubextif`
 ;;
 1)
@@ -169,6 +170,7 @@ sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
+pkg info
 ;;
 
 esac
