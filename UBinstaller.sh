@@ -257,7 +257,14 @@ cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 perl -e "s/APVER_MACRO/${APACHE_VERSION}/g" -pi ../autoubupdate.sh
 cp -R ../autoubupdate.sh $APACHE_DATA_PATH
 
-
+#disabling mysql 5.6 strict trans tables
+if [ -f /usr/local/my.cnf ];
+then
+perl -e "s/,STRICT_TRANS_TABLES//g" -pi /usr/local/my.cnf
+echo "Disabling MySQL STRICT_TRANS_TABLES done"
+else
+echo "Looks like no MySQL STRICT_TRANS_TABLES disable required"
+fi
 
 # start services
 ${APACHE_INIT_SCRIPT} start
@@ -372,6 +379,7 @@ perl -e "s/INT_IF/${LAN_IFACE}/g" -pi /etc/firewall.conf;;
 1)
 echo "no NAS setup required";;
 esac
+
 
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
