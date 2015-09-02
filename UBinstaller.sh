@@ -173,6 +173,14 @@ export CXX=/usr/bin/clang++
 pkg info
 ;;
 
+102_32)
+#FreeBSD 10.2 x32 Release need to use CC and CXX env
+sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+pkg info
+;;
+
 esac
 #=======================================================
 
