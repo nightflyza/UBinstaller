@@ -112,7 +112,8 @@ case $DN_ONLINE_LINKING in
 NO)
 echo "=== No DN online ==";;
 YES)
-ln -fs /etc/stargazer/dn ${APACHE_DATA_PATH}${UBILLING_PATH}/content/dn
+#ln -fs /etc/stargazer/dn ${APACHE_DATA_PATH}${UBILLING_PATH}/content/dn
+mkdir ${APACHE_DATA_PATH}${UBILLING_PATH}/content/dn
 chmod 777 /etc/stargazer/dn ${APACHE_DATA_PATH}${UBILLING_PATH}/content/dn
 echo "=== Linking True Online ===";;
 esac
