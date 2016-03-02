@@ -28,7 +28,7 @@ DEFADM_KILL="NO"
 
 
 #use DN online detection?
-DN_ONLINE_LINKING="NO"
+DN_ONLINE_LINKING="YES"
 
 ######################## END OF CONFIG ########################
 
