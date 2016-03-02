@@ -15,8 +15,8 @@ DL_PACKAGES_EXT=".tar.gz"
 DL_UB_URL="http://ubilling.net.ua/"
 DL_UB_NAME="ub.tgz"
 DL_STG_URL="http://ubilling.net.ua/stg/"
-DL_STG_NAME="stg-2.409-rc1.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc1"
+DL_STG_NAME="stg-2.409-rc2.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc2"
 
 set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
