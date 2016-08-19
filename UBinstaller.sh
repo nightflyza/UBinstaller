@@ -27,9 +27,9 @@ $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	   	   93_64F "FreeBSD 9.3 amd64"\
  	   	   93_32F "FreeBSD 9.3 i386"\
  	   	   103_64 "FreeBSD 10.3 amd64"\
- 	   	   103_32 "FreeBSD 10.3 i386"\
+ 	   	   #103_32 "FreeBSD 10.3 i386"\
  	   	   102_64 "FreeBSD 10.2 amd64"\
- 	   	   #102_32 "FreeBSD 10.2 i386"\
+ 	   	   102_32 "FreeBSD 10.2 i386"\
             2> /tmp/ubarch
 clear
 
