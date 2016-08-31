@@ -1,0 +1,26 @@
+#!/usr/local/bin/php
+<?php
+
+
+if (isset($argv[1])) {
+$down_cmd='ipfw table 4 list | grep "'.trim($argv[1]).'/32"';
+$up_cmd='ipfw table 3 list | grep "'.trim($argv[1]).'/32"';
+print('==================================================='."\n");
+$down_fw=trim(system($down_cmd));
+$up_fw=trim(system($up_cmd));
+
+$down_pipe=str_replace(($argv[1]."/32"),'',$down_fw);
+$up_pipe=str_replace(($argv[1]."/32"),'',$up_fw);
+$down_pipe=trim($down_pipe);
+$up_pipe=trim($up_pipe);
+
+print('||||||||||||||||||[ Download speed ]|||||||||||||||||||'."\n");
+system('ipfw pipe '.$down_pipe.' show');
+print('||||||||||||||||||[ Upload speed ]|||||||||||||||||||||'."\n");
+system('ipfw pipe '.$up_pipe.' show');
+
+print('==================================================='."\n");
+} else {
+print ("Usage: checkspeed ip\n");
+}
+?>

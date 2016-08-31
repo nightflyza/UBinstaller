@@ -1,0 +1,4 @@
+# ==== CUSTOM FIREWALL CONFIG ====
+
+${FwCMD} add  62100 allow tcp from table\(2\) to table\(17\) dst-port 80
+${FwCMD} add  62100 allow tcp from table\(17\) to table\(2\) src-port 80

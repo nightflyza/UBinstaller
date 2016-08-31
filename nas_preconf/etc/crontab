@@ -1,0 +1,3 @@
+3  3  * * *   root   /bin/kill -HUP `cat /var/run/bandwidthd.pid`
+19 0  * * *   root  /usr/local/bin/php /etc/stargazer/dnswitch.php >> /var/log/dn.log 
+12 8  * * *   root  /usr/local/bin/php /etc/stargazer/dnswitch.php >> /var/log/dn.log

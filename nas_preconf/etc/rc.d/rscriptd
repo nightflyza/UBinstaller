@@ -1,0 +1,4 @@
+#!/bin/sh 
+/usr/sbin/rscriptd
+/usr/bin/cpuset -l 0 -t $(procstat -t 0 | /usr/bin/awk '/dummynet/ {print $2}')
+/usr/local/bandwidthd/bandwidthd

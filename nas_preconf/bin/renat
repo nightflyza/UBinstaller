@@ -1,0 +1,2 @@
+#!/bin/sh
+/sbin/ipfw nat 1 delete && /sbin/ipfw nat 1 config log if EXTERNAL_INTERFACE reset same_ports

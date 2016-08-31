@@ -1,0 +1,37 @@
+#!/bin/sh
+
+LOGIN=$1
+IP=$2
+CASH=$4
+ID=$3
+
+
+SPEED=`/etc/rscriptd/GetSpeed $LOGIN`
+UPSPEED=`/etc/rscriptd/GetUpSpeed $LOGIN`
+MAC=`/etc/rscriptd/GetMac $LOGIN`
+SCOUNT="Kbit/s"
+fwcmd="/sbin/ipfw -q"
+arpcmd="/usr/sbin/arp"
+cur_date=`date \+\%Y.\%m.\%d`
+cur_time=`date \+\%H:\%M:\%S`
+
+
+# fix user mac to ip
+${arpcmd} -S $IP "${MAC}"
+
+#SPEED CONTROL
+${fwcmd} pipe `expr $ID + 101` config bw $UPSPEED$SCOUNT queue 32Kbytes
+${fwcmd} pipe `expr $ID + 18101` config bw $SPEED$SCOUNT queue 32Kbytes
+
+${fwcmd} table 47 delete $IP
+
+#new shaper
+${fwcmd} table 3 add $IP `expr $ID + 101`
+${fwcmd} table 4 add $IP `expr $ID + 18101`
+
+# DAY/NIGHT switcher
+/bin/echo $SPEED:`expr $ID + 18101` > /etc/stargazer/dn/$LOGIN
+
+
+# ADD TO LOG
+echo "$cur_date $cur_time CONNECT: ID-$ID;LOGIN-$LOGIN;IP-$IP;CASH-$CASH;SPEED-$SPEED;UPSPEED-$UPSPEED,MAC-$MAC" >> /var/stargazer/allconnect.log
