@@ -11,6 +11,13 @@ dhcpd_ifaces="LAN_IFACE"
 ubilling_enable="YES"
 ubilling_flags="LAN_IFACE"
 
+#netflow sensor
+softflowd_enable="YES"
+softflowd_interfaces="LAN_IFACE"
+softflowd_LAN_IFACE_collector="127.0.0.1:42111"
+
+bandwidthd_enable="YES"
+
 #optional services
 memcached_enable="NO"
 memcached_flags="-l 127.0.0.1 -m 64"

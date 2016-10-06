@@ -30,10 +30,6 @@ start_cmd()
 {
        echo "Starting stargazer"
        /usr/sbin/stargazer || echo "failed to start stargazer"
-       /usr/local/bandwidthd/bandwidthd
-       echo "Bandwidthd started"
-       /usr/local/sbin/softflowd -i ${ubilling_flags} -n 127.0.0.1:42111
-       echo "Softflowd started"
 }
 
 
@@ -53,10 +49,6 @@ stop_postcmd=stop_postcmd
 stop_postcmd()
 {
   echo "Stargazer stopped"
-  killall bandwidthd
-  echo "Bandwidthd stopped"
-  softflowctl shutdown
-  echo "Softflow stoppped"
 }
 
 
