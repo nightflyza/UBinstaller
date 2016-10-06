@@ -325,6 +325,8 @@ perl -e "s/rl0/${LAN_IFACE}/g" -pi ./config/alter.ini
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi /etc/stargazer/stargazer.conf
 #change rscriptd password
 perl -e "s/secretpassword/${RSD_PASS}/g" -pi /etc/stargazer/stargazer.conf
+#change default mukrotik presets password
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 
 # starting stargazer for creating DB
 /usr/sbin/stargazer
