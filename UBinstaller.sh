@@ -255,17 +255,21 @@ exit
 fi
 $DIALOG --infobox "Compiling Stargazer." 4 60
 tar zxvf ${DL_STG_NAME} 2>> /tmp/ubstg.log
+$DIALOG --infobox "Compiling Stargazer.." 4 60
 cd ${DL_STG_RELEASE}/projects/stargazer/ 
 ./build >> /tmp/ubstg.log 2>> /tmp/ubstg.log
 /usr/local/bin/gmake install >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+$DIALOG --infobox "Compiling Stargazer..." 4 60
 #and configurators
 cd ../sgconf 
 ./build >> /tmp/ubstg.log
 /usr/local/bin/gmake >> /tmp/ubstg.log 2>> /tmp/ubstg.log
 /usr/local/bin/gmake install >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+$DIALOG --infobox "Compiling Stargazer...." 4 60
 cd ../sgconf_xml/ 
 ./build >> /tmp/ubstg.log 2>> /tmp/ubstg.log
 /usr/local/bin/gmake >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+$DIALOG --infobox "Compiling Stargazer....." 4 60
 /usr/local/bin/gmake install >> /tmp/ubstg.log 2>> /tmp/ubstg.log
 $DIALOG --infobox "Stargazer installed." 4 60
 
@@ -333,7 +337,7 @@ perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 /usr/sbin/stargazer
 #changing default password
 /usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
-
+echo "Stargazer default password changed."
 #stopping stargazer
 killall stargazer
 
@@ -402,7 +406,7 @@ echo "Ubilling rc script installed."
 echo "127.0.0.1/32 127.0.0.1" > /etc/stargazer/remote_nas.conf
 
 
-#kernel compile 
+#kernel options setup 
 case $NAS_KERNEL in
 0)
 cat /usr/local/ubinstaller/configs/loader.preconf >> /boot/loader.conf
