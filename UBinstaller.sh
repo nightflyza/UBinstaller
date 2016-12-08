@@ -253,7 +253,7 @@ else
 echo "=== Error: stargazer sources are not available. Installation is aborted. ==="
 exit
 fi
-
+echo "Compiling Stargazer."
 tar zxvf ${DL_STG_NAME} 2>> /tmp/ubstg.log
 cd ${DL_STG_RELEASE}/projects/stargazer/ 
 ./build >> /tmp/ubstg.log 2>> /tmp/ubstg.log
@@ -267,6 +267,7 @@ cd ../sgconf_xml/
 ./build >> /tmp/ubstg.log 2>> /tmp/ubstg.log
 /usr/local/bin/gmake >> /tmp/ubstg.log 2>> /tmp/ubstg.log
 /usr/local/bin/gmake install >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+echo "Stargazer installed."
 
 # adding needed boot options
 cat /usr/local/ubinstaller/configs/rc.preconf >> /etc/rc.conf
@@ -354,14 +355,17 @@ touch /var/log/dhcpd.log
 /usr/local/etc/rc.d/isc-dhcpd restart
 /etc/rc.d/syslogd restart
 perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi alter.ini
+echo "dhcpd logging configured."
 
 # unpacking ubapi preset
 cp -R /usr/local/ubinstaller/configs/ubapi /bin/
 chmod a+x /bin/ubapi
+echo "remote API wrapper installed."
 
 # unpacking start scripts templates
 cp -f docs/presets/FreeBSD/etc/stargazer/* /etc/stargazer/
 chmod a+x /etc/stargazer/*
+echo "default user initialization scripts installed."
 
 # changing mysql and interface parameters
 perl -e "s/mylogin/root/g" -pi /etc/stargazer/config
@@ -388,6 +392,7 @@ ln -fs /usr/local/bandwidthd/htdocs ${APACHE_DATA_PATH}band
 #creating rc.script
 cp -R /usr/local/ubinstaller/configs/rc.billing /etc/rc.d/billing
 chmod a+x /etc/rc.d/billing
+echo "Ubilling rc script installed."
 
 #ugly hack for starting stargazer without NAS-es
 echo "127.0.0.1/32 127.0.0.1" > /etc/stargazer/remote_nas.conf
