@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#= Change this to your real Ubilling serial ==
+UBSERIAL=UB000000000000000000000000000000000
+#=============================================
+if [ $# -ne 1 ]
+then
+  echo "Usage: /bin/ubapi \"action\""
+  echo "Example: /bin/ubapi \"backupdb\" or /bin/ubapi \"swping\""
+  exit
+fi
+
+ACTION=$1
+/usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&key=${UBSERIAL}&action=${ACTION}"

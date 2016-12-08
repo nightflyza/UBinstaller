@@ -1,0 +1,2 @@
+!dhcpd
+*.*               /var/log/dhcpd.log

@@ -38,7 +38,7 @@ LOG_FILE="/var/log/ubillingupdate.log"
 
 ######################## INTERFACE SECTION ####################
 
-$DIALOG --title "Ubilling update" --msgbox "This wizard helps you update your Ubilling installation to the the latest stable or current development release" 10 40
+$DIALOG --title "Ubilling update" --msgbox "This wizard help you to update your Ubilling installation to the the latest stable or current development release" 10 40
 clear
 $DIALOG --menu "Choose a Ubilling release branch to which you want to update." 12 65 6 \
  	   	   STABLE "Ubilling latest stable release (recommended)"\
@@ -174,7 +174,7 @@ echo "=== Linking True Online ===";;
 esac
 
 NEW_RELEASE=`cat RELEASE`
-$DIALOG --title "Ubilling update" --msgbox "Ubilling update successfully complete. New your installation release is: ${NEW_RELEASE}" 10 40
+$DIALOG --title "Ubilling update" --msgbox "Ubilling update successfully complete. Now your installation release is: ${NEW_RELEASE}" 10 40
 
 
 #release file not dowloaded

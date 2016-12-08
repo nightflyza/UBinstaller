@@ -348,6 +348,16 @@ perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
 echo "TRUNCATE TABLE users" | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 echo "TRUNCATE TABLE tariffs" | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 
+#preconfiguring dhcpd logging
+cat /usr/local/ubinstaller/configs/syslog.preconf >> /etc/syslog.conf
+touch /var/log/dhcpd.log
+/usr/local/etc/rc.d/isc-dhcpd restart
+/etc/rc.d/syslogd restart
+perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi alter.ini
+
+# unpacking ubapi preset
+cp -R /usr/local/ubinstaller/configs/ubapi /bin/
+chmod a+x /bin/ubapi
 
 # unpacking start scripts templates
 cp -f docs/presets/FreeBSD/etc/stargazer/* /etc/stargazer/
