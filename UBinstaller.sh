@@ -26,6 +26,7 @@ clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	   	   93_64F "FreeBSD 9.3 amd64"\
  	   	   93_32F "FreeBSD 9.3 i386"\
+ 	   	   110_64 "FreeBSD 11.0 amd64"\
  	   	   103_64 "FreeBSD 10.3 amd64"\
  	   	   103_32 "FreeBSD 10.3 i386"\
  	   	   102_64 "FreeBSD 10.2 amd64"\
@@ -199,6 +200,12 @@ export CXX=/usr/bin/clang++
 pkg info
 ;;
 
+110_64)
+#FreeBSD 11.0 x64 Release need to use CC and CXX env
+sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+pkg info
 esac
 #=======================================================
 
