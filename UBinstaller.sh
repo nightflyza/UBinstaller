@@ -156,21 +156,18 @@ echo "Everything is okay! Installation is starting."
 case $ARCH in
 93_64F)
 #FreeBSD 9.3 x64 Release 
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 /bin/sh pkgng.installer
 ;;
 
 
 93_32F)
 #FreeBSD 9.3 x32 Release
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 /bin/sh pkgng.installer
 ;;
 
 
 102_64)
 #FreeBSD 10.2 x64 Release need to use CC and CXX env
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 pkg info
@@ -178,7 +175,6 @@ pkg info
 
 102_32)
 #FreeBSD 10.2 x32 Release need to use CC and CXX env
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 pkg info
@@ -186,7 +182,6 @@ pkg info
 
 103_64)
 #FreeBSD 10.3 x64 Release need to use CC and CXX env
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 pkg info
@@ -194,7 +189,6 @@ pkg info
 
 103_32)
 #FreeBSD 10.3 x32 Release need to use CC and CXX env
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 pkg info
@@ -202,7 +196,6 @@ pkg info
 
 110_64)
 #FreeBSD 11.0 x64 Release need to use CC and CXX env
-sed -I "" "s/apache22_enable/apache24_enable/g" ./configs/rc.preconf
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 pkg info

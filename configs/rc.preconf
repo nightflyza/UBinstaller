@@ -1,8 +1,10 @@
 # ====== added by UBinstaller ====
 
+gateway_enable="YES"
+
 #all needed services
 mysql_enable="YES"
-apache22_enable="YES"
+apache24_enable="YES"
 dhcpd_enable="YES"
 dhcpd_flags="-q"
 dhcpd_conf="/usr/local/etc/multinet/dhcpd.conf"
