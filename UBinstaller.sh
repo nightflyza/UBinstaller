@@ -26,12 +26,7 @@ clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	   	   110_64 "FreeBSD 11.0 amd64"\
  	   	   103_64 "FreeBSD 10.3 amd64"\
- 	   	   103_32 "FreeBSD 10.3 i386"\
- 	   	   102_64 "FreeBSD 10.2 amd64"\
- 	   	   102_32 "FreeBSD 10.2 i386"\
- 	   	   93_64F "FreeBSD 9.3 amd64"\
- 	   	   93_32F "FreeBSD 9.3 i386"\
-            2> /tmp/ubarch
+ 	    2> /tmp/ubarch
 clear
 
 
@@ -154,41 +149,8 @@ echo "Everything is okay! Installation is starting."
 #  Platform specific issues handling  #
 #######################################
 case $ARCH in
-93_64F)
-#FreeBSD 9.3 x64 Release 
-/bin/sh pkgng.installer
-;;
-
-
-93_32F)
-#FreeBSD 9.3 x32 Release
-/bin/sh pkgng.installer
-;;
-
-
-102_64)
-#FreeBSD 10.2 x64 Release need to use CC and CXX env
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
-pkg info
-;;
-
-102_32)
-#FreeBSD 10.2 x32 Release need to use CC and CXX env
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
-pkg info
-;;
-
 103_64)
 #FreeBSD 10.3 x64 Release need to use CC and CXX env
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
-pkg info
-;;
-
-103_32)
-#FreeBSD 10.3 x32 Release need to use CC and CXX env
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 pkg info
