@@ -32,7 +32,7 @@ cd /usr/ports/lang/php56 && make WITH="CLI"  BATCH=yes install
 cd /usr/ports/lang/php56-extensions/
 make WITH="BCMATH CURL GD ICONV MBSTRING MYSQL MYSQLI PDF SNMP SOAP XML XMLREADER XMLWRITER ZIP ZLIB SOCKETS FTP IMAP JSON POSIX PHAR SESSION SIMPLEXML TOKENIZER OPENSSL"  BATCH=yes install 
 cd /usr/ports/www/apache24/ && make BATCH=yes install
-cd /usr/ports/www/mod_php55 && make BATCH=yes install 
+cd /usr/ports/www/mod_php56 && make BATCH=yes install 
 cd /usr/ports/net-mgmt/bandwidthd/ && make BATCH=yes install 
 cd /usr/ports/net-mgmt/softflowd/ && make BATCH=yes install 
 cd /usr/ports/net/arping/ && make BATCH=yes install
