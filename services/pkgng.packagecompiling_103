@@ -16,9 +16,9 @@ ARCHPATH="/home/"${PLATFORM}".tar.gz"
 
 mkdir ${PKGPATH}
 
-#portsnap fetch
-#portsnap extract
-#portsnap update 
+portsnap fetch
+portsnap extract
+portsnap update 
 
 cd /usr/ports/textproc/expat2 && make BATCH=yes install 
 cd /usr/ports/shells/bash/ && make BATCH=yes install
