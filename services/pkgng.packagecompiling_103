@@ -12,6 +12,7 @@ pkg info
 
 PLATFORM=$1
 PKGPATH="/home/"${PLATFORM}
+ARCHDIR="/home/"
 ARCHPATH="/home/"${PLATFORM}".tar.gz"
 
 mkdir ${PKGPATH}
@@ -54,5 +55,6 @@ echo "Creating binary packages"
 pkg create -a -o ${PKGPATH}
 echo "Binary packages created"
 echo "Packing binary packages"
-tar cf - ${PKGPATH} | gzip > ${ARCHPATH}
+cd ${ARCHDIR}
+tar cf - ${PLATFORM} | gzip > ${ARCHPATH}
 echo "Packing binary packages finished: "${ARCHPATH}
