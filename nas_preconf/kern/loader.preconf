@@ -3,15 +3,7 @@ ipfw_load="YES"
 net.inet.ip.fw.default_to_accept="1"
 libalias_load="YES"
 ipfw_nat_load="YES"
-dummynet_load="YES"
+dummynet_load="YES
 
-
-#some tuning
-#hw.igb.rxd=4096
-#hw.igb.txd=4096
-#hw.igb.rx_process_limit=4096
-#hw.igb.max_interrupt_rate=32000
-#net.isr.maxthreads=1024
-#net.isr.bindthreads=1
-#hw.intr_storm_threshold=9000
-
+bridge_load="YES"
+net.link.bridge.inherit_mac="1"
