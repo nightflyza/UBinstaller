@@ -24,6 +24,7 @@ set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 $DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling of the latest stable versions to CLEAN (!) FreeBSD distribution" 10 40
 clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
+		   111_64 "FreeBSD 11.1 amd64"\
  	   	   110_64 "FreeBSD 11.0 amd64"\
  	   	   103_64 "FreeBSD 10.3 amd64"\
  	    2> /tmp/ubarch
@@ -148,20 +149,11 @@ echo "Everything is okay! Installation is starting."
 #######################################
 #  Platform specific issues handling  #
 #######################################
-case $ARCH in
-103_64)
-#FreeBSD 10.3 x64 Release need to use CC and CXX env
+#FreeBSD need to use CC and CXX env
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
+#botstrapping pkg ng
 pkg info
-;;
-
-110_64)
-#FreeBSD 11.0 x64 Release need to use CC and CXX env
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
-pkg info
-esac
 #=======================================================
 
 
