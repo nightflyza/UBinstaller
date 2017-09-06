@@ -17,62 +17,62 @@ ARCHPATH="/home/"${PLATFORM}".tar.gz"
 mkdir ${PKGPATH}
 
 
-pkg install expat2
-pkg install bash
-pkg install gmake
-pkg install libtool
-pkg install sudo
-pkg install isc-dhcp43-server
-pkg install mysql56-server
-pkg install net-snmp
-pkg install php56
-pkg install php56-iconv
-pkg install php56-gd
-pkg install php56-curl
-pkg install php56-bcmath
-pkg install php56-snmp
-pkg install php56-mbstring
-pkg install php56-mysql
-pkg install php56-mysqli
-pkg install php56-xml
-pkg install php56-imap
+pkg install -y expat2
+pkg install -y bash
+pkg install -y gmake
+pkg install -y libtool
+pkg install -y sudo
+pkg install -y isc-dhcp43-server
+pkg install -y mysql56-server
+pkg install -y net-snmp
+pkg install -y php56
+pkg install -y php56-iconv
+pkg install -y php56-gd
+pkg install -y php56-curl
+pkg install -y php56-bcmath
+pkg install -y php56-snmp
+pkg install -y php56-mbstring
+pkg install -y php56-mysql
+pkg install -y php56-mysqli
+pkg install -y php56-xml
+pkg install -y php56-imap
 #yep, php56-pdf extension missing
-pkg install php56-pdflib
-pkg install php56-snmp
-pkg install php56-soap
-pkg install php56-xml
-pkg install php56-xmlreader
-pkg install php56-xmlwriter
-pkg install php56-zip
-pkg install php56-zlib
-pkg install php56-sockets
-pkg install php56-ftp
-pkg install php56-imap
-pkg install php56-json
-pkg install php56-posix
-pkg install php56-phar
-pkg install php56-session
-pkg install php56-simplexml
-pkg install php56-tokenizer
-pkg install php56-openssl
-pkg install apache24
-pkg install mod_php56
-pkg install bandwidthd
-pkg install softflowd
-pkg install arping
-pkg install nmap
-pkg install pecl-xhprof
-pkg install graphviz
-pkg install memcached
-pkg install pecl-memcache
-pkg install pecl-memcached
-pkg install freeradius2
-pkg install vim-lite
-pkg install mc-light
-pkg install nano
-pkg install mtr-nox11
-pkg install wget
-pkg install elinks
+pkg install -y php56-pdflib
+pkg install -y php56-snmp
+pkg install -y php56-soap
+pkg install -y php56-xml
+pkg install -y php56-xmlreader
+pkg install -y php56-xmlwriter
+pkg install -y php56-zip
+pkg install -y php56-zlib
+pkg install -y php56-sockets
+pkg install -y php56-ftp
+pkg install -y php56-imap
+pkg install -y php56-json
+pkg install -y php56-posix
+pkg install -y php56-phar
+pkg install -y php56-session
+pkg install -y php56-simplexml
+pkg install -y php56-tokenizer
+pkg install -y php56-openssl
+pkg install -y apache24
+pkg install -y mod_php56
+pkg install -y bandwidthd
+pkg install -y softflowd
+pkg install -y arping
+pkg install -y nmap
+pkg install -y pecl-xhprof
+pkg install -y graphviz
+pkg install -y memcached
+pkg install -y pecl-memcache
+pkg install -y pecl-memcached
+pkg install -y freeradius2
+pkg install -y vim-lite
+pkg install -y mc-light
+pkg install -y nano
+pkg install -y mtr-nox11
+pkg install -y wget
+pkg install -y elinks
 
 #creating packages
 echo "Creating binary packages"
