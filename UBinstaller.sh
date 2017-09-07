@@ -1,4 +1,10 @@
 #!/bin/sh
+
+# I am a warrior, I have no fear
+# No one will conquer me, I will not die here
+# I will forever be where the killers run free
+# Held unaccountable to the heavens just call me
+
 DIALOG=${DIALOG=dialog}
 FETCH="/usr/bin/fetch"
 APACHE_VERSION="apache24"
@@ -7,7 +13,6 @@ APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
 APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
 APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
 APACHE_CONFIG_NAME="httpd.conf"
-
 
 #some remote paths here
 DL_PACKAGES_URL="http://ubilling.net.ua/packages/"
@@ -404,3 +409,8 @@ echo "Installation has been aborted"
 exit
 ;;
 esac
+
+# I am the chosen one, keep till the rising sun
+# I sacrifice it all for my asservation 
+# When my work is done, there will be no more 
+# Who will destroy me, I am the God of War!
