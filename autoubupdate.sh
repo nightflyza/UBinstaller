@@ -163,6 +163,7 @@ rm -fr ./customs
 
 echo "=== Setting permissions ==="
 chmod -R 777 content/ config/ multinet/ exports/ remote_nas.conf
+chmod -R 777 userstats/config/
 
 case $DN_ONLINE_LINKING in 
 NO)

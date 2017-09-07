@@ -149,7 +149,16 @@ echo "Everything is okay! Installation is starting."
 #######################################
 #  Platform specific issues handling  #
 #######################################
-#FreeBSD need to use CC and CXX env
+
+case $ARCH in
+111_64)
+#FreeBSD 11.1 x64 Release uses PHP70
+APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
+;;
+esac
+
+
+#FreeBSD 10+ need to use CC and CXX env
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 #botstrapping pkg ng
@@ -270,6 +279,7 @@ cp ${DL_UB_NAME} ${APACHE_DATA_PATH}billing/
 cd ${APACHE_DATA_PATH}billing/
 tar zxvf ${DL_UB_NAME} 2>> /tmp/ubweb.log
 chmod -R 777 content/ config/ multinet/ exports/ remote_nas.conf 
+chmod -R 777 userstats/config/
 
 # updating passwords and login in mysql.ini
 perl -e "s/mylogin/root/g" -pi ./config/mysql.ini
