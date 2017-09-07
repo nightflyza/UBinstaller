@@ -41,7 +41,8 @@ cd /usr/ports/devel/pecl-xhprof/ && make BATCH=yes install
 cd /usr/ports/graphics/graphviz/ && make BATCH=yes install
 cd /usr/ports/databases/memcached/ && make BATCH=yes install
 cd /usr/ports/databases/pecl-memcache/ && make BATCH=yes install
-cd /usr/ports/databases/pecl-memcached/ && make BATCH=yes install
+#pecl memcached not working with 5.6 anymore
+#cd /usr/ports/databases/pecl-memcached/ && make BATCH=yes install
 cd /usr/ports/net/freeradius2/ && make WITH="MYSQL USER" BATCH=yes install
 cd /usr/ports/editors/vim-lite/ && make BATCH=yes install
 cd /usr/ports/misc/mc-light/ && make BATCH=yes install
@@ -49,6 +50,7 @@ cd /usr/ports/editors/nano && make BATCH=yes install
 cd /usr/ports/net/mtr-nox11/ &&  make BATCH=yes install
 cd /usr/ports/ftp/wget/ &&  make BATCH=yes install
 cd /usr/ports/www/elinks/ &&  make BATCH=yes install
+
 
 echo "Creating binary packages"
 pkg create -a -o ${PKGPATH}
