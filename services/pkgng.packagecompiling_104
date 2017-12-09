@@ -26,7 +26,7 @@ cd /usr/ports/shells/bash/ && make BATCH=yes install
 cd /usr/ports/devel/gmake && make BATCH=yes install
 cd /usr/ports/devel/libtool && make all && make BATCH=yes install 
 cd /usr/ports/security/sudo && make BATCH=yes install 
-cd /usr/ports/net/isc-dhcp41-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=yes install 
+cd /usr/ports/net/isc-dhcp43-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=yes install 
 cd /usr/ports/databases/mysql56-server/ && make BATCH=yes install
 cd /usr/ports/net-mgmt/net-snmp/ && make WITH="MFD_REWRITES" BATCH=yes install
 cd /usr/ports/lang/php56 && make WITH="CLI"  BATCH=yes install 
