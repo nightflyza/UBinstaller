@@ -33,6 +33,7 @@ $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	   	   110_64 "FreeBSD 11.0 amd64"\
  	   	   104_64 "FreeBSD 10.4 amd64"\
  	   	   103_64 "FreeBSD 10.3 amd64"\
+ 	   	   104_32 "FreeBSD 10.4 i386"\
  	    2> /tmp/ubarch
 clear
 
