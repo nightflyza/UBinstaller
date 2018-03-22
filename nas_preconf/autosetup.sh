@@ -104,7 +104,9 @@ mkdir /var/stargazer/
 cd /tmp/nas_preconf/
 cp -R ./bin/checkspeed /bin/
 cp -R ./bin/renat /bin/
-chmod a+x /bin/renat /bin/checkspeed
+cp -R ./etc/lactrl.php /usr/local/etc/
+chmod a+x /bin/renat /bin/checkspeed /usr/local/etc/lactrl.php
+
 
 
 #symlink magic
