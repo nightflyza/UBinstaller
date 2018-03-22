@@ -27,6 +27,9 @@ SNMPCOMM="changeme"
 #bandwidthd http path
 BANDWIDTHD_PATH="band"
 
+#firewall preset script
+FIREWALL_PRESET="firewall.conf"
+
 
 ########## end of config section ########
 
@@ -62,7 +65,7 @@ cat rcconf/append_rc.conf >> /etc/rc.conf
 cat rcconf/append_sysctl.conf >> /etc/sysctl.conf
 
 #unpack firewall
-cp etc/firewall.conf /etc/
+cp -R etc/${FIREWALL_PRESET} /etc/firewall.conf
 cat fwcustoms >> /etc/firewall.conf
 chmod a+x /etc/firewall.conf
 
@@ -134,6 +137,7 @@ perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /bin/renat
 perl -e "s/NF_HOST/${NETFLOW_HOST}/g" -pi /etc/firewall.conf
 perl -e "s/INTERNAL_NETWORK/${INT_NET}\/${INT_NET_CIDR}/g" -pi /etc/firewall.conf
 perl -e "s/EXTERNAL_IP/${EXT_IP}/g" -pi /etc/firewall.conf
+perl -e "s/INT_ADDR//${INT_IP}\/${INT_NET_CIDR}/g" -pi /etc/firewall.conf
 perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/firewall.conf
 perl -e "s/INTERNAL_INTERFACE/${INT_IF}/g" -pi /etc/firewall.conf
 perl -e "s/DB_HOST/${MYSQL_HOST}/g" -pi /etc/firewall.conf
