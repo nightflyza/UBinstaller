@@ -6,9 +6,9 @@ echo "WITH_PKGNG=yes" >>  /etc/make.conf
 pkg2ng
 
 #create a repository configuration file
-mkdir /usr/local/etc/pkg
-mkdir /usr/local/etc/pkg/repos
-cat etc/repobsd.preconf  >  /usr/local/etc/pkg/repos/FreeBSD.conf
+#mkdir /usr/local/etc/pkg
+#mkdir /usr/local/etc/pkg/repos
+#cat etc/repobsd.preconf  >  /usr/local/etc/pkg/repos/FreeBSD.conf
 
 #clean deprecated packagesite
-echo >  /usr/local/etc/pkg.conf
+#echo >  /usr/local/etc/pkg.conf
