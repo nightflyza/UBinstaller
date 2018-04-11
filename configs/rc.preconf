@@ -20,7 +20,7 @@ softflowd_LAN_IFACE_collector="127.0.0.1:42111"
 
 #optional services
 memcached_enable="NO"
-memcached_flags="-l 127.0.0.1 -m 64"
+memcached_flags="-l 127.0.0.1 -m 128 -I 10M"
 radiusd_enable="NO"
 
 # ==========
