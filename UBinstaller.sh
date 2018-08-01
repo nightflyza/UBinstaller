@@ -38,6 +38,14 @@ $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
  	    2> /tmp/ubarch
 clear
 
+#configuring stargazer release
+clear
+$DIALOG --menu "Choose Stargazer release" 16 50 8 \
+                   409RC2 "Stargazer 2.409-rc2 (stable)"\
+                   409RC5 "Stargazer 2.409-rc5 (testing)"\
+            2> /tmp/stgver
+clear
+
 
 # no more manual transmission anymore
 echo "BIN" > /tmp/ubimode
@@ -128,6 +136,7 @@ STG_PASS=`cat /tmp/ubstgpass`
 RSD_PASS=`cat /tmp/ubrsd`
 ARCH=`cat /tmp/ubarch`
 UBI_MODE=`cat /tmp/ubimode`
+STG_VER=`cat /tmp/stgver`
 
 # cleaning temp files
 rm -fr /tmp/ubiface
@@ -139,6 +148,7 @@ rm -fr /tmp/ubrsd
 rm -fr /tmp/ubextif
 rm -fr /tmp/ubarch
 rm -fr /tmp/ubimode
+rm -fr /tmp/stgver
 
 
 #last chance to exit
@@ -177,6 +187,14 @@ export CXX=/usr/bin/clang++
 #botstrapping pkg ng
 pkg info
 #=======================================================
+
+#Selecting stargazer release to install
+case $STG_VER in
+409RC5)
+DL_STG_NAME="stg-2.409-rc5.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc5"
+;;
+esac
 
 
 #check is FreeBSD installation clean
