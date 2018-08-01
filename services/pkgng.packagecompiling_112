@@ -1,0 +1,61 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: sh pkgng.packagecompiling \"PLATFORM\""
+  echo "Example: sh pkgng.packagecompiling \"112_64\" or sh pkgng.packagecompiling \"112_32\""
+  exit
+fi
+
+#bootstraping pkgng
+pkg info
+
+PLATFORM=$1
+PKGPATH="/home/"${PLATFORM}
+ARCHPATH="/home/"${PLATFORM}".tar.gz"
+
+mkdir ${PKGPATH}
+
+#portsnap fetch
+#portsnap extract
+#portsnap update 
+
+cd /usr/ports/textproc/expat2 && make BATCH=yes install 
+cd /usr/ports/shells/bash/ && make BATCH=yes install
+cd /usr/ports/devel/gmake && make BATCH=yes install
+cd /usr/ports/devel/libtool && make all && make BATCH=yes install 
+cd /usr/ports/security/sudo && make BATCH=yes install 
+cd /usr/ports/net/isc-dhcp43-server/ && make WITHOUT_DHCP_PARANOIA=yes  BATCH=yes install 
+cd /usr/ports/databases/mysql56-server/ && make BATCH=yes install
+cd /usr/ports/net-mgmt/net-snmp/ && make WITH="MFD_REWRITES" BATCH=yes install
+cd /usr/ports/lang/php70 && make WITH="CLI"  BATCH=yes install 
+cd /usr/ports/lang/php70-extensions/
+make WITH="BCMATH CURL GD ICONV MBSTRING MYSQL MYSQLI PDF SNMP SOAP XML XMLREADER XMLWRITER ZIP ZLIB SOCKETS FTP IMAP JSON POSIX PHAR SESSION SIMPLEXML TOKENIZER OPENSSL"  BATCH=yes install 
+cd /usr/ports/www/apache24/ && make BATCH=yes install
+cd /usr/ports/www/mod_php70 && make BATCH=yes install 
+cd /usr/ports/net-mgmt/bandwidthd/ && make BATCH=yes install 
+cd /usr/ports/net-mgmt/softflowd/ && make BATCH=yes install 
+cd /usr/ports/net/arping/ && make BATCH=yes install
+cd /usr/ports/security/nmap && make BATCH=yes install
+#xhprof not accessible in php70
+cd /usr/ports/devel/pecl-xhprof/ && make BATCH=yes install
+cd /usr/ports/graphics/graphviz/ && make BATCH=yes install
+cd /usr/ports/databases/memcached/ && make BATCH=yes install
+cd /usr/ports/databases/pecl-memcache/ && make BATCH=yes install
+cd /usr/ports/databases/pecl-memcached/ && make BATCH=yes install
+cd /usr/ports/net/freeradius2/ && make WITH="MYSQL USER" BATCH=yes install
+cd /usr/ports/editors/vim-lite/ && make BATCH=yes install
+cd /usr/ports/misc/mc-light/ && make BATCH=yes install
+cd /usr/ports/editors/nano && make BATCH=yes install
+cd /usr/ports/net/mtr-nox11/ &&  make BATCH=yes install
+cd /usr/ports/ftp/wget/ &&  make BATCH=yes install
+cd /usr/ports/www/elinks/ &&  make BATCH=yes install
+cd /usr/ports/lang/expect/ &&  make BATCH=yes install
+
+
+echo "Creating binary packages"
+pkg create -a -o ${PKGPATH}
+echo "Binary packages created"
+echo "Packing binary packages"
+tar cf - ${PKGPATH} | gzip > ${ARCHPATH}
+echo "Packing binary packages finished: "${ARCHPATH}

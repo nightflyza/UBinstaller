@@ -29,6 +29,7 @@ set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 $DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling of the latest stable versions to CLEAN (!) FreeBSD distribution" 10 40
 clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
+	           112_64 "FreeBSD 11.2 amd64"\
 		   111_64 "FreeBSD 11.1 amd64"\
  	   	   110_64 "FreeBSD 11.0 amd64"\
  	   	   104_64 "FreeBSD 10.4 amd64"\
@@ -158,6 +159,11 @@ echo "Everything is okay! Installation is starting."
 #######################################
 
 case $ARCH in
+112_64)
+#FreeBSD 11.2 x64 Release uses PHP70
+APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
+;;
+
 111_64)
 #FreeBSD 11.1 x64 Release uses PHP70
 APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
