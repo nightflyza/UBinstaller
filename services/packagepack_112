@@ -1,0 +1,94 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: sh packagepack_ver \"PLATFORM\""
+  echo "Example: sh packagepack_112 112_64 or sh packagepack_112 112_32"
+  exit
+fi
+
+#bootstraping pkgng
+pkg info
+
+PLATFORM=$1
+PKGPATH="/home/"${PLATFORM}
+ARCHPATH="/home/DRAFT_"${PLATFORM}".tar.gz"
+
+mkdir ${PKGPATH}
+
+#installing packages
+pkg install -y bash
+pkg install -y expat
+pkg install -y gmake
+pkg install -y isc-dhcp43-server
+pkg install -y libtool
+pkg install -y memcached
+pkg install -y redis
+pkg install -y mysql56-client
+pkg install -y mysql56-server
+pkg install -y apache24
+pkg install -y php70
+pkg install -y mod_php70
+pkg install -y php70-bcmath
+pkg install -y php70-ctype
+pkg install -y php70-curl
+pkg install -y php70-dom
+pkg install -y php70-extensions
+pkg install -y php70-filter
+pkg install -y php70-ftp
+pkg install -y php70-gd
+pkg install -y php70-hash
+pkg install -y php70-iconv
+pkg install -y php70-imap
+pkg install -y php70-json
+pkg install -y php70-mbstring
+pkg install -y php70-mysqli
+pkg install -y php70-opcache
+pkg install -y php70-openssl
+pkg install -y php70-pdo
+pkg install -y php70-pdo_sqlite
+pkg install -y php70-phar
+pkg install -y php70-posix
+pkg install -y php70-session
+pkg install -y php70-simplexml
+pkg install -y php70-snmp
+pkg install -y php70-soap
+pkg install -y php70-sockets
+pkg install -y php70-sqlite3
+pkg install -y php70-tokenizer
+pkg install -y php70-xml
+pkg install -y php70-xmlreader
+pkg install -y php70-xmlwriter
+pkg install -y php70-zip
+pkg install -y php70-zlib
+pkg install -y php70-pecl-pdflib
+pkg install -y php70-pecl-memcached
+pkg install -y php70-pecl-redis
+
+
+pkg install -y graphviz
+pkg install -y softflowd
+pkg install -y sqlite3
+pkg install -y sudo
+pkg install -y vim-tiny
+pkg install -y wget
+pkg install -y arping
+pkg install -y bandwidthd
+pkg install -y elinks
+pkg install -y mc-light
+pkg install -y nano
+pkg install -y nmap
+pkg install -y mtr-nox11
+pkg install -y expect
+
+
+#freeradius3 required to build with MySQL support
+cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
+
+
+echo "Creating binary packages"
+pkg create -a -o ${PKGPATH}
+echo "Binary packages created"
+echo "Packing binary packages"
+tar cf - ${PKGPATH} | gzip > ${ARCHPATH}
+echo "Packing binary packages finished: "${ARCHPATH}
