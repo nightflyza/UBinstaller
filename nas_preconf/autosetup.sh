@@ -35,7 +35,7 @@ FIREWALL_PRESET="firewall.conf"
 
 #binary packages repo
 DL_REPO="http://ubilling.net.ua/packages/"
-#supported NAS_93_64 or NAS_103_64 and NAS_110_64 and NAS_111_64 and NAS_112_64 or NAS_120_64
+#supported NAS_120_64
 DL_NAME="NAS_120_64"
 DL_EXT=".tar.gz"
 #stargazer sources
