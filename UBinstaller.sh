@@ -29,7 +29,7 @@ set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 $DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling of the latest stable versions to CLEAN (!) FreeBSD distribution" 10 40
 clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
-	       120_64 "FreeBSD 11.2 amd64"\
+	       120_64 "FreeBSD 12.0 amd64"\
 	       112_64 "FreeBSD 11.2 amd64"\
  	    2> /tmp/ubarch
 clear
