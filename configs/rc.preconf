@@ -18,9 +18,18 @@ softflowd_enable="YES"
 softflowd_interfaces="LAN_IFACE"
 softflowd_LAN_IFACE_collector="127.0.0.1:42111"
 
-#optional services
+#Caching engines
+redis_enable="NO"
 memcached_enable="NO"
-memcached_flags="-l 127.0.0.1 -m 128 -I 10M"
+memcached_flags="-l 127.0.0.1 -m 256 -I 16M"
+
+#FreeRADIUS
 radiusd_enable="NO"
 
+
+fsck_y_enable="YES"
+background_fsck="NO"
+
+
 # ==========
+
