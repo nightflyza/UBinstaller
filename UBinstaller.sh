@@ -359,7 +359,7 @@ touch /var/log/dhcpd.log
 perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi ./config/alter.ini
 echo "dhcpd logging configured."
 
-#first install flag setup
+#first install flag setup for the future
 touch ./exports/FIRST_INSTALL
 chmod 777 ./exports/FIRST_INSTALL
 
@@ -428,6 +428,35 @@ perl -e "s/,STRICT_TRANS_TABLES//g" -pi /usr/local/my.cnf
 echo "Disabling MySQL STRICT_TRANS_TABLES done"
 else
 echo "Looks like no MySQL STRICT_TRANS_TABLES disable required"
+fi
+
+#Multigen/FreeRADIUS3 preconfiguration
+cd /usr/local/www/apache24/data/billing
+cp -R ./docs/multigen/raddb3/* /usr/local/etc/raddb/
+setenv RADVER `radiusd -v | grep "radiusd: FreeRADIUS Version" | awk '{print $4}' | tr -d ,`
+sed -i.bak "s/\/usr\/local\/lib\/freeradius-3.0.16/\/usr\/local\/lib\/freeradius-$RADVER/" /usr/local/etc/raddb/radiusd.conf
+cat ./docs/multigen/dump.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+cat ./docs/multigen/radius3_fix.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /usr/local/etc/raddb/sql.conf
+
+#starting stargazer
+/usr/sbin/stargazer
+
+#initial crontab configuration
+cd /usr/local/www/apache24/data/billing
+if [ -f ./docs/crontab/crontab.preconf ];
+then
+#generating new Ubilling serial
+/usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
+NEW_UBSERIAL=`cat ./exports/ubserial`
+echo "New Ubilling serial generated"
+crontab ./docs/crontab/crontab.preconf
+echo "Installing default crontab preset"
+#updating serial in ubapi wrapper
+perl -e "s/UB000000000000000000000000000000000/${NEW_UBSERIAL}/g" -pi /bin/ubapi
+echo "New serial installed into ubapi wrapper"
+else
+echo "Looks like this Ubilling release not support automatic crontab configuration"
 fi
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
