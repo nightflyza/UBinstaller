@@ -183,14 +183,15 @@ $DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \
 AGREE=$?
 clear
 
+case $AGREE in
+0)
+echo "Everything is okay! Installation is starting."
+
 # preparing for installation
 mkdir /usr/local/ubinstaller/
 cp -R ./* /usr/local/ubinstaller/
 cd /usr/local/ubinstaller/
 
-case $AGREE in
-0)
-echo "Everything is okay! Installation is starting."
 #######################################
 #  Platform specific issues handling  #
 #######################################
