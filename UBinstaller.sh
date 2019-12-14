@@ -459,6 +459,9 @@ else
 echo "Looks like this Ubilling release not support automatic crontab configuration"
 fi
 
+#stopping stargazer again to prevent data corruption and force server rebooting
+killall stargazer
+
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
 
 ;;
