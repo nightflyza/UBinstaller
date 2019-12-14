@@ -26,8 +26,21 @@ DL_STG_RELEASE="stg-2.409-rc2"
 set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
 # config interface section 
-$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling of the latest stable versions to CLEAN (!) FreeBSD distribution" 10 40
 clear
+$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling of the latest stable versions to CLEAN (!) FreeBSD distribution" 10 50
+clear
+
+#new or migration installation
+clear
+$DIALOG --menu "Type of Ubilling installation" 10 75 8 \
+                   NEW "This is new Ubilling installation"\
+                   MIG "Migrating existing Ubilling setup from another server"\
+            2> /tmp/insttype
+
+clear
+
+
+
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
 		   121_64 "FreeBSD 12.1 amd64"\
 	       120_64 "FreeBSD 12.0 amd64"\
@@ -42,6 +55,7 @@ $DIALOG --menu "Choose Stargazer release" 16 50 8 \
                    409RC5 "Stargazer 2.409-rc5 (testing)"\
             2> /tmp/stgver
 clear
+
 
 
 # no more manual transmission anymore
@@ -74,25 +88,11 @@ echo ${TMP_LAN_NETW} > /tmp/ubnetw
 echo ${TMP_LAN_CIDR} > /tmp/ubcidr
 
 
-#generating mysql password
-GEN_MYS_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
-echo "mys"${GEN_MYS_PASS} > /tmp/ubmypas
-
-#getting stargazer admin password
-GEN_STG_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
-echo "stg"${GEN_STG_PASS} > /tmp/ubstgpass
-
-
-#getting rscriptd encryption password
-GEN_RSD_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
-echo "rsd"${GEN_RSD_PASS} > /tmp/ubrsd
-
-
+#NAT etc presets setup
+clear
 $DIALOG --title "Setup NAS"   --yesno "Do you want to install firewall/nat/shaper presets for setup all-in-one Billing+NAS server" 10 40
 NAS_KERNEL=$?
 clear
-
-
 
 case $NAS_KERNEL in
 0)
@@ -124,9 +124,38 @@ EXT_IF="none"
 esac
 
 
+#some passwords generation or manual input
+PASSW_MODE=`cat /tmp/insttype`
+
+case $PASSW_MODE in
+NEW)
+#generating mysql password
+GEN_MYS_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
+echo "mys"${GEN_MYS_PASS} > /tmp/ubmypass
+
+#getting stargazer admin password
+GEN_STG_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
+echo "stg"${GEN_STG_PASS} > /tmp/ubstgpass
+
+
+#getting rscriptd encryption password
+GEN_RSD_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5 | cut -b-8`
+echo "rsd"${GEN_RSD_PASS} > /tmp/ubrsd
+;;
+MIG)
+#request previous MySQL/Stargazer/rscriptd passwords
+clear
+$DIALOG --title "MySQL root password"  --inputbox "Enter your previous installation MySQL root password" 8 50 2> /tmp/ubmypass
+clear
+$DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 50 2> /tmp/ubstgpass
+clear
+$DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 50 2> /tmp/ubrsd
+;;
+esac
+
 
 LAN_IFACE=`cat /tmp/ubiface`
-MYSQL_PASSWD=`cat /tmp/ubmypas`
+MYSQL_PASSWD=`cat /tmp/ubmypass`
 LAN_NETW=`cat /tmp/ubnetw`
 LAN_CIDR=`cat /tmp/ubcidr`
 STG_PASS=`cat /tmp/ubstgpass`
@@ -137,7 +166,7 @@ STG_VER=`cat /tmp/stgver`
 
 # cleaning temp files
 rm -fr /tmp/ubiface
-rm -fr /tmp/ubmypas
+rm -fr /tmp/ubmypass
 rm -fr /tmp/ubnetw
 rm -fr /tmp/ubcidr
 rm -fr /tmp/ubstgpass
@@ -146,6 +175,7 @@ rm -fr /tmp/ubextif
 rm -fr /tmp/ubarch
 rm -fr /tmp/ubimode
 rm -fr /tmp/stgver
+rm -fr /tmp/insttype
 
 
 #last chance to exit
@@ -456,7 +486,7 @@ echo "Installing default crontab preset"
 perl -e "s/UB000000000000000000000000000000000/${NEW_UBSERIAL}/g" -pi /bin/ubapi
 echo "New serial installed into ubapi wrapper"
 else
-echo "Looks like this Ubilling release not support automatic crontab configuration"
+echo "Looks like this Ubilling release is not supporting automatic crontab configuration"
 fi
 
 #stopping stargazer again to prevent data corruption and force server rebooting
