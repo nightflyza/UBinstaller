@@ -23,6 +23,7 @@ pkg install -y expat
 pkg install -y gmake
 pkg install -y isc-dhcp44-server
 pkg install -y libtool
+pkg install -y autoconf
 pkg install -y memcached
 pkg install -y redis
 pkg install -y mysql56-client
@@ -84,6 +85,7 @@ pkg install -y expect
 pkg install -y bwm-ng
 pkg install -y ifstat
 pkg install -y iperf
+pkg install -y ap24-mod_rpaf2
 
 
 
