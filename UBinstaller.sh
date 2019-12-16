@@ -197,7 +197,7 @@ cd /usr/local/ubinstaller/
 #######################################
 
 case $ARCH in
-121_6D)
+121_6T)
 #FreeBSD 12.1 x64 Release uses PHP74
 APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
 ;;
