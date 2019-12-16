@@ -469,6 +469,10 @@ sed -i.bak "s/\/usr\/local\/lib\/freeradius-3.0.16/\/usr\/local\/lib\/freeradius
 cat ./docs/multigen/dump.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 cat ./docs/multigen/radius3_fix.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /usr/local/etc/raddb/sql.conf
+#adding current hostname to fix resolve issues
+CURR_HOSTNAME=`hostname`
+echo "127.0.0.1 ${CURR_HOSTNAME} ${CURR_HOSTNAME}.localdomain" >> /etc/hosts
+
 
 #starting stargazer
 /usr/sbin/stargazer
