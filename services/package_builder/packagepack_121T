@@ -84,8 +84,10 @@ pkg install -y expect
 pkg install -y bwm-ng
 pkg install -y ifstat
 pkg install -y iperf
+pkg install -y arpwatch
 pkg install -y ap24-mod_rpaf2
 pkg install -y git
+
 
 #freeradius3 required to build with MySQL support
 cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
