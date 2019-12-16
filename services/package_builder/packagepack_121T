@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
 then
   echo "Usage: sh packagepack_ver \"PLATFORM\""
-  echo "Example: sh packagepack_121 121_64 or sh packagepack_121 121_32"
+  echo "Example: sh packagepack_121T 121_6T or sh packagepack_121T 121_3T"
   exit
 fi
 
@@ -29,43 +29,42 @@ pkg install -y redis
 pkg install -y mysql56-client
 pkg install -y mysql56-server
 pkg install -y apache24
-pkg install -y php71
-pkg install -y mod_php71
-pkg install -y php71-bcmath
-pkg install -y php71-ctype
-pkg install -y php71-curl
-pkg install -y php71-dom
-pkg install -y php71-extensions
-pkg install -y php71-filter
-pkg install -y php71-ftp
-pkg install -y php71-gd
-pkg install -y php71-hash
-pkg install -y php71-iconv
-pkg install -y php71-imap
-pkg install -y php71-json
-pkg install -y php71-mbstring
-pkg install -y php71-mysqli
-pkg install -y php71-opcache
-pkg install -y php71-openssl
-pkg install -y php71-pdo
-pkg install -y php71-pdo_sqlite
-pkg install -y php71-phar
-pkg install -y php71-posix
-pkg install -y php71-session
-pkg install -y php71-simplexml
-pkg install -y php71-snmp
-pkg install -y php71-soap
-pkg install -y php71-sockets
-pkg install -y php71-sqlite3
-pkg install -y php71-tokenizer
-pkg install -y php71-xml
-pkg install -y php71-xmlreader
-pkg install -y php71-xmlwriter
-pkg install -y php71-zip
-pkg install -y php71-zlib
-#pkg install -y php71-pecl-pdflib
-pkg install -y php71-pecl-memcached
-pkg install -y php71-pecl-redis
+pkg install -y php74
+pkg install -y mod_php74
+pkg install -y php74-bcmath
+pkg install -y php74-ctype
+pkg install -y php74-curl
+pkg install -y php74-dom
+pkg install -y php74-extensions
+pkg install -y php74-filter
+pkg install -y php74-ftp
+pkg install -y php74-gd
+pkg install -y php74-hash
+pkg install -y php74-iconv
+pkg install -y php74-imap
+pkg install -y php74-json
+pkg install -y php74-mbstring
+pkg install -y php74-mysqli
+pkg install -y php74-opcache
+pkg install -y php74-openssl
+pkg install -y php74-pdo
+pkg install -y php74-pdo_sqlite
+pkg install -y php74-phar
+pkg install -y php74-posix
+pkg install -y php74-session
+pkg install -y php74-simplexml
+pkg install -y php74-snmp
+pkg install -y php74-soap
+pkg install -y php74-sockets
+pkg install -y php74-sqlite3
+pkg install -y php74-tokenizer
+pkg install -y php74-xml
+pkg install -y php74-xmlreader
+pkg install -y php74-xmlwriter
+pkg install -y php74-zip
+pkg install -y php74-zlib
+pkg install -y php74-pecl-memcached
+pkg install -y php74-pecl-redis
 
 
 pkg install -y graphviz
@@ -87,14 +86,18 @@ pkg install -y ifstat
 pkg install -y iperf
 pkg install -y ap24-mod_rpaf2
 
-
-
 #freeradius3 required to build with MySQL support
 cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
+
+#memcached pecl build for PHP 7.4
+portsnap fetch && portsnap extract && portsnap update
+cd /usr/ports/databases/pecl-memcached &&  make BATCH=yes install
+
 
 
 echo "Creating binary packages"
 pkg create -a -o ${PKGPATH}
+pkg create  -o ${PKGPATH} -g bash
 echo "Binary packages created"
 cd ${PKGROOT}
 echo "Packing binary packages"
