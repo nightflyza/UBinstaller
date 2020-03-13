@@ -1,4 +1,4 @@
-host = DB_HOST
-username = DB_LOGIN
-password = DB_PASS
-database = DB_DB
+host = localhost
+username = mylogin
+password = newpassword
+database = stg

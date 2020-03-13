@@ -126,10 +126,11 @@ echo "smuxsocket  1.0.0.0" >> /usr/local/etc/snmpd.config
 
 
 #update ub handlers config and rscriptd
-perl -e "s/DB_HOST/${MYSQL_HOST}/g" -pi /etc/rscriptd/config
-perl -e "s/DB_LOGIN/${MYSQL_LOGIN}/g" -pi /etc/rscriptd/config
-perl -e "s/DB_PASS/${MYSQL_PASSWORD}/g" -pi /etc/rscriptd/config
-perl -e "s/DB_DB/${MYSQL_DB}/g" -pi /etc/rscriptd/config
+perl -e "s/localhost/${MYSQL_HOST}/g" -pi /etc/rscriptd/config
+perl -e "s/mylogin/${MYSQL_LOGIN}/g" -pi /etc/rscriptd/config
+perl -e "s/newpassword/${MYSQL_PASSWORD}/g" -pi /etc/rscriptd/config
+perl -e "s/stg/${MYSQL_DB}/g" -pi /etc/rscriptd/config
+
 perl -e "s/RS_KEY/${RSCRIPTD_KEY}/g" -pi /etc/rscriptd/rscriptd.conf
 perl -e "s/RS_KEY/${RSCRIPTD_KEY}/g" -pi /etc/stargazer/rscriptd.conf
 perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /bin/renat
@@ -144,11 +145,10 @@ perl -e "s/INTERNAL_INTERFACE/${INT_IF}/g" -pi /etc/firewall.conf
 perl -e "s/DB_HOST/${MYSQL_HOST}/g" -pi /etc/firewall.conf
 
 #update dnswitch
-perl -e "s/DB_HOST/${MYSQL_HOST}/g" -pi /etc/stargazer/dnswitch.php
-perl -e "s/DB_LOGIN/${MYSQL_LOGIN}/g" -pi /etc/stargazer/dnswitch.php
-perl -e "s/DB_PASS/${MYSQL_PASSWORD}/g" -pi /etc/stargazer/dnswitch.php
-perl -e "s/DB_DB/${MYSQL_DB}/g" -pi /etc/stargazer/dnswitch.php
-perl -e "s/INTERNAL_INTERFACE/${INT_IF}/g" -pi /etc/stargazer/dnswitch.php
+perl -e "s/localhost/${MYSQL_HOST}/g" -pi /etc/stargazer/dnswitch.php
+perl -e "s/mylogin/${MYSQL_LOGIN}/g" -pi /etc/stargazer/dnswitch.php
+perl -e "s/newpassword/${MYSQL_PASSWORD}/g" -pi /etc/stargazer/dnswitch.php
+perl -e "s/stg/${MYSQL_DB}/g" -pi /etc/stargazer/dnswitch.php
 
 #update bandwidthd config
 perl -e "s/INTERNAL_INTERFACE/${INT_IF}/g" -pi /usr/local/bandwidthd/etc/bandwidthd.conf
