@@ -76,6 +76,9 @@ cd ${DL_NAME}
 echo "Installing required software..."
 pkg add ./*
 
+#installing nginx
+pkg install -y nginx
+
 #back to setup dir
 cd /tmp/nas_preconf/
 
