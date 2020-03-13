@@ -5,7 +5,6 @@
 
 #external internet interface
 EXT_IF="igb1"
-EXT_IP="1.2.3.5"
 
 #internal lan interface
 INT_IF="igb0"
@@ -139,7 +138,6 @@ perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /bin/renat
 #update firewall
 perl -e "s/NF_HOST/${NETFLOW_HOST}/g" -pi /etc/firewall.conf
 perl -e "s/INTERNAL_NETWORK/${INT_NET}\/${INT_NET_CIDR}/g" -pi /etc/firewall.conf
-perl -e "s/EXTERNAL_IP/${EXT_IP}/g" -pi /etc/firewall.conf
 perl -e "s/INT_ADDR/${INT_IP}\/${INT_NET_CIDR}/g" -pi /etc/firewall.conf
 perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/firewall.conf
 perl -e "s/INTERNAL_INTERFACE/${INT_IF}/g" -pi /etc/firewall.conf
