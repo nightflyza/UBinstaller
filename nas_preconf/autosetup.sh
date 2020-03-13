@@ -35,8 +35,8 @@ FIREWALL_PRESET="firewall.conf"
 
 #binary packages repo
 DL_REPO="http://ubilling.net.ua/packages/"
-#supported NAS_120_64 or NAS_112_64
-DL_NAME="NAS_120_64"
+#binary packages distro
+DL_NAME="121_6T"
 DL_EXT=".tar.gz"
 #stargazer sources
 DL_STG_URL="http://ubilling.net.ua/stg/"
@@ -44,8 +44,6 @@ DL_STG_REL="stg-2.409-rc2"
 DL_STG_EXT=".tar.gz"
 
 #########################################
-
-sh pkgng.installer
 
 
 #setting up binary packages
@@ -59,28 +57,29 @@ pkg add ./*
 cd /tmp/nas_preconf/
 
 #update rc.conf
-cat rcconf/append_rc.conf >> /etc/rc.conf
+cat configs/append_rc.conf >> /etc/rc.conf
 
 #update sysctl.conf
-cat rcconf/append_sysctl.conf >> /etc/sysctl.conf
+cat configs/append_sysctl.conf >> /etc/sysctl.conf
 
 #unpack firewall
-cp -R etc/${FIREWALL_PRESET} /etc/firewall.conf
-cat fwcustoms >> /etc/firewall.conf
+cp -R configs/${FIREWALL_PRESET} /etc/firewall.conf
+cat configs/fwcustoms >> /etc/firewall.conf
 chmod a+x /etc/firewall.conf
 
 #update crontab
-cat etc/crontab >> /etc/crontab
+cat configs/crontab >> /etc/crontab
 
 #php opts
-cat etc/php.ini >> /usr/local/etc/php.ini
+cat configs/php.ini >> /usr/local/etc/php.ini
 
 #adding needed options to loader conf
-cat kern/loader.preconf >> /boot/loader.conf
+cat configs/loader.preconf >> /boot/loader.conf
 
 
 #setup rscriptd
 cd /tmp/nas_preconf/
+mkdir stg
 cd stg/
 fetch ${DL_STG_URL}${DL_STG_REL}${DL_STG_EXT}
 tar zxvf ${DL_STG_REL}${DL_STG_EXT}
@@ -90,21 +89,21 @@ gmake install
 
 #update configs
 cd /tmp/nas_preconf/
-cp -R ./etc/rscriptd /etc/
+cp -R ./configs/rscriptd /etc/
 chmod -R a+x /etc/rscriptd
-cp -R ./etc/stargazer /etc/
+cp -R ./configs/stargazer /etc/
 chmod -R a+x /etc/stargazer
 chmod -R 777 /etc/stargazer/dn
-cp -R ./etc/rc.d /etc/
+cp -R ./configs/rc.d /etc/
 chmod a+x /etc/rc.d/rscriptd
-cp ./etc/bandwidthd.conf /usr/local/bandwidthd/etc/
+cp ./configs/bandwidthd.conf /usr/local/bandwidthd/etc/
 mkdir /var/stargazer/ 
 
 #unpack helpful scripts
 cd /tmp/nas_preconf/
-cp -R ./bin/checkspeed /bin/
-cp -R ./bin/renat /bin/
-cp -R ./etc/lactrl.php /usr/local/etc/
+cp -R ./apps/checkspeed /bin/
+cp -R ./apps/renat /bin/
+cp -R ./apps/lactrl.php /usr/local/etc/
 chmod a+x /bin/renat /bin/checkspeed /usr/local/etc/lactrl.php
 
 
@@ -113,7 +112,7 @@ chmod a+x /bin/renat /bin/checkspeed /usr/local/etc/lactrl.php
 mkdir /usr/local/www/data
 mv /usr/local/bandwidthd/htdocs /usr/local/www/data/${BANDWIDTHD_PATH}
 ln -fs /usr/local/www/data/${BANDWIDTHD_PATH}/ /usr/local/bandwidthd/htdocs
-cp -R ./etc/nginx.conf  /usr/local/etc/nginx/
+cp -R ./configs/nginx.conf  /usr/local/etc/nginx/
 chmod a-x /etc/rc.d/sendmail
 echo "NO WAY!" > /usr/local/www/data/index.html
 
