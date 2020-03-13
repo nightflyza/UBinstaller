@@ -44,12 +44,36 @@ DL_STG_EXT=".tar.gz"
 
 #########################################
 
+#botstrapping pkgng
+pkg info
+
+#check is FreeBSD installation clean
+PKG_COUNT=`/usr/sbin/pkg info | /usr/bin/wc -l`
+if [ $PKG_COUNT -ge 2 ]
+then
+echo "rscriptd NAS installer supports setup only for clean FreeBSD distribution. Installation is aborted."
+exit
+fi
 
 #setting up binary packages
 DL_URL=${DL_REPO}${DL_NAME}${DL_EXT}
 fetch ${DL_URL}
+
+#check is binary packages download has beed completed
+if [ -f ${DL_NAME}${DL_EXT} ];
+then
+echo "Binary packages download has been completed."
+else
+echo "=== Error: binary packages are not available. Installation is aborted. ==="
+exit
+fi
+
+echo "Unpacking binary packages..."
 tar zxvf ${DL_NAME}${DL_EXT}
 cd ${DL_NAME}
+
+#installing packages
+echo "Installing required software..."
 pkg add ./*
 
 #back to setup dir
@@ -75,18 +99,25 @@ cat configs/php.ini >> /usr/local/etc/php.ini
 #adding needed options to loader conf
 cat configs/loader.preconf >> /boot/loader.conf
 
+#FreeBSD 10+ need to use CC and CXX env
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
 
 #rscriptd build and setup 
 cd /tmp/nas_preconf/
 mkdir stg
 cd stg/
+echo "Downloading stargazer distro..."
 fetch ${DL_STG_URL}${DL_STG_REL}${DL_STG_EXT}
 tar zxvf ${DL_STG_REL}${DL_STG_EXT}
 cd ${DL_STG_REL}/projects/rscriptd/
+echo "Compiling rscriptd..."
 ./build
 gmake install
+echo "rscript installed..."
 
 #updating init scritps and rscriptd configs
+echo "Installing init scripts..."
 cd /tmp/nas_preconf/
 cp -R ./configs/rscriptd /etc/
 chmod -R a+x /etc/rscriptd
@@ -99,6 +130,7 @@ cp ./configs/bandwidthd.conf /usr/local/bandwidthd/etc/
 mkdir /var/stargazer/ 
 
 #installing some helpful scripts
+echo "Installing misc scripts..."
 cd /tmp/nas_preconf/
 cp -R ./apps/checkspeed /bin/
 cp -R ./apps/renat /bin/
@@ -119,6 +151,7 @@ touch /var/log/torture.log
 
 
 ############## updating configs ##############
+echo "Updating configuration files..."
 
 #snmp 
 echo "rocommunity ${SNMPCOMM}" > /usr/local/etc/snmpd.config
@@ -153,4 +186,5 @@ perl -e "s/stg/${MYSQL_DB}/g" -pi /etc/stargazer/dnswitch.php
 perl -e "s/INTERNAL_INTERFACE/${INT_IF}/g" -pi /usr/local/bandwidthd/etc/bandwidthd.conf
 perl -e "s/INTERNAL_NETWORK/${INT_NET}\/${INT_NET_CIDR}/g" -pi /usr/local/bandwidthd/etc/bandwidthd.conf
 
-echo "==== NAS setup complete ===="
+echo "==== NAS setup complete! ===="
+echo "Reboot your server."
