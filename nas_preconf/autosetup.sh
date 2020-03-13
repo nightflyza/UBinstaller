@@ -77,7 +77,7 @@ cat configs/php.ini >> /usr/local/etc/php.ini
 cat configs/loader.preconf >> /boot/loader.conf
 
 
-#setup rscriptd
+#rscriptd build and setup 
 cd /tmp/nas_preconf/
 mkdir stg
 cd stg/
@@ -87,7 +87,7 @@ cd ${DL_STG_REL}/projects/rscriptd/
 ./build
 gmake install
 
-#update configs
+#updating init scritps and rscriptd configs
 cd /tmp/nas_preconf/
 cp -R ./configs/rscriptd /etc/
 chmod -R a+x /etc/rscriptd
@@ -99,7 +99,7 @@ chmod a+x /etc/rc.d/rscriptd
 cp ./configs/bandwidthd.conf /usr/local/bandwidthd/etc/
 mkdir /var/stargazer/ 
 
-#unpack helpful scripts
+#installing some helpful scripts
 cd /tmp/nas_preconf/
 cp -R ./apps/checkspeed /bin/
 cp -R ./apps/renat /bin/
@@ -115,6 +115,7 @@ ln -fs /usr/local/www/data/${BANDWIDTHD_PATH}/ /usr/local/bandwidthd/htdocs
 cp -R ./configs/nginx.conf  /usr/local/etc/nginx/
 chmod a-x /etc/rc.d/sendmail
 echo "NO WAY!" > /usr/local/www/data/index.html
+touch /var/log/torture.log
 
 
 
