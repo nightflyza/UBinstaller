@@ -112,6 +112,7 @@ mkdir ../ub_restore/customs
 
 
 # backup of actual configs and administrators
+mv ./content/documents/onusig ../onusig_bak
 cp .htaccess ../ub_restore/ 2> /dev/null
 cp favicon.ico ../ub_restore/ 2> /dev/null
 cp remote_nas.conf ../ub_restore/
@@ -146,6 +147,8 @@ rm -fr ${UBILLING_RELEASE_NAME}
 
 echo "=== Restoring configs ==="
 cp -R ../ub_restore/* ./
+rm -rf ./content/documents/onusig
+mv ../onusig_bak ./content/documents/onusig
 rm -fr ${UBILLING_RELEASE_NAME}
 echo "deny from all" > ../ub_restore/.htaccess
 
