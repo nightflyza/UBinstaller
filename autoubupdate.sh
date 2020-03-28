@@ -96,6 +96,7 @@ then
 
 echo "=== Create restore point ==="
 mkdir ../ub_restore 2> /dev/null
+rm -rf ../onusig_bak
 rm -fr ../ub_restore/*
 
 echo "=== Move new release to safe place ==="
