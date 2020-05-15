@@ -463,12 +463,24 @@ then
 perl -e "s/,STRICT_TRANS_TABLES//g" -pi /usr/local/my.cnf
 echo "Disabling MySQL STRICT_TRANS_TABLES in /usr/local/my.cnf done"
 else
-echo "Looks like no MySQL STRICT_TRANS_TABLES disable required"
+echo "Looks like no MySQL STRICT_TRANS_TABLES disable required in /usr/local/my.cnf"
 fi
 
+if [ -f /usr/local/etc/my.cnf ];
+then
+perl -e "s/,STRICT_TRANS_TABLES//g" -pi /usr/local/etc/my.cnf
+echo "Disabling MySQL STRICT_TRANS_TABLES in /usr/local/etc/my.cnf done"
+else
+echo "Looks like no MySQL STRICT_TRANS_TABLES disable required in /usr/local/etc/my.cnf"
+fi
 
-
-
+if [ -f /usr/local/etc/mysql/my.cnf ];
+then
+perl -e "s/,STRICT_TRANS_TABLES//g" -pi /usr/local/etc/mysql/my.cnf
+echo "Disabling MySQL STRICT_TRANS_TABLES in /usr/local/etc/mysql/my.cnf done"
+else
+echo "Looks like no MySQL STRICT_TRANS_TABLES disable required in /usr/local/etc/mysql/my.cnf"
+fi
 
 #Multigen/FreeRADIUS3 preconfiguration
 cd /usr/local/www/apache24/data/billing
