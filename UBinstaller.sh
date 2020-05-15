@@ -457,14 +457,18 @@ perl -e "s/INT_IF/${LAN_IFACE}/g" -pi /etc/firewall.conf;;
 echo "no NAS setup required";;
 esac
 
-#disabling mysql 5.6 strict trans tables
+#disabling mysql 5.6 strict trans tables in various config locations
 if [ -f /usr/local/my.cnf ];
 then
 perl -e "s/,STRICT_TRANS_TABLES//g" -pi /usr/local/my.cnf
-echo "Disabling MySQL STRICT_TRANS_TABLES done"
+echo "Disabling MySQL STRICT_TRANS_TABLES in /usr/local/my.cnf done"
 else
 echo "Looks like no MySQL STRICT_TRANS_TABLES disable required"
 fi
+
+
+
+
 
 #Multigen/FreeRADIUS3 preconfiguration
 cd /usr/local/www/apache24/data/billing
