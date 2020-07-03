@@ -20,8 +20,8 @@ DL_PACKAGES_EXT=".tar.gz"
 DL_UB_URL="http://ubilling.net.ua/"
 DL_UB_NAME="ub.tgz"
 DL_STG_URL="http://ubilling.net.ua/stg/"
-DL_STG_NAME="stg-2.409-rc2.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc2"
+DL_STG_NAME="stg-2.409-rc5.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc5"
 
 set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
@@ -51,8 +51,9 @@ clear
 #configuring stargazer release
 clear
 $DIALOG --menu "Choose Stargazer release" 16 50 8 \
-                   409RC2 "Stargazer 2.409-rc2 (stable)"\
-                   409RC5 "Stargazer 2.409-rc5 (testing)"\
+                   409RC5 "Stargazer 2.409-rc5 (stable)"\
+				   409REL "Stargazer 2.409-release (testing)"\
+                   409RC2 "Stargazer 2.409-rc2 (legacy)"\
             2> /tmp/stgver
 clear
 
@@ -232,6 +233,16 @@ case $STG_VER in
 409RC5)
 DL_STG_NAME="stg-2.409-rc5.tar.gz"
 DL_STG_RELEASE="stg-2.409-rc5"
+;;
+
+409RC2)
+DL_STG_NAME="stg-2.409-rc2.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc2"
+;;
+
+409RC5)
+DL_STG_NAME="stg-2.409.tar.gz"
+DL_STG_RELEASE="stg-2.409"
 ;;
 esac
 
