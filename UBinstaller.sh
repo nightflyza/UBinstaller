@@ -180,7 +180,7 @@ rm -fr /tmp/insttype
 
 
 #last chance to exit
-$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Mode: ${UBI_MODE}" 18 60
+$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Mode: ${UBI_MODE}\n Stargazer: ${STG_VER}\n" 18 60
 AGREE=$?
 clear
 
@@ -240,7 +240,7 @@ DL_STG_NAME="stg-2.409-rc2.tar.gz"
 DL_STG_RELEASE="stg-2.409-rc2"
 ;;
 
-409RC5)
+409REL)
 DL_STG_NAME="stg-2.409.tar.gz"
 DL_STG_RELEASE="stg-2.409"
 ;;
