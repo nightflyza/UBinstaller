@@ -168,7 +168,6 @@ perl -e "s/newpassword/${MYSQL_PASSWORD}/g" -pi /etc/rscriptd/config
 perl -e "s/stg/${MYSQL_DB}/g" -pi /etc/rscriptd/config
 
 perl -e "s/RS_KEY/${RSCRIPTD_KEY}/g" -pi /etc/rscriptd/rscriptd.conf
-perl -e "s/RS_KEY/${RSCRIPTD_KEY}/g" -pi /etc/stargazer/rscriptd.conf
 perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /bin/renat
 
 #update firewall
