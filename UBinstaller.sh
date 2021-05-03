@@ -285,7 +285,9 @@ fi
 
 tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> /tmp/ubpack.log
 cd ${ARCH}
-pkg add ./*  >> /tmp/ubpack.log 2>> /tmp/ubpack.log
+#too many arguments
+#pkg add ./*  >> /tmp/ubpack.log 2>> /tmp/ubpack.log
+ls -1 | xargs -n 1 pkg add >> /tmp/ubpack.log
 ;;
 SRC)
 echo "Ubilling ports installation not supported at this moment. Installation is aborted."
