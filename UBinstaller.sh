@@ -42,6 +42,7 @@ clear
 
 
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
+		   130_6T "FreeBSD 13.0 amd64"\
 		   122_6T "FreeBSD 12.2 amd64"\
 		   121_6T "FreeBSD 12.1 amd64"\
 	       120_64 "FreeBSD 12.0 amd64"\
@@ -199,6 +200,11 @@ cd /usr/local/ubinstaller/
 #######################################
 
 case $ARCH in
+130_6T)
+#FreeBSD 12.2 x64 Release uses PHP74
+APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
+;;
+
 122_6T)
 #FreeBSD 12.2 x64 Release uses PHP74
 APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
