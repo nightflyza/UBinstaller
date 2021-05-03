@@ -459,8 +459,8 @@ chmod 777 ${APACHE_DATA_PATH}billing/content/dn
 ln -fs /usr/local/bandwidthd/htdocs ${APACHE_DATA_PATH}band
 
 #creating rc.script
-cp -R /usr/local/ubinstaller/configs/rc.billing /etc/rc.d/billing
-chmod a+x /etc/rc.d/billing
+cp -R /usr/local/ubinstaller/configs/rc.billing /usr/local/etc/rc.d/billing
+chmod a+x /usr/local/etc/rc.d/billing
 echo "Ubilling rc script installed."
 
 #ugly hack for starting stargazer without NAS-es
