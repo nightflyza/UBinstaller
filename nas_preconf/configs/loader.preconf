@@ -7,3 +7,6 @@ dummynet_load="YES"
 
 bridge_load="YES"
 net.link.bridge.inherit_mac="1"
+
+hw.ix.unsupported_sfp=1
+hw.intr_storm_threshold=9000
