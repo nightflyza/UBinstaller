@@ -97,6 +97,7 @@ then
 echo "=== Create restore point ==="
 mkdir ../ub_restore 2> /dev/null
 rm -rf ../onusig_bak
+rm -rf ../photostorage_bak
 rm -fr ../ub_restore/*
 
 echo "=== Move new release to safe place ==="
@@ -114,6 +115,7 @@ mkdir ../ub_restore/customs
 
 # backup of actual configs and administrators
 mv ./content/documents/onusig ../onusig_bak
+mv ./content/documents/photostorage ../photostorage_bak
 cp .htaccess ../ub_restore/ 2> /dev/null
 cp favicon.ico ../ub_restore/ 2> /dev/null
 cp remote_nas.conf ../ub_restore/
@@ -150,6 +152,8 @@ echo "=== Restoring configs ==="
 cp -R ../ub_restore/* ./
 rm -rf ./content/documents/onusig
 mv ../onusig_bak ./content/documents/onusig
+rm -rf ./content/documents/photostorage
+mv ../photostorage_bak ./content/documents/photostorage
 rm -fr ${UBILLING_RELEASE_NAME}
 echo "deny from all" > ../ub_restore/.htaccess
 
