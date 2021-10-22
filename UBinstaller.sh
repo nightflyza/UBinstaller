@@ -11,7 +11,7 @@ APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/usr/local/www/apache24/data/"
 APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
 APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
-APACHE_CONFIG_PRESET_NAME="httpd24f.conf"
+APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
 APACHE_CONFIG_NAME="httpd.conf"
 
 #some remote paths here
@@ -59,10 +59,6 @@ $DIALOG --menu "Choose Stargazer release" 16 50 8 \
             2> /tmp/stgver
 clear
 
-
-
-# no more manual transmission anymore
-echo "BIN" > /tmp/ubimode
 
 #configuring LAN interface
 ALL_IFACES=`grep rnet /var/run/dmesg.boot | cut -f 1 -d ":" | tr "\n" " "`
@@ -164,7 +160,6 @@ LAN_CIDR=`cat /tmp/ubcidr`
 STG_PASS=`cat /tmp/ubstgpass`
 RSD_PASS=`cat /tmp/ubrsd`
 ARCH=`cat /tmp/ubarch`
-UBI_MODE=`cat /tmp/ubimode`
 STG_VER=`cat /tmp/stgver`
 
 # cleaning temp files
@@ -176,13 +171,12 @@ rm -fr /tmp/ubstgpass
 rm -fr /tmp/ubrsd
 rm -fr /tmp/ubextif
 rm -fr /tmp/ubarch
-rm -fr /tmp/ubimode
 rm -fr /tmp/stgver
 rm -fr /tmp/insttype
 
 
 #last chance to exit
-$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Mode: ${UBI_MODE}\n Stargazer: ${STG_VER}\n" 18 60
+$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n" 18 60
 AGREE=$?
 clear
 
@@ -199,38 +193,7 @@ cd /usr/local/ubinstaller/
 #  Platform specific issues handling  #
 #######################################
 
-case $ARCH in
-130_6T)
-#FreeBSD 12.2 x64 Release uses PHP74
-APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
-;;
-
-122_6T)
-#FreeBSD 12.2 x64 Release uses PHP74
-APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
-;;
-
-121_6T)
-#FreeBSD 12.1 x64 Release uses PHP74
-APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
-;;
-
-121_64)
-#FreeBSD 12.1 x64 Release uses PHP71
-APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
-;;
-
-
-120_64)
-#FreeBSD 12.0 x64 Release uses PHP70
-APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
-;;
-
-112_64)
-#FreeBSD 11.2 x64 Release uses PHP70
-APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
-;;
-esac
+#nothing specific required at this moment
 
 
 #FreeBSD 10+ need to use CC and CXX env
@@ -268,10 +231,8 @@ exit
 fi
 
 
-# install binary packages or needed software from ports
+# install prebuilded binary packages
 $DIALOG --infobox "Software installation is in progress. This takes a while." 4 60
-case $UBI_MODE in
-BIN)
 cd packages
 $FETCH ${DL_PACKAGES_URL}${ARCH}${DL_PACKAGES_EXT}
 #check is binary packages download has beed completed
@@ -285,16 +246,7 @@ fi
 
 tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> /tmp/ubpack.log
 cd ${ARCH}
-#too many arguments
-#pkg add ./*  >> /tmp/ubpack.log 2>> /tmp/ubpack.log
 ls -1 | xargs -n 1 pkg add >> /tmp/ubpack.log
-;;
-SRC)
-echo "Ubilling ports installation not supported at this moment. Installation is aborted."
-exit
-;;
-esac
-
 
 #back to installation directory
 cd /usr/local/ubinstaller/
@@ -344,7 +296,7 @@ cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 
 #set up and fix autoupdater paths
 perl -e "s/APVER_MACRO/${APACHE_VERSION}/g" -pi ../autoubupdate.sh
-cp -R ../autoubupdate.sh $APACHE_DATA_PATH
+cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
@@ -484,7 +436,7 @@ perl -e "s/INT_IF/${LAN_IFACE}/g" -pi /etc/firewall.conf;;
 echo "no NAS setup required";;
 esac
 
-#disabling mysql 5.6 strict trans tables in various config locations
+#disabling mysql>=5.6 strict trans tables in various config locations
 if [ -f /usr/local/my.cnf ];
 then
 perl -e "s/,STRICT_TRANS_TABLES//g" -pi /usr/local/my.cnf
@@ -510,7 +462,7 @@ echo "Looks like no MySQL STRICT_TRANS_TABLES disable required in /usr/local/etc
 fi
 
 #Multigen/FreeRADIUS3 preconfiguration
-cd /usr/local/www/apache24/data/billing
+cd ${APACHE_DATA_PATH}billing
 cp -R ./docs/multigen/raddb3/* /usr/local/etc/raddb/
 RADVER=`radiusd -v | grep "radiusd: FreeRADIUS Version" | awk '{print $4}' | tr -d ,`
 sed -i.bak "s/\/usr\/local\/lib\/freeradius-3.0.16/\/usr\/local\/lib\/freeradius-${RADVER}/" /usr/local/etc/raddb/radiusd.conf
@@ -526,7 +478,7 @@ echo "127.0.0.1 ${CURR_HOSTNAME} ${CURR_HOSTNAME}.localdomain" >> /etc/hosts
 /usr/sbin/stargazer
 
 #initial crontab configuration
-cd /usr/local/www/apache24/data/billing
+cd ${APACHE_DATA_PATH}billing
 if [ -f ./docs/crontab/crontab.preconf ];
 then
 #generating new Ubilling serial
@@ -541,6 +493,15 @@ echo "New serial installed into ubapi wrapper"
 else
 echo "Looks like this Ubilling release is not supporting automatic crontab configuration"
 fi
+
+#installing default htaccess file with compression and client-side cachig optimizations
+cd ${APACHE_DATA_PATH}billing
+if [ -f ./docs/webspeed/speed_hta ];
+then
+cp -R ./docs/webspeed/speed_hta ${APACHE_DATA_PATH}billing/.htaccess
+else
+echo "Looks like this Ubilling release does not containing default htaccess preset"
+fi	
 
 #stopping stargazer again to prevent data corruption and force server rebooting
 killall stargazer
