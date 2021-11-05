@@ -1,0 +1,474 @@
+#!/usr/bin/bash
+
+#some predefined paths and URLs here
+DIALOG="dialog"
+FETCH="/usr/bin/wget"
+
+APACHE_VERSION="apache24"
+APACHE_DATA_PATH="/var/www/html/"
+APACHE_CONFIG_DIR="/etc/apache2/"
+APACHE_INIT_SCRIPT="/usr/sbin/service apache2"
+APACHE_CONFIG_PRESET_NAME="debi11_apache2.conf"
+APACHE_CONFIG_NAME="apache2.conf"
+
+#some remote paths here
+DL_PACKAGES_URL="http://ubilling.net.ua/packages/"
+DL_PACKAGES_EXT=".tar.gz"
+DL_UB_URL="http://snaps.ubilling.net.ua/"
+DL_UB_NAME="ub_current.tgz"
+DL_STG_URL="http://ubilling.net.ua/stg/"
+DL_STG_NAME="stg-2.409-rc5.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc5"
+
+
+#initial repos update
+apt-get update >> /tmp/debianstaller.log  2>&1
+apt-get upgrade >> /tmp/debianstaller.log  2>&1
+
+#installation of basic software required for installer
+apt install -y dialog >> /tmp/debianstaller.log  2>&1
+apt install -y net-tools >> /tmp/debianstaller.log  2>&1
+apt install -y gnupg2 >> /tmp/debianstaller.log  2>&1
+
+
+clear
+$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 11 Bullseye" 10 50
+clear
+
+#new or migration installation
+clear
+$DIALOG --menu "Type of Ubilling installation" 10 75 8 \
+                   NEW "This is new Ubilling installation"\
+                   MIG "Migrating existing Ubilling setup from another server"\
+            2> /tmp/insttype
+
+clear
+
+#configuring stargazer release
+clear
+$DIALOG --menu "Choose Stargazer release" 16 50 8 \
+				   409REL "Stargazer 2.409-release (stable)"\
+                   409RC5 "Stargazer 2.409-rc5 (stable)"\
+                   409RC2 "Stargazer 2.409-rc2 (legacy)"\
+            2> /tmp/stgver
+clear
+
+#configuring LAN interface
+ALL_IFACES=`ifconfig | grep enp | cut -f 1 -d ":" | tr "\n" " "`
+
+INTIF_DIALOG_START="$DIALOG --menu \"Select LAN interface that interracts with your INTERNAL network\" 15 85 6 \\"
+INTIF_DIALOG="${INTIF_DIALOG_START}"
+
+for EACH_IFACE in $ALL_IFACES
+do
+   	LIIFACE_IP=`ifconfig ${EACH_IFACE} | grep "inet " | xargs`
+  	INTIF_DIALOG="${INTIF_DIALOG}${EACH_IFACE} \\ \"${LIIFACE_IP}\" "
+done
+
+INTIF_DIALOG="${INTIF_DIALOG} 2> /tmp/ubiface"
+
+sh -c "${INTIF_DIALOG}"
+clear 
+
+
+#configuring internal network
+TMP_LAN_IFACE=`cat /tmp/ubiface`
+TMP_NET_DATA=`netstat -rn -f inet | grep -v UG | grep ${TMP_LAN_IFACE}`
+TMP_LAN_NETW=`echo ${TMP_NET_DATA} | cut -f 1 -d " "`
+TMP_LAN_CIDR=`ip address show dev ${TMP_LAN_IFACE} | grep "inet " | cut -f 2 -d "/" | cut -f 1 -d " " | xargs`
+echo ${TMP_LAN_NETW} > /tmp/ubnetw
+echo ${TMP_LAN_CIDR} > /tmp/ubcidr
+
+#NAT etc presets setup
+clear
+$DIALOG --title "Setup NAS"   --yesno "Do you want to install firewall/nat/shaper presets for setup all-in-one Billing+NAS server" 10 40
+NAS_KERNEL=$?
+clear
+
+case $NAS_KERNEL in
+0)
+#NAS kernel setup with preconfigured firewall
+#configuring WAN interface
+ALL_IFACES=`ifconfig | grep enp | cut -f 1 -d ":" | tr "\n" " "`
+
+EXTIF_DIALOG_START="$DIALOG --menu \"Select WAN interface for NAT that interracts with Internet\" 15 85 6 \\"
+EXTIF_DIALOG="${EXTIF_DIALOG_START}"
+
+for EACH_IFACE in $ALL_IFACES
+do
+   LIIFACE_IP=`ifconfig ${EACH_IFACE} | grep "inet " | xargs`
+   EXTIF_DIALOG="${EXTIF_DIALOG}${EACH_IFACE} \\ \"${LIIFACE_IP}\" "
+done
+
+EXTIF_DIALOG="${EXTIF_DIALOG} 2> /tmp/ubextif"
+
+sh -c "${EXTIF_DIALOG}"
+clear 
+EXT_IF=`cat /tmp/ubextif`
+;;
+
+1)
+EXT_IF="none"
+;;
+esac
+
+#some passwords generation or manual input
+PASSW_MODE=`cat /tmp/insttype`
+
+case $PASSW_MODE in
+NEW)
+#generating mysql password
+GEN_MYS_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5sum | cut -b-8`
+echo "mys"${GEN_MYS_PASS} > /tmp/ubmypass
+
+#getting stargazer admin password
+GEN_STG_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5sum | cut -b-8`
+echo "stg"${GEN_STG_PASS} > /tmp/ubstgpass
+
+#getting rscriptd encryption password
+GEN_RSD_PASS=`dd if=/dev/urandom count=128 bs=1 2>&1 | md5sum | cut -b-8`
+echo "rsd"${GEN_RSD_PASS} > /tmp/ubrsd
+
+;;
+MIG)
+request previous MySQL/Stargazer/rscriptd passwords
+clear
+$DIALOG --title "MySQL root password"  --inputbox "Enter your previous installation MySQL root password" 8 50 2> /tmp/ubmypass
+clear
+$DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 50 2> /tmp/ubstgpass
+clear
+$DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 50 2> /tmp/ubrsd
+;;
+esac
+
+
+
+LAN_IFACE=`cat /tmp/ubiface`
+MYSQL_PASSWD=`cat /tmp/ubmypass`
+LAN_NETW=`cat /tmp/ubnetw`
+LAN_CIDR=`cat /tmp/ubcidr`
+STG_PASS=`cat /tmp/ubstgpass`
+RSD_PASS=`cat /tmp/ubrsd`
+ARCH=`hostnamectl | grep System | xargs`
+STG_VER=`cat /tmp/stgver`
+
+# cleaning temp files
+rm -fr /tmp/ubiface
+rm -fr /tmp/ubmypass
+rm -fr /tmp/ubnetw
+rm -fr /tmp/ubcidr
+rm -fr /tmp/ubstgpass
+rm -fr /tmp/ubrsd
+rm -fr /tmp/ubextif
+rm -fr /tmp/stgver
+rm -fr /tmp/insttype
+
+#last chance to exit
+$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n" 18 70
+AGREE=$?
+clear
+
+case $AGREE in
+0)
+$DIALOG --infobox "Everything is okay! Installation is starting..." 4 60
+mkdir /usr/local/ubinstaller/
+cp -R ./* /usr/local/ubinstaller/
+cd /usr/local/ubinstaller/
+
+#Selecting stargazer release to install
+case $STG_VER in
+409RC5)
+DL_STG_NAME="stg-2.409-rc5.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc5"
+;;
+
+409RC2)
+DL_STG_NAME="stg-2.409-rc2.tar.gz"
+DL_STG_RELEASE="stg-2.409-rc2"
+;;
+
+409REL)
+DL_STG_NAME="stg-2.409.tar.gz"
+DL_STG_RELEASE="stg-2.409"
+;;
+esac
+
+
+# install binary packages from repos
+$DIALOG --infobox "Software installation is in progress. This takes a while." 4 60
+
+#MariaDB setup
+apt install -y software-properties-common dirmngr >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Installing MariaDB" 4 60
+${FETCH} https://mariadb.org/mariadb_release_signing_key.asc >> /tmp/debianstaller.log  2>&1
+chmod -c 644 mariadb_release_signing_key.asc >> /tmp/debianstaller.log  2>&1
+mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /tmp/debianstaller.log  2>&1
+
+echo "deb [arch=amd64,arm64,ppc64el] \
+https://ftp.ubuntu-tw.org/mirror/mariadb/repo/10.6/debian \
+bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /tmp/debianstaller.log  2>&1
+
+apt update >> /tmp/debianstaller.log  2>&1
+apt install -y mariadb-server >> /tmp/debianstaller.log  2>&1
+apt install -y mariadb-client >> /tmp/debianstaller.log  2>&1
+apt install -y libmariadb-dev >> /tmp/debianstaller.log  2>&1
+apt install -y default-libmysqlclient-dev >> /tmp/debianstaller.log  2>&1
+
+
+$DIALOG --infobox "MariaDB installed" 4 60
+mariadb --version >> /tmp/debianstaller.log  2>&1
+
+systemctl start mariadb
+systemctl enable mariadb
+
+$DIALOG --infobox "MariaDB startup enabled" 4 60
+
+$DIALOG --infobox "Installing some required software" 4 60
+apt install -y expat >> /tmp/debianstaller.log  2>&1
+apt install -y libexpat1-dev >> /tmp/debianstaller.log  2>&1
+apt install -y sudo >> /tmp/debianstaller.log  2>&1
+apt install -y curl >> /tmp/debianstaller.log  2>&1
+apt install -y apache2 >> /tmp/debianstaller.log  2>&1
+apt install -y libapache2-mod-php7.4 >> /tmp/debianstaller.log  2>&1
+apt install -y isc-dhcp-server >> /tmp/debianstaller.log  2>&1
+apt install -y build-essential >> /tmp/debianstaller.log  2>&1
+apt install -y bind9 >> /tmp/debianstaller.log  2>&1
+DEBIAN_FRONTEND=noninteractive apt install -y bandwidthd >> /tmp/debianstaller.log  2>&1
+DEBIAN_FRONTEND=noninteractive apt install -y softflowd >> /tmp/debianstaller.log  2>&1
+apt install -y libxmlrpc-c++8-dev >> /tmp/debianstaller.log  2>&1
+apt install -y memcached >> /tmp/debianstaller.log  2>&1
+apt install -y redis >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Installing PHP and required extensions" 4 60
+apt install -y php7.4-cli >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-mysql >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-mysqli >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-mbstring >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-bcmath >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-curl >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-gd >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-snmp >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-soap >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-zip >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-imap >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-json >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-tokenizer >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-xml >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-xmlreader >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-xmlwriter >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-simplexml >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-sqlite3 >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-sockets >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-opcache >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-json >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-pdo >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-pdo-sqlite >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-phar >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-posix >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-memcached >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-redis >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Installing some optional software" 4 60
+apt install -y graphviz >> /tmp/debianstaller.log  2>&1
+apt install -y vim-tiny >> /tmp/debianstaller.log  2>&1
+apt install -y arping >> /tmp/debianstaller.log  2>&1
+apt install -y elinks >> /tmp/debianstaller.log  2>&1
+apt install -y mc >> /tmp/debianstaller.log  2>&1
+apt install -y nano >> /tmp/debianstaller.log  2>&1
+apt install -y nmap >> /tmp/debianstaller.log  2>&1
+apt install -y mtr >> /tmp/debianstaller.log  2>&1
+apt install -y expect >> /tmp/debianstaller.log  2>&1
+apt install -y bwm-ng >> /tmp/debianstaller.log  2>&1
+apt install -y ifstat >> /tmp/debianstaller.log  2>&1
+apt install -y iperf >> /tmp/debianstaller.log  2>&1
+apt install -y iperf3 >> /tmp/debianstaller.log  2>&1
+apt install -y arpwatch >> /tmp/debianstaller.log  2>&1
+apt install -y git >> /tmp/debianstaller.log  2>&1
+apt install -y ffmpeg >> /tmp/debianstaller.log  2>&1
+apt install -y bmon >> /tmp/debianstaller.log  2>&1
+apt install -y iftop >> /tmp/debianstaller.log  2>&1
+apt install -y netdiag >> /tmp/debianstaller.log  2>&1
+apt install -y htop >> /tmp/debianstaller.log  2>&1
+
+$DIALOG --infobox "Installing FreeRADIUS server" 4 60
+apt install -y freeradius freeradius-mysql >> /tmp/debianstaller.log  2>&1
+
+#TODO: here
+
+#back to installation directory
+cd /usr/local/ubinstaller/
+
+#installing stargazer
+$DIALOG --infobox "Stargazer download is in progress." 4 60
+$FETCH ${DL_STG_URL}${DL_STG_NAME} >> /tmp/debianstaller.log  2>&1
+if [ -f ${DL_STG_NAME} ];
+then
+$DIALOG --infobox "Stargazer distro download has been completed." 4 60
+else
+echo "=== Error: stargazer sources are not available. Installation is aborted. ==="
+exit
+fi
+$DIALOG --infobox "Compiling Stargazer." 4 60
+tar zxvf ${DL_STG_NAME} >> /tmp/debianstaller.log  2>&1
+cd ${DL_STG_RELEASE}/projects/stargazer/ 
+./build >> /tmp/debianstaller.log  2>&1
+/usr/bin/gmake install >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Compiling Stargazer..." 4 60
+#and configurators
+cd ../sgconf 
+./build >> /tmp/debianstaller.log  2>&1
+/usr/bin/gmake >> /tmp/debianstaller.log  2>&1
+/usr/bin/gmake install >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Compiling Stargazer...." 4 60
+cd ../sgconf_xml/ 
+./build >> /tmp/debianstaller.log  2>&1
+/usr/bin/gmake >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Compiling Stargazer....." 4 60
+/usr/bin/gmake install >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Stargazer installed." 4 60
+
+#stopping apache
+${APACHE_INIT_SCRIPT} stop
+
+# copying prepared configs
+cd /usr/local/ubinstaller/configs/
+cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
+cp -R php.ini /etc/php/7.4/apache2/
+cp -R stargazer.conf /etc/stargazer/
+cp -R bandwidthd.conf /etc/bandwidthd/bandwidthd.conf
+
+#setting up default web awesomeness
+cp -R inside.html ${APACHE_DATA_PATH}/index.html
+
+#fixing maria issues
+service mariadb stop
+cp -R 50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+service mariadb start
+
+
+#starting apache with new configs
+${APACHE_INIT_SCRIPT} start
+
+#"Setting MySQL root password"
+mysqladmin -u root password ${MYSQL_PASSWD}
+
+######################
+# unpacking Ubilling
+######################
+$DIALOG --infobox "Ubilling download, unpacking and installation is in progress." 4 60
+cd /usr/local/ubinstaller/
+$FETCH ${DL_UB_URL}${DL_UB_NAME} >> /tmp/debianstaller.log  2>&1
+#check is ubilling distro download complete
+if [ -f ${DL_UB_NAME} ];
+then
+$DIALOG --infobox "Ubilling download has been completed." 4 60
+else
+echo "=== Error: Ubilling release is not available. Installation is aborted. ==="
+exit
+fi
+
+mkdir ${APACHE_DATA_PATH}billing/
+cp ${DL_UB_NAME} ${APACHE_DATA_PATH}billing/
+cd ${APACHE_DATA_PATH}billing/
+tar zxvf ${DL_UB_NAME} >> /tmp/debianstaller.log  2>&1
+chmod -R 777 content/ config/ multinet/ exports/ remote_nas.conf 
+chmod -R 777 userstats/config/
+
+# updating passwords and login in mysql.ini
+perl -e "s/mylogin/root/g" -pi ./config/mysql.ini
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./config/mysql.ini
+#userstats
+perl -e "s/mylogin/root/g" -pi ./userstats/config/mysql.ini
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./userstats/config/mysql.ini
+#alter
+perl -e "s/rl0/${LAN_IFACE}/g" -pi ./config/alter.ini
+
+# and in stargazer.conf
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi /etc/stargazer/stargazer.conf
+#change rscriptd password
+perl -e "s/secretpassword/${RSD_PASS}/g" -pi /etc/stargazer/stargazer.conf
+#change default mukrotik presets password
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
+
+# starting stargazer for creating DB
+/usr/sbin/stargazer
+
+#changing default password
+/usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
+echo "Stargazer default password changed."
+#stopping stargazer
+killall stargazer
+
+
+# restoring default Ubilling SQL dump
+cat docs/test_dump.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /tmp/debianstaller.log  2>&1
+
+# apply hotfix for stargazer 2.408 and change passwords in configs
+cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
+perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
+
+#clean default stargazer users and tariffs
+echo "TRUNCATE TABLE users" | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+echo "TRUNCATE TABLE tariffs" | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+
+#preconfiguring dhcpd logging TODO:
+#cat /usr/local/ubinstaller/configs/syslog.preconf >> /etc/syslog.conf
+#touch /var/log/dhcpd.log
+#/usr/local/etc/rc.d/isc-dhcpd restart > /dev/null 2> /dev/null
+#/etc/rc.d/syslogd restart > /dev/null
+#perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi ./config/alter.ini
+#echo "dhcpd logging configured."
+
+#first install flag setup for the future
+touch ./exports/FIRST_INSTALL
+chmod 777 ./exports/FIRST_INSTALL
+
+
+# unpacking ubapi preset
+cp -R /usr/local/ubinstaller/configs/ubapi /bin/
+chmod a+x /bin/ubapi
+$DIALOG --infobox "remote API wrapper installed" 4 60
+
+# unpacking start scripts templates TODO:
+#cp -f docs/presets/FreeBSD/etc/stargazer/* /etc/stargazer/
+#chmod a+x /etc/stargazer/*
+#echo "default user initialization scripts installed."
+
+
+#starting stargazer
+/usr/sbin/stargazer
+
+#initial crontab configuration
+cd ${APACHE_DATA_PATH}billing
+if [ -f ./docs/crontab/crontab.preconf ];
+then
+#generating new Ubilling serial
+/usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
+NEW_UBSERIAL=`cat ./exports/ubserial`
+$DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
+crontab ./docs/crontab/crontab.preconf
+$DIALOG --infobox "Installing default crontab preset" 4 60
+#updating serial in ubapi wrapper
+perl -e "s/UB000000000000000000000000000000000/${NEW_UBSERIAL}/g" -pi /bin/ubapi
+$DIALOG --infobox "New serial installed into ubapi wrapper" 4 60
+else
+echo "Looks like this Ubilling release is not supporting automatic crontab configuration"
+fi
+
+#installing default htaccess file with compression and client-side cachig optimizations
+cd ${APACHE_DATA_PATH}billing
+if [ -f ./docs/webspeed/speed_hta ];
+then
+cp -R ./docs/webspeed/speed_hta ${APACHE_DATA_PATH}billing/.htaccess
+else
+echo "Looks like this Ubilling release does not containing default htaccess preset"
+fi	
+
+$DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
+
+############################## END OF CONFIRMED SETUP #####################
+;;
+1)
+echo "Installation has been aborted"
+exit
+;;
+esac
