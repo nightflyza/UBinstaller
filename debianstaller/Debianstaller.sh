@@ -341,6 +341,9 @@ cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /etc/bandwidthd/bandwidthd.conf
 cp -R sudoers_preset /etc/sudoers.d/ubilling
 
+#set up autoupdater
+cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
+
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
