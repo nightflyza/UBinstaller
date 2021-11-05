@@ -415,12 +415,14 @@ perl -e "s/\/usr\/local\/sbin\/arping/\/usr\/sbin\/arping/g" -pi ./config/alter.
 
 
 # starting stargazer for creating DB
+$DIALOG --infobox "Starting Stargazer and creating initial DB." 4 60
 /usr/sbin/stargazer
 
 #changing default password
 /usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
 $DIALOG --infobox "Stargazer default password changed." 4 60
 #stopping stargazer
+$DIALOG --infobox "Stopping Stargazer." 4 60
 killall stargazer
 
 
@@ -496,6 +498,9 @@ killall stargazer
 
 #installing systemd stargazer startup part
 cp -R /usr/local/ubinstaller/configs/stargazer.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable stargazer.service
+
 
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50

@@ -1,9 +1,14 @@
+[Install]
+WantedBy=multi-user.target
+
 [Unit]
 Description=Stargazer
 After=network.target
 After=mariadb.service
 [Service]
-Type=oneshot
+Type=forking
 User=root
 Group=root
 ExecStart=/usr/sbin/stargazer
+WorkingDirectory=/
+PIDFile=/var/run/stargazer.pid
