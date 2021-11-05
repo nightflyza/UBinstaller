@@ -11,4 +11,4 @@ then
 fi
 
 ACTION=$1
-/usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&key=${UBSERIAL}&action=${ACTION}"
+/usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&key=${UBSERIAL}&action=${ACTION}"

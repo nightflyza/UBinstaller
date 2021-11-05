@@ -22,17 +22,19 @@ DL_STG_RELEASE="stg-2.409-rc5"
 
 
 #initial repos update
+echo "Preparing to installation.."
 apt-get update >> /tmp/debianstaller.log  2>&1
 apt-get upgrade >> /tmp/debianstaller.log  2>&1
 
 #installation of basic software required for installer
+echo "Installing basic software required for Debianstaller.."
 apt install -y dialog >> /tmp/debianstaller.log  2>&1
 apt install -y net-tools >> /tmp/debianstaller.log  2>&1
 apt install -y gnupg2 >> /tmp/debianstaller.log  2>&1
 
 
 clear
-$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 11 Bullseye" 10 50
+$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 11 Bullseye. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
 clear
 
 #new or migration installation
@@ -218,8 +220,8 @@ apt install -y default-libmysqlclient-dev >> /tmp/debianstaller.log  2>&1
 $DIALOG --infobox "MariaDB installed" 4 60
 mariadb --version >> /tmp/debianstaller.log  2>&1
 
-systemctl start mariadb
-systemctl enable mariadb
+systemctl start mariadb  >> /tmp/debianstaller.log  2>&1
+systemctl enable mariadb  >> /tmp/debianstaller.log  2>&1
 
 $DIALOG --infobox "MariaDB startup enabled" 4 60
 
@@ -228,14 +230,17 @@ apt install -y expat >> /tmp/debianstaller.log  2>&1
 apt install -y libexpat1-dev >> /tmp/debianstaller.log  2>&1
 apt install -y sudo >> /tmp/debianstaller.log  2>&1
 apt install -y curl >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Installing Apache server" 4 60
 apt install -y apache2 >> /tmp/debianstaller.log  2>&1
 apt install -y libapache2-mod-php7.4 >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Installing DHCP server" 4 60
 apt install -y isc-dhcp-server >> /tmp/debianstaller.log  2>&1
 apt install -y build-essential >> /tmp/debianstaller.log  2>&1
 apt install -y bind9 >> /tmp/debianstaller.log  2>&1
 DEBIAN_FRONTEND=noninteractive apt install -y bandwidthd >> /tmp/debianstaller.log  2>&1
 DEBIAN_FRONTEND=noninteractive apt install -y softflowd >> /tmp/debianstaller.log  2>&1
 apt install -y libxmlrpc-c++8-dev >> /tmp/debianstaller.log  2>&1
+$DIALOG --infobox "Installing memory caching servers" 4 60
 apt install -y memcached >> /tmp/debianstaller.log  2>&1
 apt install -y redis >> /tmp/debianstaller.log  2>&1
 $DIALOG --infobox "Installing PHP and required extensions" 4 60
@@ -393,7 +398,7 @@ perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 
 #changing default password
 /usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
-echo "Stargazer default password changed."
+$DIALOG --infobox "Stargazer default password changed." 4 60
 #stopping stargazer
 killall stargazer
 
