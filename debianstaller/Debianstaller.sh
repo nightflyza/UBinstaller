@@ -339,6 +339,7 @@ cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
 cp -R php.ini /etc/php/7.4/apache2/
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /etc/bandwidthd/bandwidthd.conf
+cp -R sudoers_preset /etc/sudoers.d/ubilling
 
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
@@ -393,6 +394,23 @@ perl -e "s/secretpassword/${RSD_PASS}/g" -pi /etc/stargazer/stargazer.conf
 #change default mukrotik presets password
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 
+#fixing paths to linux specific
+perl -e "s/\/usr\/local\/bin\/sudo/\/usr\/bin\/sudo/g" -pi ./config/billing.ini
+perl -e "s/\/usr\/bin\/top -b/\/usr\/bin\/top -b -n1/g" -pi ./config/billing.ini
+perl -e "s/\/usr\/local\/etc\/rc.d\/isc-dhcpd/\/etc\/init.d\/isc-dhcp-server/g" -pi ./config/billing.ini
+perl -e "s/\/sbin\/ping/\/usr\/bin\/ping/g" -pi ./config/billing.ini
+perl -e "s/\/usr\/local\/bin\/wget/\/usr\/bin\/wget/g" -pi ./config/billing.ini
+perl -e "s/\/usr\/local\/bin\/expect/\/usr\/bin\/expect/g" -pi ./config/billing.ini
+
+perl -e "s/\/usr\/local\/bin\/mysqldump/\/usr\/bin\/mysqldump/g" -pi ./config/alter.ini
+perl -e "s/\/usr\/local\/bin\/mysql/\/usr\/bin\/mysql/g" -pi ./config/alter.ini
+perl -e "s/\/usr\/local\/bin\/snmpset/\/usr\/bin\/snmpset/g" -pi ./config/alter.ini
+perl -e "s/\/usr\/local\/bin\/snmpwalk/\/usr\/bin\/snmpwalk/g" -pi ./config/alter.ini
+perl -e "s/\/usr\/local\/bin\/nmap/\/usr\/bin\/nmap/g" -pi ./config/alter.ini
+perl -e "s/\/usr\/local\/bin\/radclient/\/usr\/bin\/radclient/g" -pi ./config/alter.ini
+perl -e "s/\/usr\/local\/sbin\/arping/\/usr\/sbin\/arping/g" -pi ./config/alter.ini
+
+
 # starting stargazer for creating DB
 /usr/sbin/stargazer
 
@@ -440,6 +458,7 @@ $DIALOG --infobox "remote API wrapper installed" 4 60
 
 
 #starting stargazer
+$DIALOG --infobox "Starting stargazer" 4 60
 /usr/sbin/stargazer
 
 #initial crontab configuration
@@ -466,7 +485,15 @@ then
 cp -R ./docs/webspeed/speed_hta ${APACHE_DATA_PATH}billing/.htaccess
 else
 echo "Looks like this Ubilling release does not containing default htaccess preset"
-fi	
+fi
+
+#stopping stargazer
+$DIALOG --infobox "Stopping stargazer" 4 60
+killall stargazer
+
+#installing systemd stargazer startup part
+cp -R /usr/local/ubinstaller/configs/stargazer.service /etc/systemd/system/
+
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
 
