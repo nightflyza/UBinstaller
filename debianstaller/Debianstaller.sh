@@ -296,7 +296,6 @@ apt install -y htop >> /tmp/debianstaller.log  2>&1
 $DIALOG --infobox "Installing FreeRADIUS server" 4 60
 apt install -y freeradius freeradius-mysql >> /tmp/debianstaller.log  2>&1
 
-#TODO: here
 
 #back to installation directory
 cd /usr/local/ubinstaller/
@@ -339,7 +338,11 @@ cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
 cp -R php.ini /etc/php/7.4/apache2/
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /etc/bandwidthd/bandwidthd.conf
+perl -e "s/em0/${LAN_IFACE}/g" -pi /etc/bandwidthd/bandwidthd.conf
+perl -e "s/NETW/${LAN_NETW}\/${LAN_CIDR}/g" -pi /etc/bandwidthd/bandwidthd.conf
+
 cp -R sudoers_preset /etc/sudoers.d/ubilling
+
 
 #set up autoupdater
 cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
@@ -412,7 +415,10 @@ perl -e "s/\/usr\/local\/bin\/snmpwalk/\/usr\/bin\/snmpwalk/g" -pi ./config/alte
 perl -e "s/\/usr\/local\/bin\/nmap/\/usr\/bin\/nmap/g" -pi ./config/alter.ini
 perl -e "s/\/usr\/local\/bin\/radclient/\/usr\/bin\/radclient/g" -pi ./config/alter.ini
 perl -e "s/\/usr\/local\/sbin\/arping/\/usr\/sbin\/arping/g" -pi ./config/alter.ini
+perl -e "s/-c 10 -w 20000/-c 10 -W 0.1/g" -pi ./config/alter.ini
 
+#fixing apache rights
+chmod -R 777 /var/log/apache2
 
 # starting stargazer for creating DB
 $DIALOG --infobox "Starting Stargazer and creating initial DB." 4 60
@@ -438,13 +444,10 @@ perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
 echo "TRUNCATE TABLE users" | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 echo "TRUNCATE TABLE tariffs" | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 
-#preconfiguring dhcpd logging TODO:
-#cat /usr/local/ubinstaller/configs/syslog.preconf >> /etc/syslog.conf
-#touch /var/log/dhcpd.log
-#/usr/local/etc/rc.d/isc-dhcpd restart > /dev/null 2> /dev/null
-#/etc/rc.d/syslogd restart > /dev/null
-#perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi ./config/alter.ini
-#echo "dhcpd logging configured."
+#preconfiguring dhcpd logging
+cat /usr/local/ubinstaller/configs/rsyslog.preconf >> /etc/rsyslog.conf
+perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi ./config/alter.ini
+$DIALOG --infobox "dhcpd logging configured." 4 60
 
 #first install flag setup for the future
 touch ./exports/FIRST_INSTALL
@@ -500,6 +503,17 @@ killall stargazer
 cp -R /usr/local/ubinstaller/configs/stargazer.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable stargazer.service
+
+#some magic
+mkdir /etc/stargazer/dn
+chmod -R 777 /etc/stargazer/dn
+mkdir ${APACHE_DATA_PATH}billing/content/dn
+chmod 777 ${APACHE_DATA_PATH}billing/content/dn
+cp -R /usr/local/ubinstaller/configs/dhcp_preset /etc/default/isc-dhcp-server
+perl -e "s/LAN_IFACE/${LAN_IFACE}/g" -pi /etc/default/isc-dhcp-server
+ln -fs /var/www/html/billing/multinet /usr/local/etc/multinet
+ln -fs /var/lib/bandwidthd/htdocs/ /var/www/html/band
+ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
 
 
 
