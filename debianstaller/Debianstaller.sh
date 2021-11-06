@@ -205,17 +205,20 @@ $DIALOG --infobox "Installing MariaDB" 4 60
 ${FETCH} https://mariadb.org/mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
 chmod -c 644 mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
 mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /var/log/debianstaller.log  2>&1
-
+$DIALOG --infobox "Installing MariaDB." 4 60
 echo "deb [arch=amd64,arm64,ppc64el] \
 https://ftp.ubuntu-tw.org/mirror/mariadb/repo/10.6/debian \
 bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /var/log/debianstaller.log  2>&1
-
+$DIALOG --infobox "Installing MariaDB.." 4 60
 apt update >> /var/log/debianstaller.log  2>&1
+$DIALOG --infobox "Installing MariaDB..." 4 60
 apt install -y mariadb-server >> /var/log/debianstaller.log  2>&1
+$DIALOG --infobox "Installing MariaDB...." 4 60
 apt install -y mariadb-client >> /var/log/debianstaller.log  2>&1
+$DIALOG --infobox "Installing MariaDB....." 4 60
 apt install -y libmariadb-dev >> /var/log/debianstaller.log  2>&1
+$DIALOG --infobox "Installing MariaDB......" 4 60
 apt install -y default-libmysqlclient-dev >> /var/log/debianstaller.log  2>&1
-
 
 $DIALOG --infobox "MariaDB installed" 4 60
 mariadb --version >> /var/log/debianstaller.log  2>&1
@@ -522,7 +525,6 @@ systemctl daemon-reload
 systemctl enable furrywall.service
 
 ;;
-case $NAS_KERNEL in
 1)
 $DIALOG --infobox "No NAS presets required" 4 60
 ;;
