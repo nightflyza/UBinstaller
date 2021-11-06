@@ -429,7 +429,7 @@ $DIALOG --infobox "Starting Stargazer and creating initial DB." 4 60
 /usr/sbin/stargazer
 
 #changing default password
-/usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
+/usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> " >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Stargazer default password changed." 4 60
 #stopping stargazer
 $DIALOG --infobox "Stopping Stargazer." 4 60
@@ -463,11 +463,6 @@ cp -R /usr/local/ubinstaller/configs/ubapi /bin/
 chmod a+x /bin/ubapi
 $DIALOG --infobox "remote API wrapper installed" 4 60
 
-# unpacking start scripts templates TODO:
-#cp -f docs/presets/FreeBSD/etc/stargazer/* /etc/stargazer/
-#chmod a+x /etc/stargazer/*
-#echo "default user initialization scripts installed."
-
 
 #starting stargazer
 $DIALOG --infobox "Starting stargazer" 4 60
@@ -478,7 +473,7 @@ cd ${APACHE_DATA_PATH}billing
 if [ -f ./docs/crontab/crontab.preconf ];
 then
 #generating new Ubilling serial
-/usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
+/usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save" >> /var/log/debianstaller.log  2>&1
 NEW_UBSERIAL=`cat ./exports/ubserial`
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
 crontab ./docs/crontab/crontab.preconf
@@ -506,7 +501,7 @@ killall stargazer
 #installing systemd stargazer startup part
 cp -R /usr/local/ubinstaller/configs/stargazer.service /etc/systemd/system/
 systemctl daemon-reload
-systemctl enable stargazer.service
+systemctl enable stargazer.service >> /var/log/debianstaller.log  2>&1
 
 #all-in-one box presets if required
 case $NAS_KERNEL in
@@ -522,7 +517,20 @@ perl -e "s/INTERNAL_NETWORK/${LAN_NETW}/g" -pi /etc/furrywall
 perl -e "s/INTERNAL_CIDR/${LAN_CIDR}/g" -pi /etc/furrywall
 cp -R configs/furrywall.service /etc/systemd/system/
 systemctl daemon-reload
-systemctl enable furrywall.service
+systemctl enable furrywall.service >> /var/log/debianstaller.log  2>&1
+cp -R configs/softflowd.preconf /etc/softflowd/default.conf
+perl -e "s/INTERNAL_INTERFACE/${LAN_IFACE}/g" -pi /etc/softflowd/default.conf
+
+#stargazer user init scripts preset
+cd ${APACHE_DATA_PATH}billing/
+cp -f docs/presets/Debian/etc/stargazer/* /etc/stargazer/
+chmod a+x /etc/stargazer/*
+perl -e "s/mylogin/root/g" -pi /etc/stargazer/config
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi /etc/stargazer/config
+perl -e "s/INTERNAL_INTERFACE/${LAN_IFACE}/g" -pi /etc/stargazer/OnConnect
+perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/stargazer/OnConnect
+perl -e "s/INTERNAL_INTERFACE/${LAN_IFACE}/g" -pi /etc/stargazer/OnDisconnect
+perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/stargazer/OnDisconnect
 
 ;;
 1)
