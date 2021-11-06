@@ -1,7 +1,6 @@
 #!/usr/bin/bash
 
 ############ CONFIGURATION SECTION ############
-
 LAN_IF="INTERNAL_INTERFACE"
 WAN_IF="EXTERNAL_INTERFACE"
 LAN_NET="INTERNAL_NETWORK"
@@ -23,7 +22,7 @@ WAN_IP=`ip addr show ${WAN_IF} | grep inet' '| awk {'print $2'} | cut -f 1 -d "/
 $IPT -F
 $IPT -X
 $IPS -N FORW iphash
-$IPS -N DISCON iphash 
+$IPS -N DISCON iphash
 $IPT -P INPUT ACCEPT
 $IPT -P OUTPUT ACCEPT
 $IPT -P FORWARD DROP
@@ -35,8 +34,8 @@ $IPT -A FORWARD -i lo -j ACCEPT
 $IPT -A FORWARD -m state --state INVALID -j DROP
 $IPT -A FORWARD -m set --match-set FORW src,dst -j ACCEPT
 $IPT -A FORWARD -m set --match-set FORW dst,src -j ACCEPT
-$IPT -A FORWARD -m set --match-set DISCON src --dst EXTERNAL_IP -j ACCEPT
-$IPT -A FORWARD -m set --match-set DISCON dst --src EXTERNAL_IP -j ACCEPT
+$IPT -A FORWARD -m set --match-set DISCON src --dst ${WAN_IP} -j ACCEPT
+$IPT -A FORWARD -m set --match-set DISCON dst --src ${WAN_IP} -j ACCEPT
 
 #UHW
 #$IPT -t nat -A PREROUTING --src 172.31.0.0/24 --dst 0.0.0.0/0 -p tcp --dport 80 -j DNAT --to-destination 172.31.0.1:80
