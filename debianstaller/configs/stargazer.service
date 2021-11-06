@@ -3,8 +3,8 @@ WantedBy=multi-user.target
 
 [Unit]
 Description=Stargazer
-After=network.target
-After=mariadb.service
+After=network.target mariadb.service
+Requires=mariadb.service
 [Service]
 Type=forking
 User=root

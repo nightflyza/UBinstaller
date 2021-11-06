@@ -23,14 +23,14 @@ DL_STG_RELEASE="stg-2.409-rc5"
 
 #initial repos update
 echo "Preparing to installation.."
-apt-get update >> /tmp/debianstaller.log  2>&1
-apt-get upgrade >> /tmp/debianstaller.log  2>&1
+apt-get update >> /var/log/debianstaller.log  2>&1
+apt-get upgrade >> /var/log/debianstaller.log  2>&1
 
 #installation of basic software required for installer
 echo "Installing basic software required for Debianstaller.."
-apt install -y dialog >> /tmp/debianstaller.log  2>&1
-apt install -y net-tools >> /tmp/debianstaller.log  2>&1
-apt install -y gnupg2 >> /tmp/debianstaller.log  2>&1
+apt install -y dialog >> /var/log/debianstaller.log  2>&1
+apt install -y net-tools >> /var/log/debianstaller.log  2>&1
+apt install -y gnupg2 >> /var/log/debianstaller.log  2>&1
 
 
 clear
@@ -197,104 +197,105 @@ esac
 
 
 # install binary packages from repos
-$DIALOG --infobox "Software installation is in progress. This takes a while." 4 60
+$DIALOG --infobox "Software installation is in progress. This takes a while." 4 70
 
 #MariaDB setup
-apt install -y software-properties-common dirmngr >> /tmp/debianstaller.log  2>&1
+apt install -y software-properties-common dirmngr >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB" 4 60
-${FETCH} https://mariadb.org/mariadb_release_signing_key.asc >> /tmp/debianstaller.log  2>&1
-chmod -c 644 mariadb_release_signing_key.asc >> /tmp/debianstaller.log  2>&1
-mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /tmp/debianstaller.log  2>&1
+${FETCH} https://mariadb.org/mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
+chmod -c 644 mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
+mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /var/log/debianstaller.log  2>&1
 
 echo "deb [arch=amd64,arm64,ppc64el] \
 https://ftp.ubuntu-tw.org/mirror/mariadb/repo/10.6/debian \
-bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /tmp/debianstaller.log  2>&1
+bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /var/log/debianstaller.log  2>&1
 
-apt update >> /tmp/debianstaller.log  2>&1
-apt install -y mariadb-server >> /tmp/debianstaller.log  2>&1
-apt install -y mariadb-client >> /tmp/debianstaller.log  2>&1
-apt install -y libmariadb-dev >> /tmp/debianstaller.log  2>&1
-apt install -y default-libmysqlclient-dev >> /tmp/debianstaller.log  2>&1
+apt update >> /var/log/debianstaller.log  2>&1
+apt install -y mariadb-server >> /var/log/debianstaller.log  2>&1
+apt install -y mariadb-client >> /var/log/debianstaller.log  2>&1
+apt install -y libmariadb-dev >> /var/log/debianstaller.log  2>&1
+apt install -y default-libmysqlclient-dev >> /var/log/debianstaller.log  2>&1
 
 
 $DIALOG --infobox "MariaDB installed" 4 60
-mariadb --version >> /tmp/debianstaller.log  2>&1
+mariadb --version >> /var/log/debianstaller.log  2>&1
 
-systemctl start mariadb  >> /tmp/debianstaller.log  2>&1
-systemctl enable mariadb  >> /tmp/debianstaller.log  2>&1
+systemctl start mariadb  >> /var/log/debianstaller.log  2>&1
+systemctl enable mariadb  >> /var/log/debianstaller.log  2>&1
 
 $DIALOG --infobox "MariaDB startup enabled" 4 60
 
 $DIALOG --infobox "Installing some required software" 4 60
-apt install -y expat >> /tmp/debianstaller.log  2>&1
-apt install -y libexpat1-dev >> /tmp/debianstaller.log  2>&1
-apt install -y sudo >> /tmp/debianstaller.log  2>&1
-apt install -y curl >> /tmp/debianstaller.log  2>&1
+apt install -y expat >> /var/log/debianstaller.log  2>&1
+apt install -y libexpat1-dev >> /var/log/debianstaller.log  2>&1
+apt install -y sudo >> /var/log/debianstaller.log  2>&1
+apt install -y curl >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing Apache server" 4 60
-apt install -y apache2 >> /tmp/debianstaller.log  2>&1
-apt install -y libapache2-mod-php7.4 >> /tmp/debianstaller.log  2>&1
+apt install -y apache2 >> /var/log/debianstaller.log  2>&1
+apt install -y libapache2-mod-php7.4 >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing DHCP server" 4 60
-apt install -y isc-dhcp-server >> /tmp/debianstaller.log  2>&1
-apt install -y build-essential >> /tmp/debianstaller.log  2>&1
-apt install -y bind9 >> /tmp/debianstaller.log  2>&1
-DEBIAN_FRONTEND=noninteractive apt install -y bandwidthd >> /tmp/debianstaller.log  2>&1
-DEBIAN_FRONTEND=noninteractive apt install -y softflowd >> /tmp/debianstaller.log  2>&1
-apt install -y libxmlrpc-c++8-dev >> /tmp/debianstaller.log  2>&1
+apt install -y isc-dhcp-server >> /var/log/debianstaller.log  2>&1
+apt install -y build-essential >> /var/log/debianstaller.log  2>&1
+apt install -y bind9 >> /var/log/debianstaller.log  2>&1
+DEBIAN_FRONTEND=noninteractive apt install -y bandwidthd >> /var/log/debianstaller.log  2>&1
+DEBIAN_FRONTEND=noninteractive apt install -y softflowd >> /var/log/debianstaller.log  2>&1
+apt install -y libxmlrpc-c++8-dev >> /var/log/debianstaller.log  2>&1
+apt install -y ipset >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing memory caching servers" 4 60
-apt install -y memcached >> /tmp/debianstaller.log  2>&1
-apt install -y redis >> /tmp/debianstaller.log  2>&1
+apt install -y memcached >> /var/log/debianstaller.log  2>&1
+apt install -y redis >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing PHP and required extensions" 4 60
-apt install -y php7.4-cli >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-mysql >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-mysqli >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-mbstring >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-bcmath >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-curl >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-gd >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-snmp >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-soap >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-zip >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-imap >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-json >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-tokenizer >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-xml >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-xmlreader >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-xmlwriter >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-simplexml >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-sqlite3 >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-sockets >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-opcache >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-json >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-pdo >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-pdo-sqlite >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-phar >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-posix >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-memcached >> /tmp/debianstaller.log  2>&1
-apt install -y php7.4-redis >> /tmp/debianstaller.log  2>&1
+apt install -y php7.4-cli >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-mysql >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-mysqli >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-mbstring >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-bcmath >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-curl >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-gd >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-snmp >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-soap >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-zip >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-imap >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-json >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-tokenizer >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-xml >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-xmlreader >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-xmlwriter >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-simplexml >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-sqlite3 >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-sockets >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-opcache >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-json >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-pdo >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-pdo-sqlite >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-phar >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-posix >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-memcached >> /var/log/debianstaller.log  2>&1
+apt install -y php7.4-redis >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing some optional software" 4 60
-apt install -y graphviz >> /tmp/debianstaller.log  2>&1
-apt install -y vim-tiny >> /tmp/debianstaller.log  2>&1
-apt install -y arping >> /tmp/debianstaller.log  2>&1
-apt install -y elinks >> /tmp/debianstaller.log  2>&1
-apt install -y mc >> /tmp/debianstaller.log  2>&1
-apt install -y nano >> /tmp/debianstaller.log  2>&1
-apt install -y nmap >> /tmp/debianstaller.log  2>&1
-apt install -y mtr >> /tmp/debianstaller.log  2>&1
-apt install -y expect >> /tmp/debianstaller.log  2>&1
-apt install -y bwm-ng >> /tmp/debianstaller.log  2>&1
-apt install -y ifstat >> /tmp/debianstaller.log  2>&1
-apt install -y iperf >> /tmp/debianstaller.log  2>&1
-apt install -y iperf3 >> /tmp/debianstaller.log  2>&1
-apt install -y arpwatch >> /tmp/debianstaller.log  2>&1
-apt install -y git >> /tmp/debianstaller.log  2>&1
-apt install -y ffmpeg >> /tmp/debianstaller.log  2>&1
-apt install -y bmon >> /tmp/debianstaller.log  2>&1
-apt install -y iftop >> /tmp/debianstaller.log  2>&1
-apt install -y netdiag >> /tmp/debianstaller.log  2>&1
-apt install -y htop >> /tmp/debianstaller.log  2>&1
+apt install -y graphviz >> /var/log/debianstaller.log  2>&1
+apt install -y vim-tiny >> /var/log/debianstaller.log  2>&1
+apt install -y arping >> /var/log/debianstaller.log  2>&1
+apt install -y elinks >> /var/log/debianstaller.log  2>&1
+apt install -y mc >> /var/log/debianstaller.log  2>&1
+apt install -y nano >> /var/log/debianstaller.log  2>&1
+apt install -y nmap >> /var/log/debianstaller.log  2>&1
+apt install -y mtr >> /var/log/debianstaller.log  2>&1
+apt install -y expect >> /var/log/debianstaller.log  2>&1
+apt install -y bwm-ng >> /var/log/debianstaller.log  2>&1
+apt install -y ifstat >> /var/log/debianstaller.log  2>&1
+apt install -y iperf >> /var/log/debianstaller.log  2>&1
+apt install -y iperf3 >> /var/log/debianstaller.log  2>&1
+apt install -y arpwatch >> /var/log/debianstaller.log  2>&1
+apt install -y git >> /var/log/debianstaller.log  2>&1
+apt install -y ffmpeg >> /var/log/debianstaller.log  2>&1
+apt install -y bmon >> /var/log/debianstaller.log  2>&1
+apt install -y iftop >> /var/log/debianstaller.log  2>&1
+apt install -y netdiag >> /var/log/debianstaller.log  2>&1
+apt install -y htop >> /var/log/debianstaller.log  2>&1
 
 $DIALOG --infobox "Installing FreeRADIUS server" 4 60
-apt install -y freeradius freeradius-mysql >> /tmp/debianstaller.log  2>&1
+apt install -y freeradius freeradius-mysql >> /var/log/debianstaller.log  2>&1
 
 
 #back to installation directory
@@ -302,7 +303,7 @@ cd /usr/local/ubinstaller/
 
 #installing stargazer
 $DIALOG --infobox "Stargazer download is in progress." 4 60
-$FETCH ${DL_STG_URL}${DL_STG_NAME} >> /tmp/debianstaller.log  2>&1
+$FETCH ${DL_STG_URL}${DL_STG_NAME} >> /var/log/debianstaller.log  2>&1
 if [ -f ${DL_STG_NAME} ];
 then
 $DIALOG --infobox "Stargazer distro download has been completed." 4 60
@@ -311,22 +312,22 @@ echo "=== Error: stargazer sources are not available. Installation is aborted. =
 exit
 fi
 $DIALOG --infobox "Compiling Stargazer." 4 60
-tar zxvf ${DL_STG_NAME} >> /tmp/debianstaller.log  2>&1
+tar zxvf ${DL_STG_NAME} >> /var/log/debianstaller.log  2>&1
 cd ${DL_STG_RELEASE}/projects/stargazer/ 
-./build >> /tmp/debianstaller.log  2>&1
-/usr/bin/gmake install >> /tmp/debianstaller.log  2>&1
+./build >> /var/log/debianstaller.log  2>&1
+/usr/bin/gmake install >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Compiling Stargazer..." 4 60
 #and configurators
 cd ../sgconf 
-./build >> /tmp/debianstaller.log  2>&1
-/usr/bin/gmake >> /tmp/debianstaller.log  2>&1
-/usr/bin/gmake install >> /tmp/debianstaller.log  2>&1
+./build >> /var/log/debianstaller.log  2>&1
+/usr/bin/gmake >> /var/log/debianstaller.log  2>&1
+/usr/bin/gmake install >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Compiling Stargazer...." 4 60
 cd ../sgconf_xml/ 
-./build >> /tmp/debianstaller.log  2>&1
-/usr/bin/gmake >> /tmp/debianstaller.log  2>&1
+./build >> /var/log/debianstaller.log  2>&1
+/usr/bin/gmake >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Compiling Stargazer....." 4 60
-/usr/bin/gmake install >> /tmp/debianstaller.log  2>&1
+/usr/bin/gmake install >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Stargazer installed." 4 60
 
 #stopping apache
@@ -367,7 +368,7 @@ mysqladmin -u root password ${MYSQL_PASSWD}
 ######################
 $DIALOG --infobox "Ubilling download, unpacking and installation is in progress." 4 60
 cd /usr/local/ubinstaller/
-$FETCH ${DL_UB_URL}${DL_UB_NAME} >> /tmp/debianstaller.log  2>&1
+$FETCH ${DL_UB_URL}${DL_UB_NAME} >> /var/log/debianstaller.log  2>&1
 #check is ubilling distro download complete
 if [ -f ${DL_UB_NAME} ];
 then
@@ -380,7 +381,7 @@ fi
 mkdir ${APACHE_DATA_PATH}billing/
 cp ${DL_UB_NAME} ${APACHE_DATA_PATH}billing/
 cd ${APACHE_DATA_PATH}billing/
-tar zxvf ${DL_UB_NAME} >> /tmp/debianstaller.log  2>&1
+tar zxvf ${DL_UB_NAME} >> /var/log/debianstaller.log  2>&1
 chmod -R 777 content/ config/ multinet/ exports/ remote_nas.conf 
 chmod -R 777 userstats/config/
 
@@ -433,7 +434,7 @@ killall stargazer
 
 
 # restoring default Ubilling SQL dump
-cat docs/test_dump.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /tmp/debianstaller.log  2>&1
+cat docs/test_dump.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
 
 # apply hotfix for stargazer 2.408 and change passwords in configs
 cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
@@ -503,6 +504,30 @@ killall stargazer
 cp -R /usr/local/ubinstaller/configs/stargazer.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable stargazer.service
+
+#all-in-one box presets if required
+case $NAS_KERNEL in
+0)
+$DIALOG --infobox "Installing NAS presets" 4 60
+cd /usr/local/ubinstaller/
+cat configs/sysctl.preconf >> /etc/sysctl.conf
+cp -R configs/furrywall /etc/
+chmod a+x /etc/furrywall
+perl -e "s/INTERNAL_INTERFACE/${LAN_IFACE}/g" -pi /etc/furrywall
+perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/furrywall
+perl -e "s/INTERNAL_NETWORK/${LAN_NETW}/g" -pi /etc/furrywall
+perl -e "s/INTERNAL_CIDR/${LAN_CIDR}/g" -pi /etc/furrywall
+cp -R configs/furrywall.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable furrywall.service
+
+;;
+case $NAS_KERNEL in
+1)
+$DIALOG --infobox "No NAS presets required" 4 60
+;;
+esac
+
 
 #some magic
 mkdir /etc/stargazer/dn
