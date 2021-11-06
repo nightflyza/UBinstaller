@@ -23,8 +23,8 @@ DL_STG_RELEASE="stg-2.409-rc5"
 
 #initial repos update
 echo "Preparing to installation.."
-apt-get update >> /var/log/debianstaller.log  2>&1
-apt-get upgrade >> /var/log/debianstaller.log  2>&1
+apt update >> /var/log/debianstaller.log  2>&1
+apt -y upgrade >> /var/log/debianstaller.log  2>&1
 
 #installation of basic software required for installer
 echo "Installing basic software required for Debianstaller.."
