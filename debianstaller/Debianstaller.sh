@@ -494,17 +494,19 @@ else
 echo "Looks like this Ubilling release does not containing default htaccess preset"
 fi
 
-#Multigen/FreeRADIUS3 preconfiguration TODO:
+#Multigen/FreeRADIUS3 preconfiguration
 cd ${APACHE_DATA_PATH}billing
 cp -R ./docs/multigen/raddb3/* /etc/freeradius/3.0/
+cp -R ./docs/multigen/debian /etc/freeradius/3.0/radiusd.conf
 RADVER=`freeradius -v | grep "radiusd: FreeRADIUS Version" | awk '{print $4}' | tr -d ,`
 $DIALOG --infobox "Configuring FreeRADIUS ${RADVER} and MultiGen" 4 70
-perl -e "s/\/usr\/local\/lib\/freeradius-3.0.16/\/usr\/lib\/freeradius\//g" -pi /etc/freeradius/3.0/radiusd.conf
 perl -e "s/\/usr\/local\/share\/freeradius\/dictionary/\/usr\/share\/freeradius\/dictionary/g" -pi /etc/freeradius/3.0/dictionary
 perl -e "s/\/usr\/local\/etc\/raddb\/dictionary_preset/\/etc\/freeradius\/3.0\/dictionary_preset/g" -pi /etc/freeradius/3.0/dictionary
 cat ./docs/multigen/dump.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 cat ./docs/multigen/radius3_fix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /etc/freeradius/3.0/sql.conf
+
+#sphinxsearch preconf TODO:
 
 #stopping stargazer
 $DIALOG --infobox "Stopping stargazer" 4 60
