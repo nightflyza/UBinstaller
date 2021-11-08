@@ -56,7 +56,7 @@ $DIALOG --menu "Choose Stargazer release" 16 50 8 \
 clear
 
 #configuring LAN interface
-ALL_IFACES=`ifconfig | grep enp | cut -f 1 -d ":" | tr "\n" " "`
+ALL_IFACES=`ifconfig | grep -E 'eth[0-9]|enp' | cut -f 1 -d ":" | tr "\n" " "`
 
 INTIF_DIALOG_START="$DIALOG --menu \"Select LAN interface that interracts with your INTERNAL network\" 15 85 6 \\"
 INTIF_DIALOG="${INTIF_DIALOG_START}"
@@ -91,7 +91,7 @@ case $NAS_KERNEL in
 0)
 #NAS kernel setup with preconfigured firewall
 #configuring WAN interface
-ALL_IFACES=`ifconfig | grep enp | cut -f 1 -d ":" | tr "\n" " "`
+ALL_IFACES=`ifconfig | grep -E 'eth[0-9]|enp' | cut -f 1 -d ":" | tr "\n" " "`
 
 EXTIF_DIALOG_START="$DIALOG --menu \"Select WAN interface for NAT that interracts with Internet\" 15 85 6 \\"
 EXTIF_DIALOG="${EXTIF_DIALOG_START}"
@@ -493,6 +493,18 @@ cp -R ./docs/webspeed/speed_hta ${APACHE_DATA_PATH}billing/.htaccess
 else
 echo "Looks like this Ubilling release does not containing default htaccess preset"
 fi
+
+#Multigen/FreeRADIUS3 preconfiguration TODO:
+cd ${APACHE_DATA_PATH}billing
+cp -R ./docs/multigen/raddb3/* /etc/freeradius/3.0/
+RADVER=`freeradius -v | grep "radiusd: FreeRADIUS Version" | awk '{print $4}' | tr -d ,`
+$DIALOG --infobox "Configuring FreeRADIUS ${RADVER} and MultiGen" 4 70
+perl -e "s/\/usr\/local\/lib\/freeradius-3.0.16/\/usr\/lib\/freeradius\//g" -pi /etc/freeradius/3.0/radiusd.conf
+perl -e "s/\/usr\/local\/share\/freeradius\/dictionary/\/usr\/share\/freeradius\/dictionary/g" -pi /etc/freeradius/3.0/dictionary
+perl -e "s/\/usr\/local\/etc\/raddb\/dictionary_preset/\/etc\/freeradius\/3.0\/dictionary_preset/g" -pi /etc/freeradius/3.0/dictionary
+cat ./docs/multigen/dump.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+cat ./docs/multigen/radius3_fix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /etc/freeradius/3.0/sql.conf
 
 #stopping stargazer
 $DIALOG --infobox "Stopping stargazer" 4 60
