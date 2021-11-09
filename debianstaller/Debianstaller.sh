@@ -475,7 +475,16 @@ then
 #generating new Ubilling serial
 /usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save" >> /var/log/debianstaller.log  2>&1
 NEW_UBSERIAL=`cat ./exports/ubserial`
+
+if [ -n "$NEW_UBSERIAL" ]
+then
+echo "Installation failed. Empty Ubilling serial. Retry your attempt."
+echo "FATAL: empty Ubilling serial" >> /var/log/debianstaller.log  2>&1
+exit
+else
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
+fi
+
 crontab ./docs/crontab/crontab.preconf
 $DIALOG --infobox "Installing default crontab preset" 4 60
 #updating serial in ubapi wrapper
