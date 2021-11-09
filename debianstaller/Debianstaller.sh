@@ -507,6 +507,7 @@ cat ./docs/multigen/radius3_fix.sql | /usr/bin/mysql -u root  -p stg --password=
 perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /etc/freeradius/3.0/sql.conf
 
 #sphinxsearch preconf TODO:
+$DIALOG --infobox "Installing Sphinx search service" 4 60
 cd /opt
 wget http://sphinxsearch.com/files/sphinx-3.4.1-efbcc65-linux-amd64.tar.gz >> /var/log/debianstaller.log  2>&1
 tar zxvf sphinx-3.4.1-efbcc65-linux-amd64.tar.gz >> /var/log/debianstaller.log  2>&1
@@ -518,7 +519,10 @@ cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/
 perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
 /opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all
 /opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf
-#todo: fix listen directive, autostart scripts, documentation.
+cp -R cp -R /usr/local/ubinstaller/configs/searchd.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable searchd.service >> /var/log/debianstaller.log  2>&1
+
 
 #stopping stargazer
 $DIALOG --infobox "Stopping stargazer" 4 60

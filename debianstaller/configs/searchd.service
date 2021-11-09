@@ -1,0 +1,12 @@
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=Sphinx search service
+Wants=mariadb.service
+After=network.target mariadb.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf
