@@ -507,6 +507,18 @@ cat ./docs/multigen/radius3_fix.sql | /usr/bin/mysql -u root  -p stg --password=
 perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /etc/freeradius/3.0/sql.conf
 
 #sphinxsearch preconf TODO:
+cd /opt
+wget http://sphinxsearch.com/files/sphinx-3.4.1-efbcc65-linux-amd64.tar.gz >> /var/log/debianstaller.log  2>&1
+tar zxvf sphinx-3.4.1-efbcc65-linux-amd64.tar.gz >> /var/log/debianstaller.log  2>&1
+mv sphinx-3.4.1 sphinx
+cd sphinx
+mkdir -p sphinxdata/logs
+touch sphinxdata/logs/searchd.log
+cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/sphinx.conf
+perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
+/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all
+/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf
+#todo: fix listen directive, autostart scripts, documentation.
 
 #stopping stargazer
 $DIALOG --infobox "Stopping stargazer" 4 60
