@@ -56,7 +56,7 @@ $DIALOG --menu "Choose Stargazer release" 16 50 8 \
 clear
 
 #configuring LAN interface
-ALL_IFACES=`ifconfig | grep -E 'eth[0-9]|enp' | cut -f 1 -d ":" | tr "\n" " "`
+ALL_IFACES=`basename -a /sys/class/net/* | grep -v lo | tr "\n" " "`
 
 INTIF_DIALOG_START="$DIALOG --menu \"Select LAN interface that interracts with your INTERNAL network\" 15 85 6 \\"
 INTIF_DIALOG="${INTIF_DIALOG_START}"
@@ -91,7 +91,7 @@ case $NAS_KERNEL in
 0)
 #NAS kernel setup with preconfigured firewall
 #configuring WAN interface
-ALL_IFACES=`ifconfig | grep -E 'eth[0-9]|enp' | cut -f 1 -d ":" | tr "\n" " "`
+ALL_IFACES=`basename -a /sys/class/net/* | grep -v lo | tr "\n" " "`
 
 EXTIF_DIALOG_START="$DIALOG --menu \"Select WAN interface for NAT that interracts with Internet\" 15 85 6 \\"
 EXTIF_DIALOG="${EXTIF_DIALOG_START}"
