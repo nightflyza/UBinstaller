@@ -476,14 +476,14 @@ then
 /usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save" >> /var/log/debianstaller.log  2>&1
 NEW_UBSERIAL=`cat ./exports/ubserial`
 
-if [ -n "$NEW_UBSERIAL" ]
+if [ -n "$NEW_UBSERIAL" ];
 then
+echo "OK: new Ubilling serial ${NEW_UBSERIAL}" >> /var/log/debianstaller.log  2>&1
+else
+$DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
 echo "Installation failed and aborted. Empty Ubilling serial. Retry your attempt."
 echo "FATAL: empty new Ubilling serial" >> /var/log/debianstaller.log  2>&1
 exit
-else
-$DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
-echo "OK: new Ubilling serial ${NEW_UBSERIAL}" >> /var/log/debianstaller.log  2>&1
 fi
 
 crontab ./docs/crontab/crontab.preconf
