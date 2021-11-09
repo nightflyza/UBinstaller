@@ -529,7 +529,7 @@ cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/
 perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
 /opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all >> /var/log/debianstaller.log  2>&1
 /opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf >> /var/log/debianstaller.log  2>&1
-cp -R cp -R /usr/local/ubinstaller/configs/searchd.service /etc/systemd/system/
+cp -R /usr/local/ubinstaller/configs/searchd.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable searchd.service >> /var/log/debianstaller.log  2>&1
 
