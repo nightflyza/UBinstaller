@@ -478,11 +478,12 @@ NEW_UBSERIAL=`cat ./exports/ubserial`
 
 if [ -n "$NEW_UBSERIAL" ]
 then
-echo "Installation failed. Empty Ubilling serial. Retry your attempt."
-echo "FATAL: empty Ubilling serial" >> /var/log/debianstaller.log  2>&1
+echo "Installation failed and aborted. Empty Ubilling serial. Retry your attempt."
+echo "FATAL: empty new Ubilling serial" >> /var/log/debianstaller.log  2>&1
 exit
 else
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
+echo "OK: new Ubilling serial ${NEW_UBSERIAL}" >> /var/log/debianstaller.log  2>&1
 fi
 
 crontab ./docs/crontab/crontab.preconf
