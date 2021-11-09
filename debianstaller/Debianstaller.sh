@@ -497,7 +497,7 @@ fi
 #Multigen/FreeRADIUS3 preconfiguration
 cd ${APACHE_DATA_PATH}billing
 cp -R ./docs/multigen/raddb3/* /etc/freeradius/3.0/
-cp -R ./docs/multigen/debian /etc/freeradius/3.0/radiusd.conf
+cp -R ./docs/multigen/debian/radiusd.conf /etc/freeradius/3.0/radiusd.conf
 RADVER=`freeradius -v | grep "radiusd: FreeRADIUS Version" | awk '{print $4}' | tr -d ,`
 $DIALOG --infobox "Configuring FreeRADIUS ${RADVER} and MultiGen" 4 70
 perl -e "s/\/usr\/local\/share\/freeradius\/dictionary/\/usr\/share\/freeradius\/dictionary/g" -pi /etc/freeradius/3.0/dictionary
@@ -506,7 +506,7 @@ cat ./docs/multigen/dump.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL
 cat ./docs/multigen/radius3_fix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /etc/freeradius/3.0/sql.conf
 
-#sphinxsearch preconf TODO:
+#sphinxsearch preconf
 $DIALOG --infobox "Installing Sphinx search service" 4 60
 cd /opt
 wget http://sphinxsearch.com/files/sphinx-3.4.1-efbcc65-linux-amd64.tar.gz >> /var/log/debianstaller.log  2>&1
@@ -517,8 +517,8 @@ mkdir -p sphinxdata/logs
 touch sphinxdata/logs/searchd.log
 cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/sphinx.conf
 perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
-/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all
-/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf
+/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all >> /var/log/debianstaller.log  2>&1
+/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf >> /var/log/debianstaller.log  2>&1
 cp -R cp -R /usr/local/ubinstaller/configs/searchd.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable searchd.service >> /var/log/debianstaller.log  2>&1
