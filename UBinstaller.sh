@@ -1,9 +1,8 @@
 #!/bin/sh
 
-# I am a warrior, I have no fear
-# No one will conquer me, I will not die here
-# I will forever be where the killers run free
-# Held unaccountable to the heavens just call me
+# 
+# Per aspera ad astra
+# 
 
 DIALOG=${DIALOG=dialog}
 FETCH="/usr/bin/fetch"
@@ -44,6 +43,7 @@ clear
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
 		   131_6T "FreeBSD 13.1 amd64"\
 		   130_6T "FreeBSD 13.0 amd64"\
+		   123_6T "FreeBSD 12.3 amd64"\
 		   122_6T "FreeBSD 12.2 amd64"\
 		   121_6T "FreeBSD 12.1 amd64"\
 	       120_64 "FreeBSD 12.0 amd64"\
@@ -245,9 +245,9 @@ echo "=== Error: binary packages are not available. Installation is aborted. ===
 exit
 fi
 
-tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> /tmp/ubpack.log
+tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> /var/log/ubinstaller.log
 cd ${ARCH}
-ls -1 | xargs -n 1 pkg add >> /tmp/ubpack.log
+ls -1 | xargs -n 1 pkg add >> /var/log/ubinstaller.log
 
 #back to installation directory
 cd /usr/local/ubinstaller/
@@ -265,23 +265,23 @@ echo "=== Error: stargazer sources are not available. Installation is aborted. =
 exit
 fi
 $DIALOG --infobox "Compiling Stargazer." 4 60
-tar zxvf ${DL_STG_NAME} 2>> /tmp/ubstg.log
+tar zxvf ${DL_STG_NAME} 2>> /var/log/ubinstaller.log
 $DIALOG --infobox "Compiling Stargazer.." 4 60
 cd ${DL_STG_RELEASE}/projects/stargazer/ 
-./build >> /tmp/ubstg.log 2>> /tmp/ubstg.log
-/usr/local/bin/gmake install >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+./build >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
+/usr/local/bin/gmake install >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
 $DIALOG --infobox "Compiling Stargazer..." 4 60
 #and configurators
 cd ../sgconf 
-./build >> /tmp/ubstg.log
-/usr/local/bin/gmake >> /tmp/ubstg.log 2>> /tmp/ubstg.log
-/usr/local/bin/gmake install >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+./build >> /var/log/ubinstaller.log
+/usr/local/bin/gmake >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
+/usr/local/bin/gmake install >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
 $DIALOG --infobox "Compiling Stargazer...." 4 60
 cd ../sgconf_xml/ 
-./build >> /tmp/ubstg.log 2>> /tmp/ubstg.log
-/usr/local/bin/gmake >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+./build >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
+/usr/local/bin/gmake >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
 $DIALOG --infobox "Compiling Stargazer....." 4 60
-/usr/local/bin/gmake install >> /tmp/ubstg.log 2>> /tmp/ubstg.log
+/usr/local/bin/gmake install >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
 $DIALOG --infobox "Stargazer installed." 4 60
 
 # adding needed boot options
@@ -327,7 +327,7 @@ fi
 mkdir ${APACHE_DATA_PATH}billing/
 cp ${DL_UB_NAME} ${APACHE_DATA_PATH}billing/
 cd ${APACHE_DATA_PATH}billing/
-tar zxvf ${DL_UB_NAME} 2>> /tmp/ubweb.log
+tar zxvf ${DL_UB_NAME} 2>> /var/log/ubinstaller.log
 chmod -R 777 content/ config/ multinet/ exports/ remote_nas.conf 
 chmod -R 777 userstats/config/
 
@@ -517,6 +517,3 @@ exit
 esac
 
 # I am the chosen one, keep till the rising sun
-# I sacrifice it all for my asservation 
-# When my work is done, there will be no more 
-# Who will destroy me, I am the God of War!
