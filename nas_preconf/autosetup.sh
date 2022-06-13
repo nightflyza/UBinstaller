@@ -74,7 +74,7 @@ cd ${DL_NAME}
 
 #installing packages
 echo "Installing required software..."
-pkg add ./*
+ls -1 | xargs -n 1 pkg add
 
 #installing nginx
 pkg install -y nginx

@@ -42,6 +42,7 @@ clear
 
 
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
+		   131_6T "FreeBSD 13.1 amd64"\
 		   130_6T "FreeBSD 13.0 amd64"\
 		   122_6T "FreeBSD 12.2 amd64"\
 		   121_6T "FreeBSD 12.1 amd64"\
