@@ -34,7 +34,7 @@ FIREWALL_PRESET="firewall.conf"
 
 #binary packages repo
 DL_REPO="http://ubilling.net.ua/packages/"
-#binary packages distro
+#binary packages distro (131_6T, 130_6T, 123_6T)
 DL_NAME="131_6T"
 DL_EXT=".tar.gz"
 #stargazer sources
