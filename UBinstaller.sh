@@ -44,10 +44,6 @@ $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
 		   131_6T "FreeBSD 13.1 amd64"\
 		   130_6T "FreeBSD 13.0 amd64"\
 		   123_6T "FreeBSD 12.3 amd64"\
-		   122_6T "FreeBSD 12.2 amd64"\
-		   121_6T "FreeBSD 12.1 amd64"\
-	       120_64 "FreeBSD 12.0 amd64"\
-	       112_64 "FreeBSD 11.2 amd64"\
  	    2> /tmp/ubarch
 clear
 
@@ -55,7 +51,7 @@ clear
 clear
 $DIALOG --menu "Choose Stargazer release" 16 50 8 \
 				   409REL "Stargazer 2.409-release (stable)"\
-                   409RC5 "Stargazer 2.409-rc5 (stable)"\
+                   409RC5 "Stargazer 2.409-rc5 (legacy)"\
                    409RC2 "Stargazer 2.409-rc2 (legacy)"\
             2> /tmp/stgver
 clear

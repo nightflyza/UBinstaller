@@ -50,7 +50,7 @@ clear
 clear
 $DIALOG --menu "Choose Stargazer release" 16 50 8 \
 				   409REL "Stargazer 2.409-release (stable)"\
-                   409RC5 "Stargazer 2.409-rc5 (stable)"\
+                   409RC5 "Stargazer 2.409-rc5 (legacy)"\
                    409RC2 "Stargazer 2.409-rc2 (legacy)"\
             2> /tmp/stgver
 clear

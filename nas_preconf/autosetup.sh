@@ -35,11 +35,11 @@ FIREWALL_PRESET="firewall.conf"
 #binary packages repo
 DL_REPO="http://ubilling.net.ua/packages/"
 #binary packages distro
-DL_NAME="121_6T"
+DL_NAME="131_6T"
 DL_EXT=".tar.gz"
 #stargazer sources
 DL_STG_URL="http://ubilling.net.ua/stg/"
-DL_STG_REL="stg-2.409-rc2"
+DL_STG_REL="stg-2.409"
 DL_STG_EXT=".tar.gz"
 
 #########################################

@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
 then
   echo "Usage: sh packagepack_ver \"PLATFORM\""
-  echo "Example: sh packagepack_121T 121_6T or sh packagepack_121T 121_3T"
+  echo "Example: sh packagepack_123T 123_6T or sh packagepack_123T 123_3T"
   exit
 fi
 
@@ -85,9 +85,16 @@ pkg install -y expect
 pkg install -y bwm-ng
 pkg install -y ifstat
 pkg install -y iperf
+pkg install -y iperf3
 pkg install -y arpwatch
 pkg install -y ap24-mod_rpaf2
 pkg install -y git
+pkg install -y ffmpeg
+pkg install -y nginx
+pkg install -y bmon
+pkg install -y iftop
+pkg install -y bind-tools
+pkg install -y trafshow
 
 
 #freeradius3 required to build with MySQL support
