@@ -123,7 +123,6 @@ cp -R ./multinet ../ub_restore/
 cp ./config/alter.ini ../ub_restore/config/
 cp ./config/billing.ini ../ub_restore/config/
 cp ./config/mysql.ini ../ub_restore/config/
-cp ./config/catv.ini ../ub_restore/config/
 cp ./config/ymaps.ini ../ub_restore/config/
 cp ./config/config.ini ../ub_restore/config/
 cp -R ./config/dhcp ../ub_restore/config/
