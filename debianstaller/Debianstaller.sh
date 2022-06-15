@@ -34,7 +34,7 @@ apt install -y gnupg2 >> /var/log/debianstaller.log  2>&1
 
 
 clear
-$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 11 Bullseye. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
+$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 11.3 Bullseye. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
 clear
 
 #new or migration installation
@@ -427,6 +427,7 @@ chmod -R 777 /var/log/apache2
 # starting stargazer for creating DB
 $DIALOG --infobox "Starting Stargazer and creating initial DB." 4 60
 /usr/sbin/stargazer
+sleep 3
 
 #changing default password
 /usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> " >> /var/log/debianstaller.log  2>&1
@@ -434,6 +435,7 @@ $DIALOG --infobox "Stargazer default password changed." 4 60
 #stopping stargazer
 $DIALOG --infobox "Stopping Stargazer." 4 60
 killall stargazer
+sleep 10
 
 
 # restoring default Ubilling SQL dump
@@ -467,6 +469,7 @@ $DIALOG --infobox "remote API wrapper installed" 4 60
 #starting stargazer
 $DIALOG --infobox "Starting stargazer" 4 60
 /usr/sbin/stargazer
+sleep 3
 
 #initial crontab configuration
 cd ${APACHE_DATA_PATH}billing
@@ -474,8 +477,10 @@ if [ -f ./docs/crontab/crontab.preconf ];
 then
 #generating new Ubilling serial
 /usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save" >> /var/log/debianstaller.log  2>&1
-NEW_UBSERIAL=`cat ./exports/ubserial`
+#waiting saving data
+sleep 2
 
+NEW_UBSERIAL=`cat ./exports/ubserial`
 if [ -n "$NEW_UBSERIAL" ];
 then
 echo "OK: new Ubilling serial ${NEW_UBSERIAL}" >> /var/log/debianstaller.log  2>&1
@@ -537,6 +542,7 @@ systemctl enable searchd.service >> /var/log/debianstaller.log  2>&1
 #stopping stargazer
 $DIALOG --infobox "Stopping stargazer" 4 60
 killall stargazer
+sleep 10
 
 #installing systemd stargazer startup part
 cp -R /usr/local/ubinstaller/configs/stargazer.service /etc/systemd/system/
