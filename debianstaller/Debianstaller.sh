@@ -363,7 +363,7 @@ service mariadb start
 #starting apache with new configs
 ${APACHE_INIT_SCRIPT} start
 
-#"Setting MySQL root password"
+#Setting MySQL root password
 mysqladmin -u root password ${MYSQL_PASSWD}
 
 ######################
@@ -424,8 +424,12 @@ perl -e "s/-c 10 -w 20000/-c 10 -W 0.1/g" -pi ./config/alter.ini
 #fixing apache rights
 chmod -R 777 /var/log/apache2
 
-# starting stargazer for creating DB
-$DIALOG --infobox "Starting Stargazer and creating initial DB." 4 60
+#creating stargazer database
+$DIALOG --infobox "Creating initial Stargazer DB" 4 60
+cat docs/dumps/stargazer.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
+
+# starting stargazer 
+$DIALOG --infobox "Starting Stargazer" 4 60
 /usr/sbin/stargazer
 sleep 3
 
@@ -439,16 +443,14 @@ sleep 10
 
 
 # restoring default Ubilling SQL dump
-cat docs/test_dump.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
+$DIALOG --infobox "Restoring Ubilling database" 4 60
+cat docs/dumps/ubilling.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
 
 # apply hotfix for stargazer 2.408 and change passwords in configs
 cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
 
-#clean default stargazer users and tariffs
-echo "TRUNCATE TABLE users" | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
-echo "TRUNCATE TABLE tariffs" | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 
 #preconfiguring dhcpd logging
 cat /usr/local/ubinstaller/configs/rsyslog.preconf >> /etc/rsyslog.conf
@@ -595,7 +597,6 @@ perl -e "s/LAN_IFACE/${LAN_IFACE}/g" -pi /etc/default/isc-dhcp-server
 ln -fs /var/www/html/billing/multinet /usr/local/etc/multinet
 ln -fs /var/lib/bandwidthd/htdocs/ /var/www/html/band
 ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
-
 
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50

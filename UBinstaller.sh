@@ -304,7 +304,7 @@ ${APACHE_INIT_SCRIPT} start
 /usr/local/etc/rc.d/mysql-server start
 
 
-#echo "Setting MySQL root password"
+#Setting MySQL root password
 mysqladmin -u root password ${MYSQL_PASSWD}
 
 ######################
@@ -344,25 +344,28 @@ perl -e "s/secretpassword/${RSD_PASS}/g" -pi /etc/stargazer/stargazer.conf
 #change default mukrotik presets password
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 
-# starting stargazer for creating DB
+# creating stargazer database
+$DIALOG --infobox "Creating initial Stargazer DB" 4 60
+cat docs/dumps/stargazer.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+
+# starting stargazer
+$DIALOG --infobox "Starting Stargazer" 4 60
 /usr/sbin/stargazer
-#changing default password
+#changing stargazer admin default password
 /usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
-echo "Stargazer default password changed."
+$DIALOG --infobox "Stargazer default password changed." 4 6
 #stopping stargazer
+$DIALOG --infobox "Stopping Stargazer." 4 6
 killall stargazer
 
-# restoring ubilling SQL dump
-cat docs/test_dump.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+# restoring clean ubilling SQL dump
+$DIALOG --infobox "Restoring Ubilling database" 4 60
+cat docs/dumps/ubilling.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 
 # apply hotfix for stargazer 2.408 and change passwords in configs
 cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
-
-#clean default stargazer users and tariffs
-echo "TRUNCATE TABLE users" | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
-echo "TRUNCATE TABLE tariffs" | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 
 #preconfiguring dhcpd logging
 cat /usr/local/ubinstaller/configs/syslog.preconf >> /etc/syslog.conf
@@ -370,7 +373,7 @@ touch /var/log/dhcpd.log
 /usr/local/etc/rc.d/isc-dhcpd restart > /dev/null 2> /dev/null
 /etc/rc.d/syslogd restart > /dev/null
 perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi ./config/alter.ini
-echo "dhcpd logging configured."
+$DIALOG --infobox "dhcpd logging configured." 4 60
 
 #first install flag setup for the future
 touch ./exports/FIRST_INSTALL
@@ -379,7 +382,7 @@ chmod 777 ./exports/FIRST_INSTALL
 # unpacking ubapi preset
 cp -R /usr/local/ubinstaller/configs/ubapi /bin/
 chmod a+x /bin/ubapi
-echo "remote API wrapper installed."
+$DIALOG --infobox "remote API wrapper installed" 4 60
 
 # unpacking start scripts templates
 cp -f docs/presets/FreeBSD/etc/stargazer/* /etc/stargazer/
@@ -411,7 +414,7 @@ ln -fs /usr/local/bandwidthd/htdocs ${APACHE_DATA_PATH}band
 #creating rc.script
 cp -R /usr/local/ubinstaller/configs/rc.billing /usr/local/etc/rc.d/billing
 chmod a+x /usr/local/etc/rc.d/billing
-echo "Ubilling rc script installed."
+$DIALOG --infobox "Ubilling rc script installed." 4 60
 
 #ugly hack for starting stargazer without NAS-es
 echo "127.0.0.1/32 127.0.0.1" > /etc/stargazer/remote_nas.conf
@@ -473,6 +476,7 @@ echo "127.0.0.1 ${CURR_HOSTNAME} ${CURR_HOSTNAME}.localdomain" >> /etc/hosts
 
 
 #starting stargazer
+$DIALOG --infobox "Starting Stargazer" 4 60
 /usr/sbin/stargazer
 
 #initial crontab configuration
@@ -482,12 +486,12 @@ then
 #generating new Ubilling serial
 /usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
 NEW_UBSERIAL=`cat ./exports/ubserial`
-echo "New Ubilling serial generated"
+$DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
 crontab ./docs/crontab/crontab.preconf
-echo "Installing default crontab preset"
+$DIALOG --infobox "Installing default crontab preset" 4 60
 #updating serial in ubapi wrapper
 perl -e "s/UB000000000000000000000000000000000/${NEW_UBSERIAL}/g" -pi /bin/ubapi
-echo "New serial installed into ubapi wrapper"
+$DIALOG --infobox "New serial installed into ubapi wrapper" 4 60
 else
 echo "Looks like this Ubilling release is not supporting automatic crontab configuration"
 fi
@@ -502,6 +506,7 @@ echo "Looks like this Ubilling release does not containing default htaccess pres
 fi	
 
 #stopping stargazer again to prevent data corruption and force server rebooting
+$DIALOG --infobox "Stopping stargazer" 4 60
 killall stargazer
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
