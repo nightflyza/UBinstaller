@@ -346,16 +346,16 @@ perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 
 # creating stargazer database
 $DIALOG --infobox "Creating initial Stargazer DB" 4 60
-cat docs/dumps/stargazer.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+cat docs/dumps/stargazer.sql | /usr/local/bin/mysql -u root --password=${MYSQL_PASSWD}
 
 # starting stargazer
 $DIALOG --infobox "Starting Stargazer" 4 60
 /usr/sbin/stargazer
 #changing stargazer admin default password
 /usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
-$DIALOG --infobox "Stargazer default password changed." 4 6
+$DIALOG --infobox "Stargazer default password changed." 4 60
 #stopping stargazer
-$DIALOG --infobox "Stopping Stargazer." 4 6
+$DIALOG --infobox "Stopping Stargazer." 4 60
 killall stargazer
 
 # restoring clean ubilling SQL dump

@@ -426,7 +426,7 @@ chmod -R 777 /var/log/apache2
 
 #creating stargazer database
 $DIALOG --infobox "Creating initial Stargazer DB" 4 60
-cat docs/dumps/stargazer.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
+cat docs/dumps/stargazer.sql | /usr/bin/mysql -u root --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
 
 # starting stargazer 
 $DIALOG --infobox "Starting Stargazer" 4 60
