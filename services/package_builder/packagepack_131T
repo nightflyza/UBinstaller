@@ -95,6 +95,7 @@ pkg install -y bmon
 pkg install -y iftop
 pkg install -y bind-tools
 pkg install -y trafshow
+pkg install -y fping
 
 
 
