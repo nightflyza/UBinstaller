@@ -1,10 +1,9 @@
-9223372036854775807
-302291117179807942701292197815300357206280507709#!/bin/sh
+#!/bin/sh
 
 if [ $# -ne 1 ]
 then
   echo "Usage: sh packagepack_ver \"PLATFORM\""
-  echo "Example: sh packagepack_124T 124_6T or sh packagepack_124T 124_3T"
+  echo "Example: sh packagepack_123T 123_6T or sh packagepack_123T 123_3T"
   exit
 fi
 
