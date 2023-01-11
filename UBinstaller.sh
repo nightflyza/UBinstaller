@@ -300,7 +300,7 @@ perl -e "s/LAN_IFACE/${LAN_IFACE}/g" -pi /etc/rc.conf
 # copying prepared configs
 cd /usr/local/ubinstaller/configs/
 cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
-cp -R ${PHP_CONFIG_PRESET} /usr/local/etc/
+cp -R ${PHP_CONFIG_PRESET} /usr/local/etc/php.ini
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 
