@@ -12,6 +12,7 @@ APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
 APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
 APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
 APACHE_CONFIG_NAME="httpd.conf"
+PHP_CONFIG_PRESET="php.ini"
 
 #some remote paths here
 DL_PACKAGES_URL="http://ubilling.net.ua/packages/"
@@ -45,7 +46,8 @@ $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
 		   130_6T "FreeBSD 13.0 amd64"\
 		   124_6T "FreeBSD 12.4 amd64"\
 		   123_6T "FreeBSD 12.3 amd64"\
-       131_3T "FreeBSD 13.1 i386"\
+           131_3T "FreeBSD 13.1 i386"\
+           124_6E "FreeBSD 12.4 amd64 PHP 8.2"\
  	    2> /tmp/ubarch
 clear
 
@@ -192,7 +194,12 @@ cd /usr/local/ubinstaller/
 #  Platform specific issues handling  #
 #######################################
 
-#nothing specific required at this moment
+case $ARCH in
+124_6E)
+APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
+PHP_CONFIG_PRESET="php8.ini"
+;;
+esac	
 
 
 #FreeBSD 10+ need to use CC and CXX env
@@ -289,7 +296,7 @@ perl -e "s/LAN_IFACE/${LAN_IFACE}/g" -pi /etc/rc.conf
 # copying prepared configs
 cd /usr/local/ubinstaller/configs/
 cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
-cp -R php.ini /usr/local/etc/
+cp -R ${PHP_CONFIG_PRESET} /usr/local/etc/
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 
