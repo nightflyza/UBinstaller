@@ -196,8 +196,12 @@ cd /usr/local/ubinstaller/
 
 case $ARCH in
 124_6E)
+#12.4E contains PHP 8.2 binaries
 APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
 PHP_CONFIG_PRESET="php8.ini"
+# now only current branch compatible with PHP 8.2
+DL_UB_URL="http://snaps.ubilling.net.ua/"
+DL_UB_NAME="ub_current.tgz"
 ;;
 esac	
 
