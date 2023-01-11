@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
 then
   echo "Usage: sh packagepack_ver \"PLATFORM\""
-  echo "Example: sh packagepack_124E 124_6T or sh packagepack_124E 124_3T"
+  echo "Example: sh packagepack_124E 124_6E or sh packagepack_124E 124_3E"
   exit
 fi
 
