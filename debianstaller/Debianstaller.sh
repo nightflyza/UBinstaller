@@ -140,6 +140,8 @@ clear
 $DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 50 2> /tmp/ubstgpass
 clear
 $DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 50 2> /tmp/ubrsd
+clear
+$DIALOG --title "Ubilling serial"  --inputbox "Enter your previous installation Ubilling serial number" 8 60 2> /tmp/ubsrl
 ;;
 esac
 
@@ -154,6 +156,15 @@ RSD_PASS=`cat /tmp/ubrsd`
 ARCH=`hostnamectl | grep System | xargs`
 STG_VER=`cat /tmp/stgver`
 
+case $PASSW_MODE in
+NEW)
+UBSERIAL="auto"
+;;
+MIG)
+UBSERIAL=`cat /tmp/ubsrl`
+;;
+esac
+
 # cleaning temp files
 rm -fr /tmp/ubiface
 rm -fr /tmp/ubmypass
@@ -164,9 +175,10 @@ rm -fr /tmp/ubrsd
 rm -fr /tmp/ubextif
 rm -fr /tmp/stgver
 rm -fr /tmp/insttype
+rm -fr /tmp/ubsrl
 
 #last chance to exit
-$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n" 18 70
+$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n Ubilling serial: ${UBSERIAL}\n" 18 70
 AGREE=$?
 clear
 
@@ -477,12 +489,24 @@ sleep 3
 cd ${APACHE_DATA_PATH}billing
 if [ -f ./docs/crontab/crontab.preconf ];
 then
+
+#generating new Ubilling serial or using predefined
+case $PASSW_MODE in
+NEW)
 #generating new Ubilling serial
 /usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save" >> /var/log/debianstaller.log  2>&1
 #waiting saving data
 sleep 2
-
 NEW_UBSERIAL=`cat ./exports/ubserial`
+$DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
+;;
+MIG)
+NEW_UBSERIAL=${UBSERIAL}
+$DIALOG --infobox "Using Ubilling serial: ${NEW_UBSERIAL}" 4 60
+;;
+esac
+
+
 if [ -n "$NEW_UBSERIAL" ];
 then
 echo "OK: new Ubilling serial ${NEW_UBSERIAL}" >> /var/log/debianstaller.log  2>&1
