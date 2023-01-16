@@ -145,13 +145,13 @@ echo "rsd"${GEN_RSD_PASS} > /tmp/ubrsd
 MIG)
 #request previous MySQL/Stargazer/rscriptd passwords
 clear
-$DIALOG --title "MySQL root password"  --inputbox "Enter your previous installation MySQL root password" 8 50 2> /tmp/ubmypass
+$DIALOG --title "MySQL root password"  --inputbox "Enter your previous installation MySQL root password" 8 60 2> /tmp/ubmypass
 clear
-$DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 50 2> /tmp/ubstgpass
+$DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 60 2> /tmp/ubstgpass
 clear
-$DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 50 2> /tmp/ubrsd
+$DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 60 2> /tmp/ubrsd
 clear
-$DIALOG --title "Ubilling serial"  --inputbox "Enter your previous installation Ubilling serial number" 8 50 2> /tmp/ubsrl
+$DIALOG --title "Ubilling serial"  --inputbox "Enter your previous installation Ubilling serial number" 8 60 2> /tmp/ubsrl
 ;;
 esac
 
@@ -190,7 +190,7 @@ rm -fr /tmp/ubsrl
 
 
 #last chance to exit
-$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n Serial: ${UBSERIAL}\n" 18 60
+$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n Ubilling serial: ${UBSERIAL}\n" 18 60
 AGREE=$?
 clear
 
