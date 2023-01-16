@@ -34,7 +34,7 @@ apt install -y gnupg2 >> /var/log/debianstaller.log  2>&1
 
 
 clear
-$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 11.3 Bullseye. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
+$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 11.6 Bullseye. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
 clear
 
 #new or migration installation
@@ -135,11 +135,11 @@ echo "rsd"${GEN_RSD_PASS} > /tmp/ubrsd
 MIG)
 request previous MySQL/Stargazer/rscriptd passwords
 clear
-$DIALOG --title "MySQL root password"  --inputbox "Enter your previous installation MySQL root password" 8 50 2> /tmp/ubmypass
+$DIALOG --title "MySQL root password"  --inputbox "Enter your previous installation MySQL root password" 8 60 2> /tmp/ubmypass
 clear
-$DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 50 2> /tmp/ubstgpass
+$DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 60 2> /tmp/ubstgpass
 clear
-$DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 50 2> /tmp/ubrsd
+$DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 60 2> /tmp/ubrsd
 clear
 $DIALOG --title "Ubilling serial"  --inputbox "Enter your previous installation Ubilling serial number" 8 60 2> /tmp/ubsrl
 ;;
