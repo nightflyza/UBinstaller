@@ -20,8 +20,8 @@ DL_PACKAGES_EXT=".tar.gz"
 DL_UB_URL="http://ubilling.net.ua/"
 DL_UB_NAME="ub.tgz"
 DL_STG_URL="http://ubilling.net.ua/stg/"
-DL_STG_NAME="stg-2.409-rc5.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc5"
+DL_STG_NAME="stg-2.409.tar.gz"
+DL_STG_RELEASE="stg-2.409"
 
 set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
@@ -150,6 +150,8 @@ clear
 $DIALOG --title "Stargazer password"  --inputbox "Enter your previous installation Stargazer password" 8 50 2> /tmp/ubstgpass
 clear
 $DIALOG --title "rscriptd password"  --inputbox "Enter your previous installation rscriptd password" 8 50 2> /tmp/ubrsd
+clear
+$DIALOG --title "Ubilling serial"  --inputbox "Enter your previous installation Ubilling serial number" 8 50 2> /tmp/ubsrl
 ;;
 esac
 
@@ -163,6 +165,15 @@ RSD_PASS=`cat /tmp/ubrsd`
 ARCH=`cat /tmp/ubarch`
 STG_VER=`cat /tmp/stgver`
 
+case $PASSW_MODE in
+NEW)
+UBSERIAL="auto"
+;;
+MIG)
+UBSERIAL=`cat /tmp/ubsrl`
+;;
+esac
+
 # cleaning temp files
 rm -fr /tmp/ubiface
 rm -fr /tmp/ubmypass
@@ -174,10 +185,12 @@ rm -fr /tmp/ubextif
 rm -fr /tmp/ubarch
 rm -fr /tmp/stgver
 rm -fr /tmp/insttype
+rm -fr /tmp/ubsrl
+
 
 
 #last chance to exit
-$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n" 18 60
+$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n Serial: ${UBSERIAL}\n" 18 60
 AGREE=$?
 clear
 
@@ -495,10 +508,19 @@ $DIALOG --infobox "Starting Stargazer" 4 60
 cd ${APACHE_DATA_PATH}billing
 if [ -f ./docs/crontab/crontab.preconf ];
 then
-#generating new Ubilling serial
+#generating new Ubilling serial or using predefined
+case $PASSW_MODE in
+NEW)
 /usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
 NEW_UBSERIAL=`cat ./exports/ubserial`
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
+;;
+MIG)
+NEW_UBSERIAL=${UBSERIAL}
+$DIALOG --infobox "Using Ubilling serial: ${NEW_UBSERIAL}" 4 60
+;;
+esac
+#loading default crontab preset
 crontab ./docs/crontab/crontab.preconf
 $DIALOG --infobox "Installing default crontab preset" 4 60
 #updating serial in ubapi wrapper
