@@ -411,10 +411,13 @@ perl -e "s/rl0/${LAN_IFACE}/g" -pi ./config/alter.ini
 
 # and in stargazer.conf
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi /etc/stargazer/stargazer.conf
-#change rscriptd password
+# change rscriptd password
 perl -e "s/secretpassword/${RSD_PASS}/g" -pi /etc/stargazer/stargazer.conf
-#change default mukrotik presets password
+# change default Mikrotik presets password
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
+# OpenPayz may be?
+perl -e "s/mylogin/root/g" -pi ./openpayz/config/mysql.ini
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./openpayz/config/mysql.ini
 
 #fixing paths to linux specific
 perl -e "s/\/usr\/local\/bin\/sudo/\/usr\/bin\/sudo/g" -pi ./config/billing.ini
@@ -458,11 +461,14 @@ sleep 10
 $DIALOG --infobox "Restoring Ubilling database" 4 60
 cat docs/dumps/ubilling.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
 
+$DIALOG --infobox "Installing OpenPayz database preset" 4 60
+cat docs/dumps/openpayz.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD} >> /var/log/debianstaller.log  2>&1
+
 # apply hotfix for stargazer 2.408 and change passwords in configs
 cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
-
+perl -e "s/123456/${STG_PASS}/g" -pi ./openpayz/config/openpayz.ini
 
 #preconfiguring dhcpd logging
 cat /usr/local/ubinstaller/configs/rsyslog.preconf >> /etc/rsyslog.conf
