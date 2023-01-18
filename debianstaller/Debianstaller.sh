@@ -416,8 +416,8 @@ perl -e "s/secretpassword/${RSD_PASS}/g" -pi /etc/stargazer/stargazer.conf
 # change default Mikrotik presets password
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 # OpenPayz may be?
-perl -e "s/mylogin/root/g" -pi ./openpayz/config/mysql.ini
-perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./openpayz/config/mysql.ini
+perl -e "s/mylogin/root/g" -pi ./docs/openpayz/config/mysql.ini
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/openpayz/config/mysql.ini
 
 #fixing paths to linux specific
 perl -e "s/\/usr\/local\/bin\/sudo/\/usr\/bin\/sudo/g" -pi ./config/billing.ini
@@ -468,7 +468,7 @@ cat docs/dumps/openpayz.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_
 cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
-perl -e "s/123456/${STG_PASS}/g" -pi ./openpayz/config/openpayz.ini
+perl -e "s/123456/${STG_PASS}/g" -pi ./docs/openpayz/config/openpayz.ini
 
 #preconfiguring dhcpd logging
 cat /usr/local/ubinstaller/configs/rsyslog.preconf >> /etc/rsyslog.conf

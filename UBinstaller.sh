@@ -369,8 +369,8 @@ perl -e "s/secretpassword/${RSD_PASS}/g" -pi /etc/stargazer/stargazer.conf
 # change default mukrotik presets password
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/presets/MikroTik/config.ini
 # OpenPayz may be?
-perl -e "s/mylogin/root/g" -pi ./openpayz/config/mysql.ini
-perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./openpayz/config/mysql.ini
+perl -e "s/mylogin/root/g" -pi ./docs/openpayz/config/mysql.ini
+perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/openpayz/config/mysql.ini
 
 # creating stargazer database
 $DIALOG --infobox "Creating initial Stargazer DB" 4 60
@@ -397,7 +397,7 @@ cat docs/dumps/openpayz.sql | /usr/local/bin/mysql -u root  -p stg --password=${
 cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
-perl -e "s/123456/${STG_PASS}/g" -pi ./openpayz/config/openpayz.ini
+perl -e "s/123456/${STG_PASS}/g" -pi ./docs/openpayz/config/openpayz.ini
 
 #preconfiguring dhcpd logging
 cat /usr/local/ubinstaller/configs/syslog.preconf >> /etc/syslog.conf
