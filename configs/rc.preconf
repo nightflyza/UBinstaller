@@ -35,6 +35,11 @@ radiusd_enable="NO"
 fsck_y_enable="YES"
 background_fsck="NO"
 
+#supress sendmail
+sendmail_enable="NO"
+sendmail_submit_enable="NO"
+sendmail_outbound_enable="NO"
+sendmail_msp_queue_enable="NO"
 
 # ==========
 
