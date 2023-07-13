@@ -214,15 +214,18 @@ $DIALOG --infobox "Software installation is in progress. This takes a while." 4 
 #MariaDB setup
 apt install -y software-properties-common dirmngr >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB" 4 60
-${FETCH} https://mariadb.org/mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
-chmod -c 644 mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
-mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /var/log/debianstaller.log  2>&1
+
+#old way
+#${FETCH} https://mariadb.org/mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
+#chmod -c 644 mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
+#mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB." 4 60
-echo "deb [arch=amd64,arm64,ppc64el] \
-https://ftp.ubuntu-tw.org/mirror/mariadb/repo/11.0.2/debian \
-bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /var/log/debianstaller.log  2>&1
+#old way too
+#echo "deb [arch=amd64,arm64,ppc64el] \
+#https://ftp.ubuntu-tw.org/mirror/mariadb/repo/11.0.2/debian \
+#bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB.." 4 60
-apt update >> /var/log/debianstaller.log  2>&1
+#apt update >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB..." 4 60
 apt install -y mariadb-server >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB...." 4 60
