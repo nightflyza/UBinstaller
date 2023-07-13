@@ -250,7 +250,7 @@ apt install -y sudo >> /var/log/debianstaller.log  2>&1
 apt install -y curl >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing Apache server" 4 60
 apt install -y apache2 >> /var/log/debianstaller.log  2>&1
-apt install -y libapache2-mod-php7.4 >> /var/log/debianstaller.log  2>&1
+apt install -y libapache2-mod-php8.2 >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing DHCP server" 4 60
 apt install -y isc-dhcp-server >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing misc software" 4 60
@@ -355,7 +355,7 @@ ${APACHE_INIT_SCRIPT} stop
 # copying prepared configs
 cd /usr/local/ubinstaller/configs/
 cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
-cp -R php.ini /etc/php/7.4/apache2/
+cp -R php82.ini /etc/php/8.2/apache2/php.ini
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /etc/bandwidthd/bandwidthd.conf
 perl -e "s/em0/${LAN_IFACE}/g" -pi /etc/bandwidthd/bandwidthd.conf
