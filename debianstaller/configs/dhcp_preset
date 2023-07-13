@@ -1,3 +1,3 @@
 INTERFACESv4="LAN_IFACE"
-DHCPDv4_CONF=/var/www/html/billing/multinet/dhcpd.conf
+DHCPDv4_CONF=/etc/dhcp/multinet/dhcpd.conf
 OPTIONS="-4"
