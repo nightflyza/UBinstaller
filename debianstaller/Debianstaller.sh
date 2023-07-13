@@ -8,7 +8,7 @@ APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/var/www/html/"
 APACHE_CONFIG_DIR="/etc/apache2/"
 APACHE_INIT_SCRIPT="/usr/sbin/service apache2"
-APACHE_CONFIG_PRESET_NAME="debi11_apache2.conf"
+APACHE_CONFIG_PRESET_NAME="debi12_apache2.conf"
 APACHE_CONFIG_NAME="apache2.conf"
 
 #some remote paths here
@@ -219,7 +219,7 @@ chmod -c 644 mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
 mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB." 4 60
 echo "deb [arch=amd64,arm64,ppc64el] \
-https://ftp.ubuntu-tw.org/mirror/mariadb/repo/10.6/debian \
+https://ftp.ubuntu-tw.org/mirror/mariadb/repo/11.0.2/debian \
 bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB.." 4 60
 apt update >> /var/log/debianstaller.log  2>&1
@@ -250,6 +250,7 @@ apt install -y apache2 >> /var/log/debianstaller.log  2>&1
 apt install -y libapache2-mod-php7.4 >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing DHCP server" 4 60
 apt install -y isc-dhcp-server >> /var/log/debianstaller.log  2>&1
+$DIALOG --infobox "Installing misc software" 4 60
 apt install -y build-essential >> /var/log/debianstaller.log  2>&1
 apt install -y bind9 >> /var/log/debianstaller.log  2>&1
 DEBIAN_FRONTEND=noninteractive apt install -y bandwidthd >> /var/log/debianstaller.log  2>&1
