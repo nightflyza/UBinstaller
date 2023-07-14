@@ -52,6 +52,8 @@ $TC class add dev ${LAN_IF} parent 1: classid 1:1 htb rate ${BANDWIDTH} ceil ${B
 $TC qdisc add dev ${WAN_IF} root handle 1: htb
 $TC class add dev ${WAN_IF} parent 1: classid 1:1 htb rate ${BANDWIDTH} ceil ${BANDWIDTH}
 
+#starting bandwidthd
+service bandwidthd start
 
 #                              /
 #                   __       //
