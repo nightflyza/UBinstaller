@@ -615,6 +615,9 @@ perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/stargazer/OnConnect
 perl -e "s/INTERNAL_INTERFACE/${LAN_IFACE}/g" -pi /etc/stargazer/OnDisconnect
 perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/stargazer/OnDisconnect
 
+#bandwidthd service setup
+systemctl enable bandwidthd.service >> /var/log/debianstaller.log  2>&1
+
 ;;
 1)
 $DIALOG --infobox "No NAS presets required" 4 60
