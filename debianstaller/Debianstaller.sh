@@ -633,6 +633,7 @@ chmod 777 ${APACHE_DATA_PATH}billing/content/dn
 cp -R /usr/local/ubinstaller/configs/dhcp_preset /etc/default/isc-dhcp-server
 perl -e "s/LAN_IFACE/${LAN_IFACE}/g" -pi /etc/default/isc-dhcp-server
 ln -fs /var/www/html/billing/multinet /etc/dhcp/multinet
+ln -fs /var/www/html/billing/multinet /usr/local/etc/dhcp/multinet
 ln -fs /var/lib/bandwidthd/htdocs/ /var/www/html/band
 ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
 
