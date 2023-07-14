@@ -636,6 +636,10 @@ ln -fs /var/www/html/billing/multinet /etc/dhcp/multinet
 ln -fs /var/lib/bandwidthd/htdocs/ /var/www/html/band
 ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
 
+#disabling apparmor
+systemctl stop apparmor >> /var/log/debianstaller.log  2>&1
+systemctl disable apparmor >> /var/log/debianstaller.log  2>&1
+
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
 
