@@ -34,7 +34,7 @@ apt install -y gnupg2 >> /var/log/debianstaller.log  2>&1
 
 
 clear
-$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 12.0 Bookworm. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
+$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 12.1 Bookworm. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
 clear
 
 #new or migration installation
