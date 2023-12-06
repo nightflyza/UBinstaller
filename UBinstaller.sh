@@ -224,7 +224,7 @@ PHP_CONFIG_PRESET="php8.ini"
 #14.0K contains PHP 8.3 binaries
 APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
 PHP_CONFIG_PRESET="php8.ini"
-export CXX_FLAGS=-std=c++03
+export CXXFLAGS=-std=c++03
 ;;
 esac	
 
