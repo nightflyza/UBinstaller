@@ -21,7 +21,7 @@ mkdir ${PKGPATH}
 pkg install -y bash
 pkg install -y expat
 pkg install -y gmake
-pkg install -y gcc13
+# pkg install -y gcc13
 pkg install -y isc-dhcp44-server
 pkg install -y libtool
 pkg install -y autoconf

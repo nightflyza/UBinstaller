@@ -229,10 +229,13 @@ PHP_CONFIG_PRESET="php8.ini"
 APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
 PHP_CONFIG_PRESET="php8.ini"
 
-#FreeBSD 14.0 requires 
-export CC=/usr/local/bin/gcc13
-export CXX=/usr/local/bin/g++13
-export LD=/usr/local/bin/g++13
+# FreeBSD 14.0 requires custom clang flags
+# or gcc13 build
+# export CC=/usr/local/bin/gcc13
+# export CXX=/usr/local/bin/g++13
+# export LD=/usr/local/bin/g++13
+
+export CXXFLAGS=-std=c++11
 ;;
 esac	
 
@@ -338,11 +341,17 @@ cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
+# database specific issues handling
+case $ARCH in
+140_6K)
+# MySQL 8.0 requires custom config
+cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
+;;
+esac
 
 # start services
 ${APACHE_INIT_SCRIPT} start
 /usr/local/etc/rc.d/mysql-server start
-
 
 #Setting MySQL root password
 mysqladmin -u root password ${MYSQL_PASSWD}
