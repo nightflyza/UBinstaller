@@ -42,8 +42,9 @@ clear
 
 
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
+       140_6K "FreeBSD 14.0 amd64"\
        132_6E "FreeBSD 13.2 amd64"\
-		   131_6T "FreeBSD 13.1 amd64"\
+		 131_6T "FreeBSD 13.1 amd64"\
        131_3T "FreeBSD 13.1 i386"\
        124_6T "FreeBSD 12.4 amd64"\
        124_6E "FreeBSD 12.4 amd64"\
@@ -215,6 +216,12 @@ PHP_CONFIG_PRESET="php8.ini"
 
 132_6E)
 #13.2E contains PHP 8.2 binaries
+APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
+PHP_CONFIG_PRESET="php8.ini"
+;;
+
+140_6K)
+#14.0K contains PHP 8.3 binaries
 APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
 PHP_CONFIG_PRESET="php8.ini"
 ;;
