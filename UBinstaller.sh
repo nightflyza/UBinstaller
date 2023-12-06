@@ -224,6 +224,7 @@ PHP_CONFIG_PRESET="php8.ini"
 #14.0K contains PHP 8.3 binaries
 APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
 PHP_CONFIG_PRESET="php8.ini"
+export CXX_FLAGS=-std=c++03
 ;;
 esac	
 
@@ -231,6 +232,7 @@ esac
 #FreeBSD 10+ need to use CC and CXX env
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
+
 #botstrapping pkg ng
 pkg info
 #=======================================================
