@@ -207,6 +207,10 @@ cd /usr/local/ubinstaller/
 #  Platform specific issues handling  #
 #######################################
 
+#FreeBSD 10+ need to use CC and CXX env
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+
 case $ARCH in
 124_6E)
 #12.4E contains PHP 8.2 binaries
@@ -224,14 +228,14 @@ PHP_CONFIG_PRESET="php8.ini"
 #14.0K contains PHP 8.3 binaries
 APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
 PHP_CONFIG_PRESET="php8.ini"
-export CXXFLAGS=-std=c++03
+
+#FreeBSD 14.0 requires 
+export CC=/usr/local/bin/gcc13
+export CXX=/usr/local/bin/g++13
+export LD=/usr/local/bin/g++13
 ;;
 esac	
 
-
-#FreeBSD 10+ need to use CC and CXX env
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
 
 #botstrapping pkg ng
 pkg info
