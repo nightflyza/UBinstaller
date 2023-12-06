@@ -346,6 +346,7 @@ case $ARCH in
 140_6K)
 # MySQL 8.0 requires custom config
 cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
+echo "MySQL 8.0 config replaced"
 ;;
 esac
 
