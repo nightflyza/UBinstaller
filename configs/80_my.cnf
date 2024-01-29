@@ -10,14 +10,15 @@ no_auto_rehash
 user                            = mysql
 port                            = 3306
 socket                          = /tmp/mysql.sock
-bind-address                    = 127.0.0.1
+bind-address                    = 0.0.0.0
 basedir                         = /usr/local
 datadir                         = /var/db/mysql
 tmpdir                          = /var/db/mysql_tmpdir
 replica-load-tmpdir             = /var/db/mysql_tmpdir
 secure-file-priv                = /var/db/mysql_secure
-log-bin                         = mysql-bin
-log-output                      = TABLE
+disable_log_bin
+#log-bin                         = mysql-bin
+#log-output                      = TABLE
 relay-log-recovery              = 1
 slow-query-log                  = 1
 server-id                       = 1
