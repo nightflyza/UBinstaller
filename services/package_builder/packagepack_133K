@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
 then
   echo "Usage: sh packagepack_ver \"PLATFORM\""
-  echo "Example: sh packagepack_140K 140_6K or sh packagepack_140K 140_3K"
+  echo "Example: sh packagepack_133K 133_6K or sh packagepack_133K 133_3K"
   exit
 fi
 
@@ -101,8 +101,8 @@ pkg install -y fping
 #freeradius3 required to build with MySQL support
 cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
 
-#memcached pecl build for PHP 8.3
-#portsnap fetch && portsnap extract && portsnap update
+#memcached pecl build for PHP 7.4
+portsnap fetch && portsnap extract && portsnap update
 cd /usr/ports/databases/pecl-memcached &&  make BATCH=yes install
 
 
