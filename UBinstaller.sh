@@ -204,9 +204,12 @@ cd /usr/local/ubinstaller/
 #  Platform specific issues handling  #
 #######################################
 
-#FreeBSD 10+ need to use CC and CXX env
+#FreeBSD 10+ need to use CC and CXX env with clang
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
+
+#FreeBSD 13.3/14.0 requires specific CXXFLAGS env
+export CXXFLAGS=-std=c++11
 
 case $ARCH in
 
@@ -220,8 +223,7 @@ PHP_CONFIG_PRESET="php8.ini"
 # export CC=/usr/local/bin/gcc13
 # export CXX=/usr/local/bin/g++13
 # export LD=/usr/local/bin/g++13
-
-export CXXFLAGS=-std=c++11
+# export CXXFLAGS=-std=c++11
 ;;
 esac	
 
