@@ -10,9 +10,9 @@ APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/usr/local/www/apache24/data/"
 APACHE_CONFIG_DIR="/usr/local/etc/apache24/"
 APACHE_INIT_SCRIPT="/usr/local/etc/rc.d/apache24"
-APACHE_CONFIG_PRESET_NAME="httpd24f7.conf"
+APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
 APACHE_CONFIG_NAME="httpd.conf"
-PHP_CONFIG_PRESET="php.ini"
+PHP_CONFIG_PRESET="php8.ini"
 
 #some remote paths here
 DL_PACKAGES_URL="http://ubilling.net.ua/packages/"
@@ -43,11 +43,8 @@ clear
 
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
        140_6K "FreeBSD 14.0 amd64"\
+       133_6K "FreeBSD 13.3 amd64"\
        132_6E "FreeBSD 13.2 amd64"\
-		 131_6T "FreeBSD 13.1 amd64"\
-       131_3T "FreeBSD 13.1 i386"\
-       124_6T "FreeBSD 12.4 amd64"\
-       124_6E "FreeBSD 12.4 amd64"\
  	    2> /tmp/ubarch
 clear
 
@@ -212,17 +209,6 @@ export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 
 case $ARCH in
-124_6E)
-#12.4E contains PHP 8.2 binaries
-APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
-PHP_CONFIG_PRESET="php8.ini"
-;;
-
-132_6E)
-#13.2E contains PHP 8.2 binaries
-APACHE_CONFIG_PRESET_NAME="httpd24f8.conf"
-PHP_CONFIG_PRESET="php8.ini"
-;;
 
 140_6K)
 #14.0K contains PHP 8.3 binaries
@@ -343,6 +329,12 @@ cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
 # database specific issues handling
 case $ARCH in
+133_6K)
+# MySQL 8.0 requires custom config
+cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
+echo "MySQL 8.0 config replaced"
+;;
+
 140_6K)
 # MySQL 8.0 requires custom config
 cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
