@@ -4,6 +4,8 @@
 DIALOG="dialog"
 FETCH="/usr/bin/wget"
 
+TARGET_SYSTEM="Debian 12.5 Bookworm"
+
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/var/www/html/"
 APACHE_CONFIG_DIR="/etc/apache2/"
@@ -34,7 +36,7 @@ apt install -y gnupg2 >> /var/log/debianstaller.log  2>&1
 
 
 clear
-$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with Debian 12.1 Bookworm. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
+$DIALOG --title "Ubilling installation" --msgbox "This wizard helps you to install Stargazer and Ubilling to your server with ${TARGET_SYSTEM}. This installer is experimental(!) and not recommended for real usage at this moment." 10 50
 clear
 
 #new or migration installation
