@@ -1,0 +1,117 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: sh packagepack_ver \"PLATFORM\""
+  echo "Example: sh packagepack_141K 141_6K or sh packagepack_141K 141_3K"
+  exit
+fi
+
+#bootstraping pkgng
+pkg info
+
+PLATFORM=$1
+PKGROOT="/home/"
+PKGPATH=${PKGROOT}${PLATFORM}
+ARCHNAME=${PLATFORM}".tar.gz"
+
+mkdir ${PKGPATH}
+
+#installing packages
+pkg install -y bash
+pkg install -y expat
+pkg install -y gmake
+pkg install -y isc-dhcp44-server
+pkg install -y libtool
+pkg install -y autoconf
+pkg install -y memcached
+pkg install -y libmemcached
+pkg install -y redis
+pkg install -y mysql80-client
+pkg install -y mysql80-server
+pkg install -y apache24
+pkg install -y php83
+pkg install -y mod_php83
+pkg install -y php83-bcmath
+pkg install -y php83-ctype
+pkg install -y php83-curl
+pkg install -y php83-dom
+pkg install -y php83-extensions
+pkg install -y php83-filter
+pkg install -y php83-ftp
+pkg install -y php83-gd
+pkg install -y php83-hash
+pkg install -y php83-iconv
+pkg install -y php83-imap
+pkg install -y php83-json
+pkg install -y php83-mbstring
+pkg install -y php83-mysqli
+pkg install -y php83-opcache
+pkg install -y php83-openssl
+pkg install -y php83-pdo
+pkg install -y php83-pdo_sqlite
+pkg install -y php83-phar
+pkg install -y php83-posix
+pkg install -y php83-session
+pkg install -y php83-simplexml
+pkg install -y php83-snmp
+pkg install -y php83-soap
+pkg install -y php83-sockets
+pkg install -y php83-sqlite3
+pkg install -y php83-tokenizer
+pkg install -y php83-xml
+pkg install -y php83-xmlreader
+pkg install -y php83-xmlwriter
+pkg install -y php83-zip
+pkg install -y php83-zlib
+pkg install -y php83-pecl-memcached
+pkg install -y php83-pecl-redis
+
+
+pkg install -y graphviz
+pkg install -y softflowd
+pkg install -y sqlite3
+pkg install -y sudo
+pkg install -y vim-tiny
+pkg install -y wget
+pkg install -y arping
+pkg install -y bandwidthd
+pkg install -y elinks
+pkg install -y mc
+pkg install -y nano
+pkg install -y nmap
+pkg install -y mtr-nox11
+pkg install -y expect
+pkg install -y bwm-ng
+pkg install -y ifstat
+pkg install -y iperf
+pkg install -y iperf3
+pkg install -y arpwatch
+pkg install -y ap24-mod_rpaf2
+pkg install -y git
+pkg install -y ffmpeg
+pkg install -y nginx
+pkg install -y bmon
+pkg install -y iftop
+pkg install -y bind-tools
+pkg install -y trafshow
+pkg install -y fping
+
+
+#freeradius3 required to build with MySQL support
+cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
+
+#memcached pecl build for PHP 8.3
+#portsnap fetch && portsnap extract && portsnap update
+cd /usr/ports/databases/pecl-memcached &&  make BATCH=yes install
+
+
+
+echo "Creating binary packages"
+pkg create -a -o ${PKGPATH}
+pkg create  -o ${PKGPATH} -g bash
+echo "Binary packages created"
+cd ${PKGROOT}
+echo "Packing binary packages"
+tar cf - ${PLATFORM} | gzip > ${ARCHNAME}
+echo "Packing binary packages finished: "${PKGROOT}${ARCHNAME}
