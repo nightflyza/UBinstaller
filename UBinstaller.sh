@@ -576,6 +576,10 @@ fi
 $DIALOG --infobox "Stopping stargazer" 4 60
 killall stargazer
 
+# Setting up autoupdate script
+cp -R ./docs/presets/FreeBSD/ubautoupgrade.sh /bin/
+chmod a+x /bin/ubautoupgrade.sh
+
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
 
 ;;
