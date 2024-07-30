@@ -324,10 +324,6 @@ cp -R ${PHP_CONFIG_PRESET} /usr/local/etc/php.ini
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 
-#set up and fix autoupdater paths (DEPRECATED)
-#perl -e "s/APVER_MACRO/${APACHE_VERSION}/g" -pi ../autoubupdate.sh
-#cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
-
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
@@ -578,8 +574,13 @@ $DIALOG --infobox "Stopping stargazer" 4 60
 killall stargazer
 
 # Setting up autoupdate script
+if [ -f ./docs/presets/FreeBSD/ubautoupgrade.sh ];
+then
 cp -R ./docs/presets/FreeBSD/ubautoupgrade.sh /bin/
 chmod a+x /bin/ubautoupgrade.sh
+else
+echo "Looks like this Ubilling release does not containing automatic upgrade preset"
+fi
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
 
