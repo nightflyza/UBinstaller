@@ -324,9 +324,10 @@ cp -R ${PHP_CONFIG_PRESET} /usr/local/etc/php.ini
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 
-#set up and fix autoupdater paths
-perl -e "s/APVER_MACRO/${APACHE_VERSION}/g" -pi ../autoubupdate.sh
-cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
+#set up and fix autoupdater paths (DEPRECATED)
+#perl -e "s/APVER_MACRO/${APACHE_VERSION}/g" -pi ../autoubupdate.sh
+#cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
+
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
