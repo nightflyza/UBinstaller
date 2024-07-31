@@ -4,7 +4,7 @@
 DIALOG="dialog"
 FETCH="/usr/bin/wget"
 
-TARGET_SYSTEM="Debian 12.5 Bookworm"
+TARGET_SYSTEM="Debian 12.6 Bookworm"
 
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/var/www/html/"
@@ -366,10 +366,6 @@ perl -e "s/NETW/${LAN_NETW}\/${LAN_CIDR}/g" -pi /etc/bandwidthd/bandwidthd.conf
 
 cp -R sudoers_preset /etc/sudoers.d/ubilling
 
-
-#set up autoupdater
-cp -R ../autoubupdate.sh ${APACHE_DATA_PATH}
-
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
@@ -641,6 +637,15 @@ ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
 #disabling apparmor
 systemctl stop apparmor >> /var/log/debianstaller.log  2>&1
 systemctl disable apparmor >> /var/log/debianstaller.log  2>&1
+
+# Setting up autoupdate script
+if [ -f ./docs/presets/FreeBSD/ubautoupgrade.sh ];
+then
+cp -R ./docs/presets/Debian/ubautoupgrade.sh /bin/
+chmod a+x /bin/ubautoupgrade.sh
+else
+echo "Looks like this Ubilling release does not containing automatic upgrade preset"
+fi
 
 
 $DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
