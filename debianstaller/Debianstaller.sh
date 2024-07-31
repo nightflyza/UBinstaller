@@ -639,7 +639,7 @@ systemctl stop apparmor >> /var/log/debianstaller.log  2>&1
 systemctl disable apparmor >> /var/log/debianstaller.log  2>&1
 
 # Setting up autoupdate script
-if [ -f ./docs/presets/FreeBSD/ubautoupgrade.sh ];
+if [ -f ./docs/presets/Debian/ubautoupgrade.sh ];
 then
 cp -R ./docs/presets/Debian/ubautoupgrade.sh /bin/
 chmod a+x /bin/ubautoupgrade.sh
