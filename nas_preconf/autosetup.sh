@@ -3,7 +3,7 @@
 ############ CONFIG SECTION #############
 
 #binary packages distro (141_6K, 140_6K, 133_6K, 132_6E available)
-DL_NAME="141_6T"
+DL_NAME="141_6K"
 
 #external internet interface
 EXT_IF="igb1"
