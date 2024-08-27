@@ -2,6 +2,8 @@
 
 ############ CONFIG SECTION #############
 
+#binary packages distro (141_6K, 140_6K, 133_6K, 132_6E available)
+DL_NAME="141_6T"
 
 #external internet interface
 EXT_IF="igb1"
@@ -34,8 +36,7 @@ FIREWALL_PRESET="firewall.conf"
 
 #binary packages repo
 DL_REPO="http://ubilling.net.ua/packages/"
-#binary packages distro (131_6T, 130_6T, 123_6T)
-DL_NAME="131_6T"
+
 DL_EXT=".tar.gz"
 #stargazer sources
 DL_STG_URL="http://ubilling.net.ua/stg/"
@@ -105,6 +106,8 @@ cat configs/loader.preconf >> /boot/loader.conf
 #FreeBSD 10+ need to use CC and CXX env
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
+#FreeBSD 13.3/14.0 requires specific CXXFLAGS env
+export CXXFLAGS=-std=c++11
 
 #rscriptd build and setup 
 cd /tmp/nas_preconf/
