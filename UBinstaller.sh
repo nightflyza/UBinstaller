@@ -353,6 +353,12 @@ echo "MySQL 8.0 config replaced"
 cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
 echo "MySQL 8.0 config replaced"
 ;;
+
+142_6L)
+# MySQL 8.0 requires custom config
+cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
+echo "MySQL 8.0 config replaced"
+;;
 esac
 
 # start services
