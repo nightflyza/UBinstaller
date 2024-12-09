@@ -42,11 +42,11 @@ clear
 
 
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
+       142_6L "FreeBSD 14.2 amd64"\
        141_6K "FreeBSD 14.1 amd64"\
        140_6K "FreeBSD 14.0 amd64"\
        134_6K "FreeBSD 13.4 amd64"\
        133_6K "FreeBSD 13.3 amd64"\
-       132_6E "FreeBSD 13.2 amd64"\
  	    2> /tmp/ubarch
 clear
 
