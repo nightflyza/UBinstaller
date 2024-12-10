@@ -4,7 +4,7 @@
 DIALOG="dialog"
 FETCH="/usr/bin/wget"
 
-TARGET_SYSTEM="Debian 12.6 Bookworm"
+TARGET_SYSTEM="Debian 12 Bookworm"
 
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/var/www/html/"
