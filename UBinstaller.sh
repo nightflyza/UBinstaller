@@ -45,6 +45,7 @@ $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
        142_6L "FreeBSD 14.2 amd64"\
        141_6K "FreeBSD 14.1 amd64"\
        140_6K "FreeBSD 14.0 amd64"\
+       135_6L "FreeBSD 13.5 amd64"\
        134_6K "FreeBSD 13.4 amd64"\
        133_6K "FreeBSD 13.3 amd64"\
  	    2> /tmp/ubarch
@@ -329,37 +330,10 @@ cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
 
 # database specific issues handling
-case $ARCH in
-133_6K)
-# MySQL 8.0 requires custom config
-cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
-echo "MySQL 8.0 config replaced"
-;;
 
-134_6K)
 # MySQL 8.0 requires custom config
 cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
 echo "MySQL 8.0 config replaced"
-;;
-
-140_6K)
-# MySQL 8.0 requires custom config
-cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
-echo "MySQL 8.0 config replaced"
-;;
-
-141_6K)
-# MySQL 8.0 requires custom config
-cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
-echo "MySQL 8.0 config replaced"
-;;
-
-142_6L)
-# MySQL 8.0 requires custom config
-cp -R 80_my.cnf /usr/local/etc/mysql/my.cnf 
-echo "MySQL 8.0 config replaced"
-;;
-esac
 
 # start services
 ${APACHE_INIT_SCRIPT} start
