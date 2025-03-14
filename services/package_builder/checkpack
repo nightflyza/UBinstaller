@@ -1,0 +1,30 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: sh checkpack \"PLATFORM\""
+  echo "Example: sh checkpack 135_6L"
+  exit
+fi
+
+PLATFORM=$1
+PKGROOT="/home/"
+PKGPATH=${PKGROOT}${PLATFORM}
+
+packages="
+bash expat gmake isc-dhcp44-server libtool autoconf memcached libmemcached redis mysql80-client mysql80-server apache24
+php84 mod_php84 php84-bcmath php84-ctype php84-curl php84-dom php84-extensions php84-filter php84-ftp php84-gd 
+php84-iconv php84-mbstring php84-mysqli php84-opcache php84-pdo php84-pdo_sqlite
+php84-phar php84-posix php84-session php84-simplexml php84-snmp php84-soap php84-sockets php84-sqlite3 php84-tokenizer
+php84-xml php84-xmlreader php84-xmlwriter php84-zip php84-zlib php84-pecl-memcached php84-pecl-redis graphviz softflowd
+sqlite3 sudo vim-tiny wget arping bandwidthd elinks mc nano nmap mtr-nox11 expect bwm-ng ifstat iperf iperf3 arpwatch
+ap24-mod_rpaf2 git ffmpeg nginx bmon iftop bind-tools trafshow fping freeradius3 net-snmp curl 
+"
+
+for pkg in $packages; do
+    if ls "$PKGPATH"/"$pkg"-*.pkg >/dev/null 2>&1; then
+        echo "✅ Package $pkg [OK]"
+    else
+        echo "❌ Package $pkg [MISSING]"
+    fi
+done
