@@ -588,6 +588,7 @@ systemctl daemon-reload
 systemctl enable furrywall.service >> /var/log/debianstaller.log  2>&1
 cp -R configs/softflowd.preconf /etc/softflowd/default.conf
 perl -e "s/INTERNAL_INTERFACE/${LAN_IFACE}/g" -pi /etc/softflowd/default.conf
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 
 #stargazer user init scripts preset
 cd ${APACHE_DATA_PATH}billing/

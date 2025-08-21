@@ -15,9 +15,12 @@ TC="/sbin/tc"
 
 WAN_IP=`ip addr show ${WAN_IF} | grep inet' '| awk {'print $2'} | cut -f 1 -d "/" | sed -n '1p' | xargs`
 
-/sbin/modprobe ip_conntrack
-/sbin/modprobe ip_conntrack_ftp
-/sbin/modprobe ip_nat_ftp
+/sbin/modprobe nf_conntrack
+/sbin/modprobe nf_conntrack_ftp
+/sbin/modprobe nf_nat_ftp
+
+#force IP Forwarding
+/usr/sbin/sysctl -w net.ipv4.ip_forward=1
 
 $IPT -F
 $IPT -X
