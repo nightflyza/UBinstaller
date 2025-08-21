@@ -12,6 +12,8 @@ APACHE_CONFIG_DIR="/etc/apache2/"
 APACHE_INIT_SCRIPT="/usr/sbin/service apache2"
 APACHE_CONFIG_PRESET_NAME="apache2.conf"
 APACHE_CONFIG_NAME="apache2.conf"
+PHP_CONFIG_PRESET="php8.ini"
+PHP_CONFIG_DIR="/etc/php/8.4/apache2/"
 
 #some remote paths here
 DL_PACKAGES_URL="http://ubilling.net.ua/packages/"
@@ -343,7 +345,7 @@ ${APACHE_INIT_SCRIPT} stop
 # copying prepared configs
 cd /usr/local/ubinstaller/configs/
 cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
-cp -R php82.ini /etc/php/8.2/apache2/php.ini
+cp -R ${PHP_CONFIG_PRESET} ${PHP_CONFIG_DIR}php.ini
 cp -R stargazer.conf /etc/stargazer/
 cp -R bandwidthd.conf /etc/bandwidthd/bandwidthd.conf
 perl -e "s/em0/${LAN_IFACE}/g" -pi /etc/bandwidthd/bandwidthd.conf
