@@ -4,13 +4,13 @@
 DIALOG="dialog"
 FETCH="/usr/bin/wget"
 
-TARGET_SYSTEM="Debian 12 Bookworm"
+TARGET_SYSTEM="Debian 13 Trixie"
 
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/var/www/html/"
 APACHE_CONFIG_DIR="/etc/apache2/"
 APACHE_INIT_SCRIPT="/usr/sbin/service apache2"
-APACHE_CONFIG_PRESET_NAME="debi12_apache2.conf"
+APACHE_CONFIG_PRESET_NAME="apache2.conf"
 APACHE_CONFIG_NAME="apache2.conf"
 
 #some remote paths here
@@ -216,18 +216,6 @@ $DIALOG --infobox "Software installation is in progress. This takes a while." 4 
 #MariaDB setup
 apt install -y software-properties-common dirmngr >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB" 4 60
-
-#old way
-#${FETCH} https://mariadb.org/mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
-#chmod -c 644 mariadb_release_signing_key.asc >> /var/log/debianstaller.log  2>&1
-#mv -v mariadb_release_signing_key.asc /etc/apt/trusted.gpg.d/ >> /var/log/debianstaller.log  2>&1
-$DIALOG --infobox "Installing MariaDB." 4 60
-#old way too
-#echo "deb [arch=amd64,arm64,ppc64el] \
-#https://ftp.ubuntu-tw.org/mirror/mariadb/repo/11.0.2/debian \
-#bullseye main" | tee /etc/apt/sources.list.d/mariadb.list >> /var/log/debianstaller.log  2>&1
-$DIALOG --infobox "Installing MariaDB.." 4 60
-#apt update >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB..." 4 60
 apt install -y mariadb-server >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing MariaDB...." 4 60
@@ -252,7 +240,7 @@ apt install -y sudo >> /var/log/debianstaller.log  2>&1
 apt install -y curl >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing Apache server" 4 60
 apt install -y apache2 >> /var/log/debianstaller.log  2>&1
-apt install -y libapache2-mod-php8.2 >> /var/log/debianstaller.log  2>&1
+apt install -y libapache2-mod-php8.4 >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing DHCP server" 4 60
 apt install -y isc-dhcp-server >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing misc software" 4 60
@@ -266,33 +254,32 @@ $DIALOG --infobox "Installing memory caching servers" 4 60
 apt install -y memcached >> /var/log/debianstaller.log  2>&1
 apt install -y redis >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing PHP and required extensions" 4 60
-apt install -y php8.2-cli >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-mysql >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-mysqli >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-mbstring >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-bcmath >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-curl >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-gd >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-snmp >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-soap >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-zip >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-imap >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-json >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-tokenizer >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-xml >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-xmlreader >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-xmlwriter >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-simplexml >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-sqlite3 >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-sockets >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-opcache >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-json >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-pdo >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-pdo-sqlite >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-phar >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-posix >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-memcached >> /var/log/debianstaller.log  2>&1
-apt install -y php8.2-redis >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-cli >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-mysql >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-mysqli >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-mbstring >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-bcmath >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-curl >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-gd >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-snmp >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-soap >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-zip >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-imap >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-tokenizer >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-xml >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-xmlreader >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-xmlwriter >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-simplexml >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-sqlite3 >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-sockets >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-opcache >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-json >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-pdo >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-pdo-sqlite >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-phar >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-posix >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-memcached >> /var/log/debianstaller.log  2>&1
+apt install -y php8.4-redis >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing some optional software" 4 60
 apt install -y graphviz >> /var/log/debianstaller.log  2>&1
 apt install -y vim-tiny >> /var/log/debianstaller.log  2>&1
@@ -305,8 +292,6 @@ apt install -y mtr >> /var/log/debianstaller.log  2>&1
 apt install -y expect >> /var/log/debianstaller.log  2>&1
 apt install -y bwm-ng >> /var/log/debianstaller.log  2>&1
 apt install -y ifstat >> /var/log/debianstaller.log  2>&1
-#apt install -y iperf >> /var/log/debianstaller.log  2>&1
-#apt install -y iperf3 >> /var/log/debianstaller.log  2>&1
 apt install -y arpwatch >> /var/log/debianstaller.log  2>&1
 apt install -y git >> /var/log/debianstaller.log  2>&1
 apt install -y ffmpeg >> /var/log/debianstaller.log  2>&1
