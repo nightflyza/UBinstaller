@@ -4,6 +4,11 @@
 # Per aspera ad astra
 # 
 
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Error: UBinstaller script must be run only as root user."
+    exit 1
+fi
+
 DIALOG=${DIALOG=dialog}
 FETCH="/usr/bin/fetch"
 APACHE_VERSION="apache24"
