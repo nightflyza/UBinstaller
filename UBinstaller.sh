@@ -63,9 +63,9 @@ clear
 
 #selecting Ubilling installation channel
 clear
-$DIALOG --menu "Choose Ubilling installation channel" 16 50 8 \
+$DIALOG --menu "Choose Ubilling installation channel" 11 54 4 \
 				       STABLE "Latest stable release (recommended)"\
-                   CURRENT "Nightly (current development build)"\
+                   CURRENT "Nightly build (current development)"\
             2> /tmp/ubchannel
 clear
 
