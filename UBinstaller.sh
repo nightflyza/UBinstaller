@@ -39,8 +39,7 @@ $DIALOG --menu "Type of Ubilling installation" 10 75 8 \
 
 clear
 
-
-
+#chosing FreeBSD version and architecture
 $DIALOG --menu "Choose FreeBSD version and architecture" 16 50 8 \
        143_6L "FreeBSD 14.3 amd64"\
        142_6L "FreeBSD 14.2 amd64"\
@@ -57,6 +56,13 @@ $DIALOG --menu "Choose Stargazer release" 16 50 8 \
             2> /tmp/stgver
 clear
 
+#selecting Ubilling installation channel
+clear
+$DIALOG --menu "Choose Ubilling installation channel" 16 50 8 \
+				       STABLE "Latest stable release (recommended)"\
+                   CURRENT "Nightly (current development build)"\
+            2> /tmp/ubchannel
+clear
 
 #configuring LAN interface
 ALL_IFACES=`grep rnet /var/run/dmesg.boot | cut -f 1 -d ":" | tr "\n" " "`
@@ -161,6 +167,7 @@ STG_PASS=`cat /tmp/ubstgpass`
 RSD_PASS=`cat /tmp/ubrsd`
 ARCH=`cat /tmp/ubarch`
 STG_VER=`cat /tmp/stgver`
+UB_CHANNEL=`cat /tmp/ubchannel`
 
 case $PASSW_MODE in
 NEW)
@@ -183,11 +190,23 @@ rm -fr /tmp/ubarch
 rm -fr /tmp/stgver
 rm -fr /tmp/insttype
 rm -fr /tmp/ubsrl
-
-
+rm -fr /tmp/ubchannel
 
 #last chance to exit
-$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n Ubilling serial: ${UBSERIAL}\n" 18 60
+$DIALOG --title "Check settings" --yesno "\
+Are all of these settings correct?
+
+LAN interface: ${LAN_IFACE}
+LAN network: ${LAN_NETW}/${LAN_CIDR}
+WAN interface: ${EXT_IF}
+MySQL password: ${MYSQL_PASSWD}
+Stargazer password: ${STG_PASS}
+Rscripd password: ${RSD_PASS}
+System: ${ARCH}
+Stargazer: ${STG_VER}
+Ubilling channel: ${UB_CHANNEL}
+Ubilling serial: ${UBSERIAL}
+" 18 60
 AGREE=$?
 clear
 
@@ -250,6 +269,16 @@ DL_STG_RELEASE="stg-2.409"
 ;;
 esac
 
+#selecting Ubilling release to install
+case $UB_CHANNEL in
+STABLE)
+#noting here, its default now
+;;
+CURRENT)
+DL_UB_URL="http://snaps.ubilling.net.ua/"
+DL_UB_NAME="ub_current.tgz"
+;;
+esac
 
 #check is FreeBSD installation clean
 PKG_COUNT=`/usr/sbin/pkg info | /usr/bin/wc -l`
@@ -566,7 +595,15 @@ else
 echo "Looks like this Ubilling release does not containing automatic upgrade preset"
 fi
 
-$DIALOG --title "Ubilling installation has been completed" --msgbox "Now you can access your web-interface by address http://server_ip/billing/ with login and password: admin/demo. Please reboot your server to check correct startup of all services" 15 50
+$DIALOG --title "Ubilling installation has been completed" --msgbox "\
+Now you can access the web interface at:
+
+  http://server_ip/billing/
+
+Login / password: admin / demo
+
+Please reboot your server to verify correct startup of all services.
+" 15 50
 
 ;;
 1)
