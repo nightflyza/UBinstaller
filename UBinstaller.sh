@@ -603,9 +603,9 @@ fi
 $DIALOG --title "Ubilling installation has been completed" --msgbox "\
 Now you can access the web interface at:
 
-  http://server_ip/billing/
+http://server_ip/billing/
 
-Login / password: admin / demo
+Login/password: admin/demo
 
 Please reboot your server to verify correct startup of all services.
 " 15 50
