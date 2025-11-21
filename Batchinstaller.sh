@@ -165,7 +165,7 @@ export CXXFLAGS=-std=c++11
 
 
 #botstrapping pkg ng
-pkg bootstrap -y
+ASSUME_ALWAYS_YES=yes pkg bootstrap -y
 #=======================================================
 
 #selecting Ubilling release to install

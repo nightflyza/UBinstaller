@@ -253,7 +253,7 @@ esac
 
 
 #botstrapping pkg ng
-pkg bootstrap -y
+ASSUME_ALWAYS_YES=yes pkg bootstrap -y
 #=======================================================
 
 #Selecting stargazer release to install
