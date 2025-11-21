@@ -23,10 +23,14 @@ DL_STG_URL="http://ubilling.net.ua/stg/"
 DL_STG_NAME="stg-2.409.tar.gz"
 DL_STG_RELEASE="stg-2.409"
 
-set PATH=/usr/local/bin:/usr/local/sbin:$PATH
+PATH=/usr/local/bin:/usr/local/sbin:$PATH
+export PATH
 
 # CLI parameter parsing
 if [ "$#" -lt 4 ]; then
+    echo "========================================================================"
+    echo "|           Ubilling batch installation script                          |"  
+    echo "========================================================================"
     echo "Usage: $0 <type> <arch> <channel> <internal_interface> [external_interface] [mysql_pass] [stargazer_pass] [rscriptd_pass] [ubilling_serial]"
     echo ""
     echo "Required parameters:"
@@ -43,6 +47,10 @@ if [ "$#" -lt 4 ]; then
     echo "  stargazer_pass    - Stargazer admin password"
     echo "  rscriptd_pass     - rscriptd encryption password"
     echo "  ubilling_serial   - Ubilling serial number"
+    echo ""
+    echo "Examples:"
+    echo "  $0 NEW 143_6L STABLE em0 - New installation on FreeBSD 14.3 amd64 with internal interface em0"
+    echo "  $0 MIG 143_6L STABLE em0 em1 mys828223 stg883473 rsdbilochka66 UB0000000000000000000 - Migration from another server"
     exit 1
 fi
 
@@ -125,19 +133,19 @@ fi
 # Always use Stargazer 2.409 release
 STG_VER="409REL"
 
-echo "==========================================================================="
-echo "|                                                                          |"
-echo "|             Starting Ubilling installation...                            |"
-echo "|                                                                          |"
-echo "|             Type: ${PASSW_MODE}                                          |"
-echo "|             Architecture: ${ARCH}                                        |"
-echo "|             Channel: ${UB_CHANNEL}                                       |"
-echo "|             LAN interface: ${LAN_IFACE}                                  |"
-echo "|             LAN network: ${LAN_NETW}/${LAN_CIDR}                         |"
-echo "|             WAN interface: ${EXT_IF}                                     |"
-echo "|             Stargazer: ${STG_VER}                                        |"
-echo "|                                                                          |"
-echo "==========================================================================="
+echo "===================================================================="
+echo "                                                                          "
+echo "             Starting Ubilling installation...                            "
+echo "                                                                          "
+echo "             Type: ${PASSW_MODE}                                          "
+echo "             Architecture: ${ARCH}                                        "
+echo "             Channel: ${UB_CHANNEL}                                       "
+echo "             LAN interface: ${LAN_IFACE}                                  "
+echo "             LAN network: ${LAN_NETW}/${LAN_CIDR}                         "
+echo "             WAN interface: ${EXT_IF}                                     "
+echo "             Stargazer: ${STG_VER}                                        "
+echo "                                                                          "
+echo "===================================================================="
 
 # preparing for installation
 mkdir /usr/local/ubinstaller/
