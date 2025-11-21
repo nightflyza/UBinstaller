@@ -26,7 +26,7 @@ DL_STG_RELEASE="stg-2.409"
 set PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
 # CLI parameter parsing
-if [ $# -lt 4 ]; then
+if [ "$#" -lt 4 ]; then
     echo "Usage: $0 <type> <arch> <channel> <internal_interface> [external_interface] [mysql_pass] [stargazer_pass] [rscriptd_pass] [ubilling_serial]"
     echo ""
     echo "Required parameters:"
@@ -46,10 +46,10 @@ if [ $# -lt 4 ]; then
     exit 1
 fi
 
-PASSW_MODE=$1
-ARCH=$2
-UB_CHANNEL=$3
-LAN_IFACE=$4
+PASSW_MODE="$1"
+ARCH="$2"
+UB_CHANNEL="$3"
+LAN_IFACE="$4"
 
 # Validate type
 if [ "$PASSW_MODE" != "NEW" ] && [ "$PASSW_MODE" != "MIG" ]; then
@@ -66,20 +66,20 @@ fi
 # Handle external interface and MIG parameters
 if [ "$PASSW_MODE" = "MIG" ]; then
     # For MIG, check parameter count to determine if external interface is provided
-    if [ $# -eq 9 ]; then
+    if [ "$#" -eq 9 ]; then
         # External interface provided: type arch channel internal external mysql stargazer rscriptd serial
-        EXT_IF=$5
-        MYSQL_PASSWD=$6
-        STG_PASS=$7
-        RSD_PASS=$8
-        UBSERIAL=$9
-    elif [ $# -eq 8 ]; then
+        EXT_IF="$5"
+        MYSQL_PASSWD="$6"
+        STG_PASS="$7"
+        RSD_PASS="$8"
+        UBSERIAL="$9"
+    elif [ "$#" -eq 8 ]; then
         # No external interface: type arch channel internal mysql stargazer rscriptd serial
         EXT_IF="none"
-        MYSQL_PASSWD=$5
-        STG_PASS=$6
-        RSD_PASS=$7
-        UBSERIAL=$8
+        MYSQL_PASSWD="$5"
+        STG_PASS="$6"
+        RSD_PASS="$7"
+        UBSERIAL="$8"
     else
         echo "Error: MIG type requires mysql_pass, stargazer_pass, rscriptd_pass, and ubilling_serial parameters"
         echo "Usage: $0 MIG <arch> <channel> <internal_interface> [external_interface] <mysql_pass> <stargazer_pass> <rscriptd_pass> <ubilling_serial>"
@@ -87,8 +87,8 @@ if [ "$PASSW_MODE" = "MIG" ]; then
     fi
 else
     # For NEW, external interface is optional
-    if [ $# -ge 5 ]; then
-        EXT_IF=$5
+    if [ "$#" -ge 5 ]; then
+        EXT_IF="$5"
     else
         EXT_IF="none"
     fi
