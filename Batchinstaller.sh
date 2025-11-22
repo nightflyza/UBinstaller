@@ -31,7 +31,7 @@ if [ "$#" -lt 4 ]; then
     echo "========================================================================"
     echo "|           Ubilling batch installation script                          |"  
     echo "========================================================================"
-    echo "Usage: $0 <type> <arch> <channel> <internal_interface> [external_interface] [mysql_pass] [stargazer_pass] [rscriptd_pass] [ubilling_serial] [restore_dump]"
+    echo "Usage: $0 <type> <arch> <channel> <internal_interface> [external_interface] [mysql_pass] [stargazer_pass] [rscriptd_pass] [ubilling_serial]"
     echo ""
     echo "Required parameters:"
     echo "  type              - Installation type: NEW or MIG"
@@ -47,9 +47,6 @@ if [ "$#" -lt 4 ]; then
     echo "  stargazer_pass    - Stargazer admin password"
     echo "  rscriptd_pass     - rscriptd encryption password"
     echo "  ubilling_serial   - Ubilling serial number"
-    echo ""
-    echo "Optional for MIG type:"
-    echo "  restore_dump      - Path to SQL dump file to restore at end of migration"
     echo ""
     echo "Examples:"
     echo "  $0 NEW 143_6L STABLE em0 - New installation on FreeBSD 14.3 amd64 with internal interface em0"
@@ -76,49 +73,24 @@ fi
 
 # Handle external interface and MIG parameters
 if [ "$PASSW_MODE" = "MIG" ]; then
-    # For MIG, check parameter count to determine if external interface and restore_dump are provided
-    if [ "$#" -eq 10 ]; then
-        # External interface and restore_dump provided: type arch channel internal external mysql stargazer rscriptd serial restore_dump
+    # For MIG, check parameter count to determine if external interface is provided
+    if [ "$#" -eq 9 ]; then
+        # External interface provided: type arch channel internal external mysql stargazer rscriptd serial
         EXT_IF="$5"
         MYSQL_PASSWD="$6"
         STG_PASS="$7"
         RSD_PASS="$8"
         UBSERIAL="$9"
-        RESTORE_DUMP="${10}"
-    elif [ "$#" -eq 9 ]; then
-        # Check if 9th parameter is restore_dump (no external interface) or external interface (no restore_dump)
-        # If 9th parameter looks like a file path (starts with / or contains .sql or contains /), it's restore_dump
-        case "$9" in
-        /*|*.sql|*/*)
-            # No external interface, but restore_dump provided: type arch channel internal mysql stargazer rscriptd serial restore_dump
-            EXT_IF="none"
-            MYSQL_PASSWD="$5"
-            STG_PASS="$6"
-            RSD_PASS="$7"
-            UBSERIAL="$8"
-            RESTORE_DUMP="$9"
-            ;;
-        *)
-            # External interface provided, no restore_dump: type arch channel internal external mysql stargazer rscriptd serial
-            EXT_IF="$5"
-            MYSQL_PASSWD="$6"
-            STG_PASS="$7"
-            RSD_PASS="$8"
-            UBSERIAL="$9"
-            RESTORE_DUMP=""
-            ;;
-        esac
     elif [ "$#" -eq 8 ]; then
-        # No external interface, no restore_dump: type arch channel internal mysql stargazer rscriptd serial
+        # No external interface: type arch channel internal mysql stargazer rscriptd serial
         EXT_IF="none"
         MYSQL_PASSWD="$5"
         STG_PASS="$6"
         RSD_PASS="$7"
         UBSERIAL="$8"
-        RESTORE_DUMP=""
     else
         echo "Error: MIG type requires mysql_pass, stargazer_pass, rscriptd_pass, and ubilling_serial parameters"
-        echo "Usage: $0 MIG <arch> <channel> <internal_interface> [external_interface] <mysql_pass> <stargazer_pass> <rscriptd_pass> <ubilling_serial> [restore_dump]"
+        echo "Usage: $0 MIG <arch> <channel> <internal_interface> [external_interface] <mysql_pass> <stargazer_pass> <rscriptd_pass> <ubilling_serial>"
         exit 1
     fi
 else
@@ -521,23 +493,6 @@ chmod a+x /bin/ubautoupgrade.sh
 else
 echo "Looks like this Ubilling release does not containing automatic upgrade preset"
 fi
-
-# Restore dump in MIG mode if specified
-if [ "$PASSW_MODE" = "MIG" ] && [ -n "$RESTORE_DUMP" ]; then
-    if [ -f "$RESTORE_DUMP" ]; then
-        echo "Restoring SQL dump from: ${RESTORE_DUMP}"
-        cat "$RESTORE_DUMP" | /usr/local/bin/mysql -u root --password=${MYSQL_PASSWD} stg 2>> /var/log/ubinstaller.log
-        if [ $? -eq 0 ]; then
-            echo "SQL dump restored successfully."
-        else
-            echo "Warning: SQL dump restoration completed with errors. Check /var/log/ubinstaller.log for details."
-        fi
-    else
-        echo "Error: SQL dump file not found: ${RESTORE_DUMP}"
-        exit 1
-    fi
-fi
-
 
 echo "==========================================================================="
 echo "|             Ubilling installation has been completed!                    |"
