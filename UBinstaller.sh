@@ -550,17 +550,17 @@ echo "127.0.0.1 ${CURR_HOSTNAME} ${CURR_HOSTNAME}.localdomain" >> /etc/hosts
 
 #sphinxsearch preconf
 $DIALOG --infobox "Installing Sphinx search service" 4 60
-mkdir /opt
+mkdir -p /opt
 cd /opt
 fetch http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
-tar tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
-mv mv sphinx-3.1.1 sphinx
+tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
+mv sphinx-3.1.1 sphinx
 cd sphinx
 mkdir -p sphinxdata/logs
 touch sphinxdata/logs/searchd.log
 cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/sphinx.conf
 perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
-/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all >> 2>> /var/log/ubinstaller.log
+/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all  2>> /var/log/ubinstaller.log
 /opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf 2>> /var/log/ubinstaller.log
 
 
