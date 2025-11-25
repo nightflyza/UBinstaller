@@ -433,6 +433,7 @@ fi
 cd ${APACHE_DATA_PATH}billing
 cp -R ./docs/multigen/raddb3/* /usr/local/etc/raddb/
 RADVER=`radiusd -v | grep "radiusd: FreeRADIUS Version" | awk '{print $4}' | tr -d ,`
+echo "Configuring FreeRADIUS ${RADVER} and MultiGen"
 sed -i.bak "s/\/usr\/local\/lib\/freeradius-3.0.16/\/usr\/local\/lib\/freeradius-${RADVER}/" /usr/local/etc/raddb/radiusd.conf
 cat ./docs/multigen/dump.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
 cat ./docs/multigen/radius3_fix.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
@@ -441,6 +442,20 @@ perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /usr/local/etc/raddb/sql.con
 CURR_HOSTNAME=`hostname`
 echo "127.0.0.1 ${CURR_HOSTNAME} ${CURR_HOSTNAME}.localdomain" >> /etc/hosts
 
+#sphinxsearch preconf
+echo "Installing Sphinx search service"
+mkdir /opt
+cd /opt
+fetch http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
+tar tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
+mv mv sphinx-3.1.1 sphinx
+cd sphinx
+mkdir -p sphinxdata/logs
+touch sphinxdata/logs/searchd.log
+cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/sphinx.conf
+perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
+/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all >> 2>> /var/log/ubinstaller.log
+/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf 2>> /var/log/ubinstaller.log
 
 #starting stargazer
 echo "Starting Stargazer"

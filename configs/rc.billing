@@ -32,6 +32,8 @@ start_cmd()
        /usr/sbin/stargazer || echo "failed to start stargazer"
        /usr/local/bandwidthd/bandwidthd
        echo "Bandwidthd started"
+       #/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf
+       #echo "SphinxSearch started"
 }
 
 
