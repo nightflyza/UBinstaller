@@ -448,7 +448,7 @@ mkdir -p /opt
 cd /opt
 fetch http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
 tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
-mv  sphinx-3.1.1 sphinx
+mv sphinx-3.1.1 sphinx
 cd sphinx
 mkdir -p sphinxdata/logs
 touch sphinxdata/logs/searchd.log
