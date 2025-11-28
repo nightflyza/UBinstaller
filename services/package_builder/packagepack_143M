@@ -104,7 +104,7 @@ rm -rf /usr/ports
 git clone https://git.FreeBSD.org/ports.git /usr/ports
 
 #freeradius3 required to build with MySQL support
-cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
+cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes DISABLE_VULNERABILITIES=yes install
 
 #memcached pecl build for PHP 8.3
 cd /usr/ports/databases/pecl-memcached &&  make BATCH=yes install
