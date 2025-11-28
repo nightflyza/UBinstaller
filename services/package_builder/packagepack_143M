@@ -99,12 +99,14 @@ pkg install -y fping
 pkg install -y goaccess
 pkg install -y bat
 
+#new port tree installation
+rm -rf /usr/ports
+git clone https://git.FreeBSD.org/ports.git /usr/ports
 
 #freeradius3 required to build with MySQL support
 cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
 
 #memcached pecl build for PHP 8.3
-#portsnap fetch && portsnap extract && portsnap update
 cd /usr/ports/databases/pecl-memcached &&  make BATCH=yes install
 
 
