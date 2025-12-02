@@ -9,7 +9,17 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-DIALOG=${DIALOG=dialog}
+if [ -z "$DIALOG" ]; then
+    if command -v dialog >/dev/null 2>&1; then
+        DIALOG=dialog
+    elif command -v bsddialog >/dev/null 2>&1; then
+        DIALOG=bsddialog
+    else
+        echo "Error: Neither 'dialog' (gnu-dialog) nor 'bsddialog' is available."
+        exit 1
+    fi
+fi
+
 FETCH="/usr/bin/fetch"
 APACHE_VERSION="apache24"
 APACHE_DATA_PATH="/usr/local/www/apache24/data/"
