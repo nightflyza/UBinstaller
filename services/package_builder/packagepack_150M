@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
 then
   echo "Usage: sh packagepack_ver \"PLATFORM\""
-  echo "Example: sh packagepack_124E 124_6E or sh packagepack_124E 124_3E"
+  echo "Example: sh packagepack_150M 150_6M"
   exit
 fi
 
@@ -27,45 +27,45 @@ pkg install -y autoconf
 pkg install -y memcached
 pkg install -y libmemcached
 pkg install -y redis
-pkg install -y mysql56-client
-pkg install -y mysql56-server
+pkg install -y mysql80-client
+pkg install -y mysql80-server
 pkg install -y apache24
-pkg install -y php82
-pkg install -y mod_php82
-pkg install -y php82-bcmath
-pkg install -y php82-ctype
-pkg install -y php82-curl
-pkg install -y php82-dom
-pkg install -y php82-extensions
-pkg install -y php82-filter
-pkg install -y php82-ftp
-pkg install -y php82-gd
-pkg install -y php82-hash
-pkg install -y php82-iconv
-pkg install -y php82-imap
-pkg install -y php82-json
-pkg install -y php82-mbstring
-pkg install -y php82-mysqli
-pkg install -y php82-opcache
-pkg install -y php82-openssl
-pkg install -y php82-pdo
-pkg install -y php82-pdo_sqlite
-pkg install -y php82-phar
-pkg install -y php82-posix
-pkg install -y php82-session
-pkg install -y php82-simplexml
-pkg install -y php82-snmp
-pkg install -y php82-soap
-pkg install -y php82-sockets
-pkg install -y php82-sqlite3
-pkg install -y php82-tokenizer
-pkg install -y php82-xml
-pkg install -y php82-xmlreader
-pkg install -y php82-xmlwriter
-pkg install -y php82-zip
-pkg install -y php82-zlib
-pkg install -y php82-pecl-memcached
-pkg install -y php82-pecl-redis
+pkg install -y php85
+pkg install -y mod_php85
+pkg install -y php85-bcmath
+pkg install -y php85-ctype
+pkg install -y php85-curl
+pkg install -y php85-dom
+pkg install -y php85-extensions
+pkg install -y php85-filter
+pkg install -y php85-ftp
+pkg install -y php85-gd
+pkg install -y php85-hash
+pkg install -y php85-iconv
+pkg install -y php85-imap
+pkg install -y php85-json
+pkg install -y php85-mbstring
+pkg install -y php85-mysqli
+pkg install -y php85-opcache
+pkg install -y php85-openssl
+pkg install -y php85-pdo
+pkg install -y php85-pdo_sqlite
+pkg install -y php85-phar
+pkg install -y php85-posix
+pkg install -y php85-session
+pkg install -y php85-simplexml
+pkg install -y php85-snmp
+pkg install -y php85-soap
+pkg install -y php85-sockets
+pkg install -y php85-sqlite3
+pkg install -y php85-tokenizer
+pkg install -y php85-xml
+pkg install -y php85-xmlreader
+pkg install -y php85-xmlwriter
+pkg install -y php85-zip
+pkg install -y php85-zlib
+pkg install -y php85-pecl-memcached
+pkg install -y php85-pecl-redis
 
 
 pkg install -y graphviz
@@ -96,13 +96,17 @@ pkg install -y iftop
 pkg install -y bind-tools
 pkg install -y trafshow
 pkg install -y fping
+pkg install -y goaccess
+pkg install -y bat
 
+#new port tree installation
+rm -rf /usr/ports
+git clone https://git.FreeBSD.org/ports.git /usr/ports
 
 #freeradius3 required to build with MySQL support
-cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes install
+cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes DISABLE_VULNERABILITIES=yes install
 
-#memcached pecl build for PHP 7.4
-portsnap fetch && portsnap extract && portsnap update
+#memcached pecl build for PHP 8.3
 cd /usr/ports/databases/pecl-memcached &&  make BATCH=yes install
 
 
