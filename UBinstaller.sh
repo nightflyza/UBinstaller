@@ -579,6 +579,7 @@ perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
 #starting stargazer
 $DIALOG --infobox "Starting Stargazer" 4 60
 /usr/sbin/stargazer
+sleep 5
 
 #initial crontab configuration
 cd ${APACHE_DATA_PATH}billing
