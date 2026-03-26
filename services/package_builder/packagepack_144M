@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
 then
   echo "Usage: sh packagepack_ver \"PLATFORM\""
-  echo "Example: sh packagepack_143M 143_6M"
+  echo "Example: sh packagepack_144M 144_6M"
   exit
 fi
 
