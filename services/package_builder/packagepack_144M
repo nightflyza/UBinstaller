@@ -103,6 +103,17 @@ pkg install -y bat
 rm -rf /usr/ports
 git clone https://git.FreeBSD.org/ports.git /usr/ports
 
+#FreeBSD 14.4 fix of freeradius3 build:
+pkg install -y p5-Locale-gettext
+pkg install -y p5-Locale-libintl
+pkg install -y p5-Text-Unidecode
+pkg install -y p5-Unicode-EastAsianWidth
+pkg install -y texinfo
+pkg install -y libgcrypt
+pkg install -y libxslt
+pkg install -y talloc
+
+
 #freeradius3 required to build with MySQL support
 cd /usr/ports/net/freeradius3/ && make WITH="MYSQL USER" BATCH=yes DISABLE_VULNERABILITIES=yes install
 
