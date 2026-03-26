@@ -35,7 +35,7 @@ if [ "$#" -lt 4 ]; then
     echo ""
     echo "Required parameters:"
     echo "  type              - Installation type: NEW or MIG"
-    echo "  arch              - Architecture: 143_6L, 142_6L, or 135_6L"
+    echo "  arch              - Target architecture: 150_6M or 144_6M or 143_6L for example"
     echo "  channel           - Ubilling channel: STABLE or CURRENT"
     echo "  internal_interface - Internal network interface name"
     echo ""
@@ -50,7 +50,7 @@ if [ "$#" -lt 4 ]; then
     echo ""
     echo "Examples:"
     echo "  $0 NEW 143_6L STABLE em0 - New installation on FreeBSD 14.3 amd64 with internal interface em0"
-    echo "  $0 MIG 143_6L STABLE em0 em1 mys828223 stg883473 rsdbilochka66 UB0000000000000000000 - Migration from another server"
+    echo "  $0 MIG 150_6M STABLE em0 em1 mys828223 stg883473 rsdbilochka66 UB0000000000000000000 - Migration from another server"
     exit 1
 fi
 
