@@ -589,6 +589,7 @@ then
 case $PASSW_MODE in
 NEW)
 /usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
+sleep 3
 NEW_UBSERIAL=`cat ./exports/ubserial`
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
 ;;
