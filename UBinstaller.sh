@@ -579,7 +579,6 @@ perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
 #starting stargazer
 $DIALOG --infobox "Starting Stargazer" 4 60
 /usr/sbin/stargazer
-sleep 5
 
 #initial crontab configuration
 cd ${APACHE_DATA_PATH}billing
@@ -588,8 +587,15 @@ then
 #generating new Ubilling serial or using predefined
 case $PASSW_MODE in
 NEW)
-/usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
+echo -n "Waiting for Stargazer"
+while [ ! -f /var/run/stargazer.pid ]; do
+    echo -n "."
+    sleep 1
+done
+echo "Generating new Ubilling serial.."
+/usr/local/bin/curl "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
 sleep 3
+echo "Loading new Ubilling serial..."
 NEW_UBSERIAL=`cat ./exports/ubserial`
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
 ;;
