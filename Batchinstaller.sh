@@ -26,6 +26,14 @@ DL_STG_RELEASE="stg-2.409"
 PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH
 
+# Load shared variables and helper functions (LOG_FILE, STG_DEFAULT_*, wait_stargazer_*)
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+if [ ! -f "${SCRIPT_DIR}/common.sh" ]; then
+    echo "Error: shared file common.sh not found in ${SCRIPT_DIR}."
+    exit 1
+fi
+. "${SCRIPT_DIR}/common.sh"
+
 # CLI parameter parsing
 if [ "$#" -lt 4 ]; then
     echo "========================================================================"
@@ -201,9 +209,9 @@ echo "=== Error: binary packages are not available. Installation is aborted. ===
 exit
 fi
 
-tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> /var/log/ubinstaller.log
+tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> ${LOG_FILE}
 cd ${ARCH}
-ls -1 | xargs -n 1 pkg add >> /var/log/ubinstaller.log
+ls -1 | xargs -n 1 pkg add >> ${LOG_FILE}
 
 #back to installation directory
 cd /usr/local/ubinstaller/
@@ -221,23 +229,23 @@ echo "=== Error: stargazer sources are not available. Installation is aborted. =
 exit
 fi
 echo "Compiling Stargazer."
-tar zxvf ${DL_STG_NAME} 2>> /var/log/ubinstaller.log
+tar zxvf ${DL_STG_NAME} 2>> ${LOG_FILE}
 echo "Compiling Stargazer.."
 cd ${DL_STG_RELEASE}/projects/stargazer/ 
-./build >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
-/usr/local/bin/gmake install >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
+./build >> ${LOG_FILE} 2>> ${LOG_FILE}
+/usr/local/bin/gmake install >> ${LOG_FILE} 2>> ${LOG_FILE}
 echo "Compiling Stargazer..."
 #and configurators
 cd ../sgconf 
-./build >> /var/log/ubinstaller.log
-/usr/local/bin/gmake >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
-/usr/local/bin/gmake install >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
+./build >> ${LOG_FILE}
+/usr/local/bin/gmake >> ${LOG_FILE} 2>> ${LOG_FILE}
+/usr/local/bin/gmake install >> ${LOG_FILE} 2>> ${LOG_FILE}
 echo "Compiling Stargazer...."
 cd ../sgconf_xml/ 
-./build >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
-/usr/local/bin/gmake >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
+./build >> ${LOG_FILE} 2>> ${LOG_FILE}
+/usr/local/bin/gmake >> ${LOG_FILE} 2>> ${LOG_FILE}
 echo "Compiling Stargazer....."
-/usr/local/bin/gmake install >> /var/log/ubinstaller.log 2>> /var/log/ubinstaller.log
+/usr/local/bin/gmake install >> ${LOG_FILE} 2>> ${LOG_FILE}
 echo "Stargazer installed."
 
 # adding needed boot options
@@ -265,7 +273,7 @@ ${APACHE_INIT_SCRIPT} start
 /usr/local/etc/rc.d/mysql-server start
 
 #Setting MySQL root password
-mysqladmin -u root password ${MYSQL_PASSWD}
+mysqladmin -u ${MYSQL_USER} password ${MYSQL_PASSWD}
 
 ######################
 # unpacking Ubilling
@@ -284,7 +292,7 @@ fi
 mkdir ${APACHE_DATA_PATH}billing/
 cp ${DL_UB_NAME} ${APACHE_DATA_PATH}billing/
 cd ${APACHE_DATA_PATH}billing/
-tar zxvf ${DL_UB_NAME} 2>> /var/log/ubinstaller.log
+tar zxvf ${DL_UB_NAME} 2>> ${LOG_FILE}
 chmod -R 777 content/ config/ multinet/ exports/ remote_nas.conf 
 chmod -R 777 userstats/config/
 
@@ -309,27 +317,29 @@ perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi ./docs/openpayz/config/mysql.ini
 
 # creating stargazer database
 echo "Creating initial Stargazer DB"
-cat docs/dumps/stargazer.sql | /usr/local/bin/mysql -u root --password=${MYSQL_PASSWD}
+load_sql_dump docs/dumps/stargazer.sql
 
 # starting stargazer
 echo "Starting Stargazer"
 /usr/sbin/stargazer
+wait_stargazer_start
 #changing stargazer admin default password
-/usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> "
+/usr/sbin/sgconf_xml -s localhost -p ${STG_DEFAULT_PORT} -a ${STG_DEFAULT_LOGIN} -w ${STG_DEFAULT_PASS} -r " <ChgAdmin Login=\"${STG_DEFAULT_LOGIN}\" password=\"${STG_PASS}\" /> "
 echo "Stargazer default password changed."
 #stopping stargazer
 echo "Stopping Stargazer."
 killall stargazer
+wait_stargazer_stop
 
 # restoring clean ubilling SQL dump
 echo "Restoring Ubilling database"
-cat docs/dumps/ubilling.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+load_sql_dump docs/dumps/ubilling.sql "${MYSQL_DB}"
 
 echo "Installing OpenPayz database preset"
-cat docs/dumps/openpayz.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+load_sql_dump docs/dumps/openpayz.sql "${MYSQL_DB}"
 
 # apply hotfix for stargazer 2.408 and change passwords in configs
-cat /usr/local/ubinstaller/configs/admin_rights_hotfix.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+load_sql_dump /usr/local/ubinstaller/configs/admin_rights_hotfix.sql "${MYSQL_DB}"
 perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./docs/openpayz/config/openpayz.ini
@@ -435,8 +445,8 @@ cp -R ./docs/multigen/raddb3/* /usr/local/etc/raddb/
 RADVER=`radiusd -v | grep "radiusd: FreeRADIUS Version" | awk '{print $4}' | tr -d ,`
 echo "Configuring FreeRADIUS ${RADVER} and MultiGen"
 sed -i.bak "s/\/usr\/local\/lib\/freeradius-3.0.16/\/usr\/local\/lib\/freeradius-${RADVER}/" /usr/local/etc/raddb/radiusd.conf
-cat ./docs/multigen/dump.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
-cat ./docs/multigen/radius3_fix.sql | /usr/local/bin/mysql -u root  -p stg --password=${MYSQL_PASSWD}
+load_sql_dump ./docs/multigen/dump.sql "${MYSQL_DB}"
+load_sql_dump ./docs/multigen/radius3_fix.sql "${MYSQL_DB}"
 perl -e "s/yourmysqlpassword/${MYSQL_PASSWD}/g" -pi /usr/local/etc/raddb/sql.conf
 #adding current hostname to fix resolve issues
 CURR_HOSTNAME=`hostname`
@@ -446,20 +456,21 @@ echo "127.0.0.1 ${CURR_HOSTNAME} ${CURR_HOSTNAME}.localdomain" >> /etc/hosts
 echo "Installing Sphinx search service"
 mkdir -p /opt
 cd /opt
-fetch http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
-tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> /var/log/ubinstaller.log
+fetch http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> ${LOG_FILE}
+tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> ${LOG_FILE}
 mv sphinx-3.1.1 sphinx
 cd sphinx
 mkdir -p sphinxdata/logs
 touch sphinxdata/logs/searchd.log
 cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/sphinx.conf
 perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
-/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all  2>> /var/log/ubinstaller.log
-/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf 2>> /var/log/ubinstaller.log
+/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all  2>> ${LOG_FILE}
+/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf 2>> ${LOG_FILE}
 
 #starting stargazer
 echo "Starting Stargazer"
 /usr/sbin/stargazer
+wait_stargazer_start
 
 
 #initial crontab configuration
@@ -469,12 +480,6 @@ then
 #generating new Ubilling serial or using predefined
 case $PASSW_MODE in
 NEW)
-echo -n "Waiting for Stargazer"
-while [ ! -f /var/run/stargazer.pid ]; do
-    echo -n "."
-    sleep 1
-done
-sleep 3
 /usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
 sleep 3
 if [ ! -s ./exports/ubserial ]; then
@@ -515,6 +520,7 @@ fi
 #stopping stargazer again to prevent data corruption and force server rebooting
 echo "Stopping stargazer"
 killall stargazer
+wait_stargazer_stop
 
 # Setting up autoupdate script
 if [ -f ./docs/presets/FreeBSD/ubautoupgrade.sh ];
