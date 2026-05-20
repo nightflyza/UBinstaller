@@ -592,11 +592,26 @@ while [ ! -f /var/run/stargazer.pid ]; do
     echo -n "."
     sleep 1
 done
+sleep 3
 echo "Generating new Ubilling serial.."
 /usr/local/bin/curl "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
 sleep 3
 echo "Loading new Ubilling serial..."
+if [ ! -s ./exports/ubserial ]; then
+    clear
+    $DIALOG --title "Fatal error" --msgbox "Failed to generate new Ubilling serial number. Installation is aborted." 10 60
+    clear
+    echo "=== Fatal error: failed to generate new Ubilling serial number. Installation is aborted. ==="
+    exit 1
+fi
 NEW_UBSERIAL=`cat ./exports/ubserial`
+if [ -z "${NEW_UBSERIAL}" ]; then
+    clear
+    $DIALOG --title "Fatal error" --msgbox "Failed to generate new Ubilling serial number. The generated serial is empty. Installation is aborted." 10 60
+    clear
+    echo "=== Fatal error: generated Ubilling serial number is empty. Installation is aborted. ==="
+    exit 1
+fi
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
 ;;
 MIG)
