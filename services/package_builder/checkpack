@@ -17,7 +17,7 @@ php84 mod_php84 php84-bcmath php84-ctype php84-curl php84-dom php84-extensions p
 php84-iconv php84-mbstring php84-mysqli php84-opcache php84-pdo php84-pdo_sqlite
 php84-phar php84-posix php84-session php84-simplexml php84-snmp php84-soap php84-sockets php84-sqlite3 php84-tokenizer
 php84-xml php84-xmlreader php84-xmlwriter php84-zip php84-zlib php84-pecl-memcached php84-pecl-redis graphviz softflowd
-sqlite3 sudo vim-tiny wget arping bandwidthd elinks mc nano nmap mtr-nox11 expect bwm-ng ifstat iperf iperf3 arpwatch
+sqlite3 sudo vim-tiny wget arping elinks mc nano nmap mtr-nox11 expect bwm-ng ifstat iperf iperf3 arpwatch
 ap24-mod_rpaf2 git ffmpeg nginx bmon iftop bind-tools trafshow fping freeradius3 net-snmp curl 
 "
 

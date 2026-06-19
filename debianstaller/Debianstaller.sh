@@ -248,7 +248,6 @@ apt install -y isc-dhcp-server >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing misc software" 4 60
 apt install -y build-essential >> /var/log/debianstaller.log  2>&1
 apt install -y bind9 >> /var/log/debianstaller.log  2>&1
-DEBIAN_FRONTEND=noninteractive apt install -y bandwidthd >> /var/log/debianstaller.log  2>&1
 DEBIAN_FRONTEND=noninteractive apt install -y softflowd >> /var/log/debianstaller.log  2>&1
 apt install -y libxmlrpc-c++8-dev >> /var/log/debianstaller.log  2>&1
 apt install -y ipset >> /var/log/debianstaller.log  2>&1
@@ -347,9 +346,6 @@ cd /usr/local/ubinstaller/configs/
 cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
 cp -R ${PHP_CONFIG_PRESET} ${PHP_CONFIG_DIR}php.ini
 cp -R stargazer.conf /etc/stargazer/
-cp -R bandwidthd.conf /etc/bandwidthd/bandwidthd.conf
-perl -e "s/em0/${LAN_IFACE}/g" -pi /etc/bandwidthd/bandwidthd.conf
-perl -e "s/NETW/${LAN_NETW}\/${LAN_CIDR}/g" -pi /etc/bandwidthd/bandwidthd.conf
 
 cp -R sudoers_preset /etc/sudoers.d/ubilling
 
@@ -601,9 +597,6 @@ perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/stargazer/OnConnect
 perl -e "s/INTERNAL_INTERFACE/${LAN_IFACE}/g" -pi /etc/stargazer/OnDisconnect
 perl -e "s/EXTERNAL_INTERFACE/${EXT_IF}/g" -pi /etc/stargazer/OnDisconnect
 
-#bandwidthd service setup
-systemctl enable bandwidthd.service >> /var/log/debianstaller.log  2>&1
-
 ;;
 1)
 $DIALOG --infobox "No NAS presets required" 4 60
@@ -619,7 +612,6 @@ chmod 777 ${APACHE_DATA_PATH}billing/content/dn
 cp -R /usr/local/ubinstaller/configs/dhcp_preset /etc/default/isc-dhcp-server
 perl -e "s/LAN_IFACE/${LAN_IFACE}/g" -pi /etc/default/isc-dhcp-server
 ln -fs /var/www/html/billing/multinet /usr/local/etc/multinet
-ln -fs /var/lib/bandwidthd/htdocs/ /var/www/html/band
 ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
 
 #disabling apparmor
