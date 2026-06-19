@@ -201,6 +201,7 @@ fi
 
 # install prebuilded binary packages
 echo "Software installation is in progress. This takes a while."
+echo "Downloading binary packages..."
 cd packages
 $FETCH ${DL_PACKAGES_URL}${ARCH}${DL_PACKAGES_EXT}
 #check is binary packages download has beed completed
@@ -212,8 +213,10 @@ echo "=== Error: binary packages are not available. Installation is aborted. ===
 exit
 fi
 
+echo "Unpacking binary packages.."
 tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> ${LOG_FILE}
 cd ${ARCH}
+echo "Installing binary packages..."
 ls -1 | xargs -n 1 pkg add >> ${LOG_FILE}
 
 #back to installation directory
@@ -235,20 +238,20 @@ echo "Compiling Stargazer."
 tar zxvf ${DL_STG_NAME} 2>> ${LOG_FILE}
 echo "Compiling Stargazer.."
 cd ${DL_STG_RELEASE}/projects/stargazer/ 
-./build >> ${LOG_FILE} 2>> ${LOG_FILE}
-/usr/local/bin/gmake install >> ${LOG_FILE} 2>> ${LOG_FILE}
+./build >> ${LOG_FILE} 2>&1
+/usr/local/bin/gmake install >> ${LOG_FILE} 2>&1
 echo "Compiling Stargazer..."
 #and configurators
 cd ../sgconf 
-./build >> ${LOG_FILE}
-/usr/local/bin/gmake >> ${LOG_FILE} 2>> ${LOG_FILE}
-/usr/local/bin/gmake install >> ${LOG_FILE} 2>> ${LOG_FILE}
+./build >> ${LOG_FILE} 2>&1
+/usr/local/bin/gmake >> ${LOG_FILE} 2>&1
+/usr/local/bin/gmake install >> ${LOG_FILE} 2>&1
 echo "Compiling Stargazer...."
 cd ../sgconf_xml/ 
-./build >> ${LOG_FILE} 2>> ${LOG_FILE}
-/usr/local/bin/gmake >> ${LOG_FILE} 2>> ${LOG_FILE}
+./build >> ${LOG_FILE} 2>&1
+/usr/local/bin/gmake >> ${LOG_FILE} 2>&1
 echo "Compiling Stargazer....."
-/usr/local/bin/gmake install >> ${LOG_FILE} 2>> ${LOG_FILE}
+/usr/local/bin/gmake install >> ${LOG_FILE} 2>&1
 echo "Stargazer installed."
 
 # adding needed boot options
@@ -455,16 +458,16 @@ echo "127.0.0.1 ${CURR_HOSTNAME} ${CURR_HOSTNAME}.localdomain" >> /etc/hosts
 echo "Installing Sphinx search service"
 mkdir -p /opt
 cd /opt
-fetch http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> ${LOG_FILE}
-tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz 2>> ${LOG_FILE}
+fetch http://sphinxsearch.com/files/sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz >> ${LOG_FILE} 2>&1
+tar zxvf sphinx-3.1.1-612d99f-freebsd-amd64.tar.gz >> ${LOG_FILE} 2>&1
 mv sphinx-3.1.1 sphinx
 cd sphinx
 mkdir -p sphinxdata/logs
 touch sphinxdata/logs/searchd.log
 cp -R ${APACHE_DATA_PATH}billing/docs/sphinxsearch/sphinx3.conf /opt/sphinx/etc/sphinx.conf
 perl -e "s/rootpassword/${MYSQL_PASSWD}/g" -pi /opt/sphinx/etc/sphinx.conf
-/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all  2>> ${LOG_FILE}
-/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf 2>> ${LOG_FILE}
+/opt/sphinx/bin/indexer --config /opt/sphinx/etc/sphinx.conf --all >> ${LOG_FILE} 2>&1
+/opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf >> ${LOG_FILE} 2>&1
 
 #starting stargazer
 echo "Starting Stargazer"
