@@ -217,7 +217,7 @@ echo "Unpacking binary packages.."
 tar zxvf ${ARCH}${DL_PACKAGES_EXT} 2>> ${LOG_FILE}
 cd ${ARCH}
 echo "Installing binary packages..."
-ls -1 | xargs -n 1 pkg add >> ${LOG_FILE}
+ls -1 | xargs -n 1 pkg add >> ${LOG_FILE} 2>&1
 
 #back to installation directory
 cd /usr/local/ubinstaller/
@@ -278,7 +278,7 @@ ${APACHE_INIT_SCRIPT} start
 /usr/local/etc/rc.d/mysql-server start
 
 #Setting MySQL root password
-mysqladmin -u ${MYSQL_USER} password ${MYSQL_PASSWD}
+mysqladmin -u ${MYSQL_USER} password ${MYSQL_PASSWD} >> ${LOG_FILE} 2>&1
 
 ######################
 # unpacking Ubilling

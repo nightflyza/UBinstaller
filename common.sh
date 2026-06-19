@@ -26,9 +26,9 @@ load_sql_dump() {
     _sql_file="$1"
     _db="$2"
     if [ -n "${_db}" ]; then
-        "${MYSQL_BIN}" -u "${MYSQL_USER}" --password="${MYSQL_PASSWD}" "${_db}" < "${_sql_file}"
+        "${MYSQL_BIN}" -u "${MYSQL_USER}" --password="${MYSQL_PASSWD}" "${_db}" < "${_sql_file}" >> ${LOG_FILE} 2>&1
     else
-        "${MYSQL_BIN}" -u "${MYSQL_USER}" --password="${MYSQL_PASSWD}" < "${_sql_file}"
+        "${MYSQL_BIN}" -u "${MYSQL_USER}" --password="${MYSQL_PASSWD}" < "${_sql_file}" >> ${LOG_FILE} 2>&1
     fi
 }
 
