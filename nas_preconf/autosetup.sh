@@ -25,8 +25,6 @@ RSCRIPTD_KEY="kotiki"
 NETFLOW_HOST="172.16.0.1:42111"
 SNMPCOMM="changeme"
 
-#bandwidthd http path
-BANDWIDTHD_PATH="band"
 
 #firewall preset script
 FIREWALL_PRESET="firewall.conf"
@@ -132,7 +130,6 @@ chmod -R a+x /etc/stargazer
 chmod -R 777 /etc/stargazer/dn
 cp -R ./configs/rc.d /etc/
 chmod a+x /etc/rc.d/rscriptd
-cp ./configs/bandwidthd.conf /usr/local/bandwidthd/etc/
 mkdir /var/stargazer/ 
 
 #installing some helpful scripts
@@ -147,8 +144,6 @@ chmod a+x /bin/renat /bin/checkspeed /usr/local/etc/lactrl.php
 
 #symlink magic
 mkdir /usr/local/www/data
-mv /usr/local/bandwidthd/htdocs /usr/local/www/data/${BANDWIDTHD_PATH}
-ln -fs /usr/local/www/data/${BANDWIDTHD_PATH}/ /usr/local/bandwidthd/htdocs
 cp -R ./configs/nginx.conf  /usr/local/etc/nginx/
 chmod a-x /etc/rc.d/sendmail
 echo "NO WAY!" > /usr/local/www/data/index.html
@@ -186,10 +181,6 @@ perl -e "s/localhost/${MYSQL_HOST}/g" -pi /etc/stargazer/dnswitch.php
 perl -e "s/mylogin/${MYSQL_LOGIN}/g" -pi /etc/stargazer/dnswitch.php
 perl -e "s/newpassword/${MYSQL_PASSWORD}/g" -pi /etc/stargazer/dnswitch.php
 perl -e "s/stg/${MYSQL_DB}/g" -pi /etc/stargazer/dnswitch.php
-
-#update bandwidthd config
-perl -e "s/INTERNAL_INTERFACE/${INT_IF}/g" -pi /usr/local/bandwidthd/etc/bandwidthd.conf
-perl -e "s/INTERNAL_NETWORK/${INT_NET}\/${INT_NET_CIDR}/g" -pi /usr/local/bandwidthd/etc/bandwidthd.conf
 
 echo "==== NAS setup complete! ===="
 echo "Reboot your server."
