@@ -482,7 +482,7 @@ then
 #generating new Ubilling serial or using predefined
 case $PASSW_MODE in
 NEW)
-/usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save"
+/usr/local/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save" >> ${LOG_FILE} 2>&1
 sleep 3
 if [ ! -s ./exports/ubserial ]; then
     echo "=== Fatal error: failed to generate new Ubilling serial number. Installation is aborted. ==="
