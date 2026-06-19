@@ -138,9 +138,6 @@ else
     NAS_KERNEL=1
 fi
 
-# Always use Stargazer 2.409 release
-STG_VER="409REL"
-
 echo "===================================================================="
 echo "                                                                          "
 echo "             Starting Ubilling installation...                            "
@@ -151,7 +148,10 @@ echo "             Channel: ${UB_CHANNEL}                                       
 echo "             LAN interface: ${LAN_IFACE}                                  "
 echo "             LAN network: ${LAN_NETW}/${LAN_CIDR}                         "
 echo "             WAN interface: ${EXT_IF}                                     "
-echo "             Stargazer: ${STG_VER}                                        "
+echo "             Stargazer: ${DL_STG_RELEASE}                                 "
+echo "             MySQL password: ${MYSQL_PASSWD}                              "
+echo "             Stargazer password: ${STG_PASS}                              "
+echo "             Rscriptd password: ${RSD_PASS}                               "
 echo "                                                                          "
 echo "===================================================================="
 

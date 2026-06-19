@@ -168,16 +168,16 @@ echo "Everything is okay! Installation is starting."
 case $PASSW_MODE in
 NEW)
 if [ "$EXT_IF" != "none" ]; then
-    exec "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}" "${EXT_IF}"
+    sh "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}" "${EXT_IF}"
 else
-    exec "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}"
+    sh "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}"
 fi
 ;;
 MIG)
 if [ "$EXT_IF" != "none" ]; then
-    exec "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}" "${EXT_IF}" "${MYSQL_PASSWD}" "${STG_PASS}" "${RSD_PASS}" "${UBSERIAL}"
+    sh "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}" "${EXT_IF}" "${MYSQL_PASSWD}" "${STG_PASS}" "${RSD_PASS}" "${UBSERIAL}"
 else
-    exec "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}" "${MYSQL_PASSWD}" "${STG_PASS}" "${RSD_PASS}" "${UBSERIAL}"
+    sh "${BATCHINSTALLER}" "${PASSW_MODE}" "${ARCH}" "${UB_CHANNEL}" "${LAN_IFACE}" "${MYSQL_PASSWD}" "${STG_PASS}" "${RSD_PASS}" "${UBSERIAL}"
 fi
 ;;
 esac
