@@ -257,7 +257,6 @@ cd /usr/local/ubinstaller/configs/
 cp -R ${APACHE_CONFIG_PRESET_NAME} ${APACHE_CONFIG_DIR}${APACHE_CONFIG_NAME}
 cp -R ${PHP_CONFIG_PRESET} /usr/local/etc/php.ini
 cp -R stargazer.conf /etc/stargazer/
-cp -R bandwidthd.conf /usr/local/bandwidthd/etc/
 
 #setting up default web awesomeness
 cp -R inside.html ${APACHE_DATA_PATH}/index.html
@@ -370,8 +369,6 @@ echo "default user initialization scripts installed."
 perl -e "s/mylogin/root/g" -pi /etc/stargazer/config
 perl -e "s/newpassword/${MYSQL_PASSWD}/g" -pi /etc/stargazer/config
 perl -e "s/rl0/${LAN_IFACE}/g" -pi /etc/stargazer/OnConnect
-perl -e "s/em0/${LAN_IFACE}/g" -pi /usr/local/bandwidthd/etc/bandwidthd.conf
-perl -e "s/NETW/${LAN_NETW}\/${LAN_CIDR}/g" -pi /usr/local/bandwidthd/etc/bandwidthd.conf
 
 
 #editing sudoers
@@ -386,7 +383,6 @@ ln -fs ${APACHE_DATA_PATH}billing/multinet /usr/local/etc/multinet
 ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
 mkdir ${APACHE_DATA_PATH}billing/content/dn
 chmod 777 ${APACHE_DATA_PATH}billing/content/dn
-ln -fs /usr/local/bandwidthd/htdocs ${APACHE_DATA_PATH}band
 
 #creating rc.script
 cp -R /usr/local/ubinstaller/configs/rc.billing /usr/local/etc/rc.d/billing
