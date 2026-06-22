@@ -75,7 +75,6 @@ pkg install -y sudo
 pkg install -y vim-tiny
 pkg install -y wget
 pkg install -y arping
-pkg install -y bandwidthd
 pkg install -y elinks
 pkg install -y mc
 pkg install -y nano
