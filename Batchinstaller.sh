@@ -533,6 +533,10 @@ else
 echo "Looks like this Ubilling release does not containing automatic upgrade preset"
 fi
 
+# Setting up newsyslog preset
+cp -R /usr/local/ubinstaller/configs/newsyslog.preconf /etc/newsyslog.conf.d/ubilling.conf
+
+
 echo "==========================================================================="
 echo "|             Ubilling installation has been completed!                    |"
 echo "|                                                                          |"

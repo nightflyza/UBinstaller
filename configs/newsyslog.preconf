@@ -1,0 +1,10 @@
+# Sphinx
+/opt/sphinx/sphinxdata/logs/query.log   600  5     100   *     JC  /opt/sphinx/sphinxdata/searchd.pid 30
+/opt/sphinx/sphinxdata/logs/searchd.log 600  5     100   *     JC  /opt/sphinx/sphinxdata/searchd.pid 30
+
+#DHCPD
+/var/log/dhcpd.log                      644  2  *  @T03  JZ
+
+#Apache
+/var/log/httpd-access.log  644  2  1048576  *  1  /var/run/httpd.pid
+/var/log/httpd-error.log   644  2  1048576  *  1  /var/run/httpd.pid
