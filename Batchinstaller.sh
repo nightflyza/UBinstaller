@@ -529,12 +529,14 @@ if [ -f ./docs/presets/FreeBSD/ubautoupgrade.sh ];
 then
 cp -R ./docs/presets/FreeBSD/ubautoupgrade.sh /bin/
 chmod a+x /bin/ubautoupgrade.sh
+echo "Autoupgrade script installed"
 else
 echo "Looks like this Ubilling release does not containing automatic upgrade preset"
 fi
 
 # Setting up newsyslog preset
 cp -R /usr/local/ubinstaller/configs/newsyslog.preconf /etc/newsyslog.conf.d/ubilling.conf
+echo "newsyslog preset installed"
 
 
 echo "==========================================================================="
