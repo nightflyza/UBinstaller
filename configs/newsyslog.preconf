@@ -6,5 +6,5 @@
 /var/log/dhcpd.log                      644  2  *  @T03  JZ
 
 #Apache
-/var/log/httpd-access.log  644  2  1048576  *  1  /var/run/httpd.pid
-/var/log/httpd-error.log   644  2  1048576  *  1  /var/run/httpd.pid
+/var/log/httpd-access.log  644  2  1048576  *  J  /var/run/httpd.pid
+/var/log/httpd-error.log   644  2  1048576  *  J  /var/run/httpd.pid
