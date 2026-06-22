@@ -24,7 +24,7 @@ softflowd_interfaces="LAN_IFACE"
 softflowd_LAN_IFACE_collector="127.0.0.1:42111"
 
 #Caching engines
-redis_enable="NO"
+redis_enable="YES"
 memcached_enable="NO"
 memcached_flags="-l 127.0.0.1 -m 256 -I 16M"
 
