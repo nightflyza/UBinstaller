@@ -495,6 +495,9 @@ perl -e "s/123456/${STG_PASS}/g" -pi ./docs/openpayz/config/openpayz.ini
 
 #preconfiguring dhcpd logging
 cat /usr/local/ubinstaller/configs/rsyslog.preconf >> /etc/rsyslog.conf
+touch /var/log/dhcpd.log
+cp -R /usr/local/ubinstaller/configs/logrotate-dhcpd /etc/logrotate.d/ubilling-dhcpd
+systemctl restart rsyslog >> /var/log/debianstaller.log  2>&1
 perl -e "s/NMLEASES = \/var\/log\/messages/NMLEASES = \/var\/log\/dhcpd.log/g" -pi ./config/alter.ini
 $DIALOG --infobox "dhcpd logging configured." 4 60
 

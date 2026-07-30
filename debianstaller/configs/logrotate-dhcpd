@@ -1,0 +1,10 @@
+/var/log/dhcpd.log {
+    daily
+    rotate 2
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+    create 644 root root
+}
