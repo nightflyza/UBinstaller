@@ -21,20 +21,60 @@ DL_PACKAGES_EXT=".tar.gz"
 DL_UB_URL="http://ubilling.net.ua/"
 DL_UB_NAME="ub.tgz"
 DL_STG_URL="http://ubilling.net.ua/stg/"
-DL_STG_NAME="stg-2.409-rc5.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc5"
+DL_STG_NAME="stg-2.409.tar.gz"
+DL_STG_RELEASE="stg-2.409"
+
+LOG_FILE="/var/log/debianstaller.log"
+STG_PID_FILE="/var/run/stargazer.pid"
+STG_WAIT_TIMEOUT=120
+
+# Waits until Stargazer PID file appears (timeout to avoid hanging forever)
+wait_stargazer_start() {
+    echo -n "Waiting for Stargazer to start" | tee -a ${LOG_FILE}
+    WAIT_COUNT=0
+    while [ ! -f "${STG_PID_FILE}" ]; do
+        echo -n "." | tee -a ${LOG_FILE}
+        sleep 1
+        WAIT_COUNT=$((WAIT_COUNT + 1))
+        if [ $WAIT_COUNT -ge ${STG_WAIT_TIMEOUT} ]; then
+            echo " timeout!" | tee -a ${LOG_FILE}
+            return 1
+        fi
+    done
+    echo " ok" | tee -a ${LOG_FILE}
+    sleep 3
+    return 0
+}
+
+# Waits until Stargazer PID file disappears
+wait_stargazer_stop() {
+    echo -n "Waiting for Stargazer to stop" | tee -a ${LOG_FILE}
+    WAIT_COUNT=0
+    while [ -f "${STG_PID_FILE}" ]; do
+        echo -n "." | tee -a ${LOG_FILE}
+        sleep 1
+        WAIT_COUNT=$((WAIT_COUNT + 1))
+        if [ $WAIT_COUNT -ge ${STG_WAIT_TIMEOUT} ]; then
+            echo " timeout!" | tee -a ${LOG_FILE}
+            return 1
+        fi
+    done
+    echo " ok" | tee -a ${LOG_FILE}
+    sleep 1
+    return 0
+}
 
 
 #initial repos update
 echo "Preparing to installation.."
-apt update >> /var/log/debianstaller.log  2>&1
-apt -y upgrade >> /var/log/debianstaller.log  2>&1
+apt update >> ${LOG_FILE}  2>&1
+apt -y upgrade >> ${LOG_FILE}  2>&1
 
 #installation of basic software required for installer
 echo "Installing basic software required for Debianstaller.."
-apt install -y dialog >> /var/log/debianstaller.log  2>&1
-apt install -y net-tools >> /var/log/debianstaller.log  2>&1
-apt install -y gnupg2 >> /var/log/debianstaller.log  2>&1
+apt install -y dialog >> ${LOG_FILE}  2>&1
+apt install -y net-tools >> ${LOG_FILE}  2>&1
+apt install -y gnupg2 >> ${LOG_FILE}  2>&1
 
 
 clear
@@ -50,13 +90,12 @@ $DIALOG --menu "Type of Ubilling installation" 10 75 8 \
 
 clear
 
-#configuring stargazer release
+#configuring Ubilling installation channel
 clear
-$DIALOG --menu "Choose Stargazer release" 16 50 8 \
-				   409REL "Stargazer 2.409-release (stable)"\
-                   409RC5 "Stargazer 2.409-rc5 (legacy)"\
-                   409RC2 "Stargazer 2.409-rc2 (legacy)"\
-            2> /tmp/stgver
+$DIALOG --menu "Choose Ubilling installation channel" 11 54 4 \
+                   STABLE "Latest stable release (recommended)"\
+                   CURRENT "Nightly build (current development)"\
+            2> /tmp/ubchannel
 clear
 
 #configuring LAN interface
@@ -158,7 +197,7 @@ LAN_CIDR=`cat /tmp/ubcidr`
 STG_PASS=`cat /tmp/ubstgpass`
 RSD_PASS=`cat /tmp/ubrsd`
 ARCH=`hostnamectl | grep System | xargs`
-STG_VER=`cat /tmp/stgver`
+UB_CHANNEL=`cat /tmp/ubchannel`
 
 case $PASSW_MODE in
 NEW)
@@ -177,12 +216,12 @@ rm -fr /tmp/ubcidr
 rm -fr /tmp/ubstgpass
 rm -fr /tmp/ubrsd
 rm -fr /tmp/ubextif
-rm -fr /tmp/stgver
+rm -fr /tmp/ubchannel
 rm -fr /tmp/insttype
 rm -fr /tmp/ubsrl
 
 #last chance to exit
-$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Stargazer: ${STG_VER}\n Ubilling serial: ${UBSERIAL}\n" 18 70
+$DIALOG --title "Check settings"   --yesno "Are all of these settings correct? \n \n LAN interface: ${LAN_IFACE} \n LAN network: ${LAN_NETW}/${LAN_CIDR} \n WAN interface: ${EXT_IF} \n MySQL password: ${MYSQL_PASSWD} \n Stargazer password: ${STG_PASS} \n Rscripd password: ${RSD_PASS} \n System: ${ARCH} \n Ubilling channel: ${UB_CHANNEL}\n Stargazer: ${DL_STG_RELEASE}\n Ubilling serial: ${UBSERIAL}\n" 18 70
 AGREE=$?
 clear
 
@@ -193,21 +232,14 @@ mkdir /usr/local/ubinstaller/
 cp -R ./* /usr/local/ubinstaller/
 cd /usr/local/ubinstaller/
 
-#Selecting stargazer release to install
-case $STG_VER in
-409RC5)
-DL_STG_NAME="stg-2.409-rc5.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc5"
+#selecting Ubilling release to install
+case $UB_CHANNEL in
+STABLE)
+#nothing here, its default now
 ;;
-
-409RC2)
-DL_STG_NAME="stg-2.409-rc2.tar.gz"
-DL_STG_RELEASE="stg-2.409-rc2"
-;;
-
-409REL)
-DL_STG_NAME="stg-2.409.tar.gz"
-DL_STG_RELEASE="stg-2.409"
+CURRENT)
+DL_UB_URL="http://snaps.ubilling.net.ua/"
+DL_UB_NAME="ub_current.tgz"
 ;;
 esac
 
@@ -254,6 +286,7 @@ apt install -y ipset >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing memory caching servers" 4 60
 apt install -y memcached >> /var/log/debianstaller.log  2>&1
 apt install -y redis >> /var/log/debianstaller.log  2>&1
+systemctl enable redis-server >> /var/log/debianstaller.log  2>&1
 $DIALOG --infobox "Installing PHP and required extensions" 4 60
 apt install -y php8.4-cli >> /var/log/debianstaller.log  2>&1
 apt install -y php8.4-mysql >> /var/log/debianstaller.log  2>&1
@@ -432,7 +465,11 @@ cat docs/dumps/stargazer.sql | /usr/bin/mysql -u root --password=${MYSQL_PASSWD}
 # starting stargazer 
 $DIALOG --infobox "Starting Stargazer" 4 60
 /usr/sbin/stargazer
-sleep 3
+if ! wait_stargazer_start; then
+    echo "=== Fatal error: Stargazer failed to start. Installation is aborted. ===" | tee -a ${LOG_FILE}
+    $DIALOG --msgbox "Fatal error: Stargazer failed to start. Installation is aborted." 8 60
+    exit 1
+fi
 
 #changing default password
 /usr/sbin/sgconf_xml -s localhost -p 5555 -a admin -w 123456 -r " <ChgAdmin Login=\"admin\" password=\"${STG_PASS}\" /> " >> /var/log/debianstaller.log  2>&1
@@ -440,7 +477,7 @@ $DIALOG --infobox "Stargazer default password changed." 4 60
 #stopping stargazer
 $DIALOG --infobox "Stopping Stargazer." 4 60
 killall stargazer
-sleep 10
+wait_stargazer_stop
 
 
 # restoring default Ubilling SQL dump
@@ -475,7 +512,11 @@ $DIALOG --infobox "remote API wrapper installed" 4 60
 #starting stargazer
 $DIALOG --infobox "Starting stargazer" 4 60
 /usr/sbin/stargazer
-sleep 3
+if ! wait_stargazer_start; then
+    echo "=== Fatal error: Stargazer failed to start. Installation is aborted. ===" | tee -a ${LOG_FILE}
+    $DIALOG --msgbox "Fatal error: Stargazer failed to start. Installation is aborted." 8 60
+    exit 1
+fi
 
 #initial crontab configuration
 cd ${APACHE_DATA_PATH}billing
@@ -488,26 +529,32 @@ NEW)
 #generating new Ubilling serial
 /usr/bin/curl -o /dev/null "http://127.0.0.1/billing/?module=remoteapi&action=identify&param=save" >> /var/log/debianstaller.log  2>&1
 #waiting saving data
-sleep 2
+sleep 3
+if [ ! -s ./exports/ubserial ]; then
+    echo "=== Fatal error: failed to generate new Ubilling serial number. Installation is aborted. ===" | tee -a ${LOG_FILE}
+    $DIALOG --msgbox "Fatal error: failed to generate new Ubilling serial number. Installation is aborted." 8 60
+    exit 1
+fi
 NEW_UBSERIAL=`cat ./exports/ubserial`
+if [ -z "${NEW_UBSERIAL}" ]; then
+    echo "=== Fatal error: generated Ubilling serial number is empty. Installation is aborted. ===" | tee -a ${LOG_FILE}
+    $DIALOG --msgbox "Fatal error: generated Ubilling serial number is empty. Installation is aborted." 8 60
+    exit 1
+fi
 $DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
 ;;
 MIG)
 NEW_UBSERIAL=${UBSERIAL}
+if [ -z "${NEW_UBSERIAL}" ]; then
+    echo "=== Fatal error: Ubilling serial number is empty. Installation is aborted. ===" | tee -a ${LOG_FILE}
+    $DIALOG --msgbox "Fatal error: Ubilling serial number is empty. Installation is aborted." 8 60
+    exit 1
+fi
 $DIALOG --infobox "Using Ubilling serial: ${NEW_UBSERIAL}" 4 60
 ;;
 esac
 
-
-if [ -n "$NEW_UBSERIAL" ];
-then
 echo "OK: new Ubilling serial ${NEW_UBSERIAL}" >> /var/log/debianstaller.log  2>&1
-else
-$DIALOG --infobox "New Ubilling serial generated: ${NEW_UBSERIAL}" 4 60
-echo "Installation failed and aborted. Empty Ubilling serial. Retry your attempt."
-echo "FATAL: empty new Ubilling serial" >> /var/log/debianstaller.log  2>&1
-exit
-fi
 
 crontab ./docs/crontab/crontab.preconf
 $DIALOG --infobox "Installing default crontab preset" 4 60
@@ -560,7 +607,7 @@ systemctl enable searchd.service >> /var/log/debianstaller.log  2>&1
 #stopping stargazer
 $DIALOG --infobox "Stopping stargazer" 4 60
 killall stargazer
-sleep 10
+wait_stargazer_stop
 
 #installing systemd stargazer startup part
 cp -R /usr/local/ubinstaller/configs/stargazer.service /etc/systemd/system/
@@ -611,8 +658,17 @@ mkdir ${APACHE_DATA_PATH}billing/content/dn
 chmod 777 ${APACHE_DATA_PATH}billing/content/dn
 cp -R /usr/local/ubinstaller/configs/dhcp_preset /etc/default/isc-dhcp-server
 perl -e "s/LAN_IFACE/${LAN_IFACE}/g" -pi /etc/default/isc-dhcp-server
+systemctl enable isc-dhcp-server >> /var/log/debianstaller.log  2>&1
 ln -fs /var/www/html/billing/multinet /usr/local/etc/multinet
 ln -fs ${APACHE_DATA_PATH}billing/remote_nas.conf /etc/stargazer/remote_nas.conf
+
+# NTP via systemd-timesyncd
+$DIALOG --infobox "Configuring NTP sync" 4 60
+if ! grep -q "ntp.ubilling.net.ua" /etc/systemd/timesyncd.conf; then
+    echo "NTP=ntp.ubilling.net.ua" >> /etc/systemd/timesyncd.conf
+fi
+systemctl enable systemd-timesyncd >> /var/log/debianstaller.log  2>&1
+systemctl restart systemd-timesyncd >> /var/log/debianstaller.log  2>&1
 
 #disabling apparmor
 systemctl stop apparmor >> /var/log/debianstaller.log  2>&1
