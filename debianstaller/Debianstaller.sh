@@ -564,6 +564,8 @@ $DIALOG --infobox "Installing default crontab preset" 4 60
 #updating serial in ubapi wrapper
 perl -e "s/UB000000000000000000000000000000000/${NEW_UBSERIAL}/g" -pi /bin/ubapi
 $DIALOG --infobox "New serial installed into ubapi wrapper" 4 60
+perl -e "s/UB000000000000000000000000000000000/${NEW_UBSERIAL}/g" -pi ./userstats/config/userstats.ini
+$DIALOG --infobox "Serial installed into userstats config" 4 60
 else
 echo "Looks like this Ubilling release is not supporting automatic crontab configuration"
 fi
