@@ -346,7 +346,6 @@ load_sql_dump docs/dumps/openpayz.sql "${MYSQL_DB}"
 # apply hotfix for stargazer 2.408 and change passwords in configs
 load_sql_dump /usr/local/ubinstaller/configs/admin_rights_hotfix.sql "${MYSQL_DB}"
 perl -e "s/123456/${STG_PASS}/g" -pi ./config/billing.ini
-perl -e "s/123456/${STG_PASS}/g" -pi ./userstats/config/userstats.ini
 perl -e "s/123456/${STG_PASS}/g" -pi ./docs/openpayz/config/openpayz.ini
 
 #preconfiguring dhcpd logging
