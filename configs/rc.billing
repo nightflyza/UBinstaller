@@ -30,7 +30,7 @@ start_cmd()
 {
        echo "Starting stargazer"
        /usr/sbin/stargazer || echo "failed to start stargazer"
-       opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf
+       /opt/sphinx/bin/searchd --config /opt/sphinx/etc/sphinx.conf
        echo "SphinxSearch started"
 }
 
