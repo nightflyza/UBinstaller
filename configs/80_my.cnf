@@ -7,6 +7,7 @@ prompt                          = \u@\h [\d]>\_
 no_auto_rehash
 
 [mysqld]
+max_connections                 = 300
 user                            = mysql
 port                            = 3306
 socket                          = /tmp/mysql.sock
@@ -20,7 +21,12 @@ disable_log_bin
 #log-bin                         = mysql-bin
 #log-output                      = TABLE
 relay-log-recovery              = 1
+
 slow-query-log                  = 1
+long_query_time                 = 2
+log_queries_not_using_indexes   = OFF
+min_examined_row_limit          = 100
+
 server-id                       = 1
 sync_binlog                     = 1
 sync_relay_log                  = 1
@@ -39,18 +45,20 @@ table_definition_cache          = 8192
 net_retry_count                 = 16384
 key_buffer_size                 = 256M
 max_allowed_packet              = 64M
-long_query_time                 = 0.5
-innodb_buffer_pool_size         = 1G
+
+innodb_buffer_pool_size         = 8G
+innodb_redo_log_capacity        = 1G
 innodb_data_home_dir            = /var/db/mysql
 innodb_log_group_home_dir       = /var/db/mysql
 innodb_data_file_path           = ibdata1:128M:autoextend
 innodb_temp_data_file_path      = ibtmp1:128M:autoextend
 innodb_flush_method             = O_DIRECT
-innodb_redo_log_capacity        = 512M
-innodb_log_buffer_size          = 16M
+innodb_log_buffer_size          = 32M
 innodb_write_io_threads         = 8
 innodb_read_io_threads          = 8
 innodb_autoinc_lock_mode        = 2
+innodb_file_per_table           = 1
+innodb_flush_log_at_trx_commit  = 1
 sql_mode=NO_ENGINE_SUBSTITUTION
 
 [mysqldump]
